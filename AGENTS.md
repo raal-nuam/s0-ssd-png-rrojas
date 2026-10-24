@@ -25,6 +25,7 @@ las mismas reglas funcionales con cualquier cliente que pueda leer los archivos.
 
 ## Capacidades compartidas
 
+- Contextualización opcional: [skills/project-discovery/SKILL.md](skills/project-discovery/SKILL.md).
 - Refinamiento PO: [.agents/skills/refine-user-story/SKILL.md](.agents/skills/refine-user-story/SKILL.md).
 - Preparación QA: [.agents/skills/prepare-tests/SKILL.md](.agents/skills/prepare-tests/SKILL.md).
 
@@ -47,6 +48,9 @@ técnicos no cambia la redacción en español de instrucciones y resultados.
 Mantén las reglas comunes en este archivo y los métodos PO/QA sólo en sus skills
 canónicas de `.agents/skills/`. `CLAUDE.md` y las entradas propias de `.claude/`
 son puentes a esas fuentes. No necesitan enlaces simbólicos ni scripts de copia.
+Project Discovery tiene su fuente en `skills/project-discovery/` y puentes para
+ambos clientes. Es independiente y no es un paso obligatorio de OpenSpec;
+documentar contexto no autoriza cambiar configuración ni artefactos OpenSpec.
 Los workflows `openspec-*` son generados por OpenSpec; actualízalos con la CLI
 acordada, sin editarlos a mano. Valida los artefactos con
 `openspec validate --all --strict --no-interactive`; eso no ejecuta tests de producto.

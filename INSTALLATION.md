@@ -43,6 +43,7 @@ descarga contenido, no actualiza Git ni copia skills a otras carpetas.
 | Leer documentos en GitHub | Navegador y acceso al repositorio |
 | Leer una copia local | Editor; Git para clonar/actualizar, o ZIP sin Git |
 | Refinar historias y preparar casos desde el S0 | Copia del S0 y agente instalado con acceso a sus archivos; no requiere CLI OpenSpec |
+| Descubrir contexto y publicar el borrador aprobado | Skill Project Discovery y repositorios autorizados; Git y Python >=3.10 para verificar la escritura. No requiere CLI OpenSpec |
 | Crear/configurar el S0 | Git y CLI OpenSpec 1.14.3 |
 | Ejecutar workflows nativos como `propose`, `apply` o `archive` | CLI OpenSpec 1.14.3, agente compatible y acceso a las carpetas implicadas |
 | Automatizar o ejecutar pruebas | Repositorio de la suite, entorno y herramientas del producto; OpenSpec sólo si además usas sus workflows |
@@ -202,6 +203,10 @@ confirmada. Es el lugar donde alguien nuevo debe poder entender el sistema:
 | Fuentes | Specs, contratos/documentos existentes y S0 de otros subsistemas |
 | Pendientes | Lo que aún falta confirmar; sin inventar reglas ni tecnología |
 
+Puedes completar esta página manualmente o usar [Project Discovery](#project-discovery)
+para inspeccionar los repositorios autorizados y revisar un borrador antes de
+guardarlo. Es opcional y también permite actualizar sólo algunos componentes.
+
 Para un monorepo, describe sus componentes con la misma URL y sus respectivas
 subcarpetas. Para muchos repositorios puedes usar una tabla en esa misma página.
 Si el mapa crece, `repositories.yaml` es una alternativa **opcional**:
@@ -231,6 +236,8 @@ En `openspec/config.yaml`, reemplaza la primera frase de `context: |` que
 describe S0 Core por una descripción de tu sistema. **Conserva** `schema:
 spec-driven`, el resto de instrucciones pertinentes y las reglas nativas.
 El resto del bloque remite a `context/project.md`; no dupliques allí todo el mapa.
+Esta personalización es parte de la adopción manual. Project Discovery nunca
+modifica ese archivo ni añade instrucciones para generar artefactos.
 
 Adapta también el inicio del README de la instancia: nombre, propósito, ID, URL
 y enlace directo al [recorrido de incorporación](#join-team). Así PO y QA no
@@ -427,6 +434,8 @@ necesitas `repositories.yaml`, URLs inventadas ni una arquitectura completa para
 empezar. Adapta la frase de `context` en `openspec/config.yaml` y el inicio del
 README como explica el paso 5. Publica la preparación con el **paso 7**; omite la
 conexión a código hasta disponer de esos repositorios.
+Project Discovery no es un requisito previo para iniciar este proyecto o proponer
+su primer cambio; está orientado especialmente a comprender sistemas existentes.
 
 ### Paso 3. Define y comparte el primer cambio desde el S0
 
@@ -519,7 +528,7 @@ como proyecto/carpeta de trabajo en tu cliente e inicia una sesión con acceso a
 esos archivos. No abras sólo `context/` ni la carpeta de código para este recorrido.
 
 Ya recibes instrucciones y métodos versionados: `AGENTS.md` es común;
-`CLAUDE.md` lo referencia; las dos skills propias viven en `.agents/skills/` y
+`CLAUDE.md` lo referencia; las dos skills PO/QA viven en `.agents/skills/` y
 sus entradas Claude apuntan a esas mismas fuentes. No se instalan globalmente.
 Si no aparecen o seleccionas otra copia, usa la [comprobación de rutas](#local-skills).
 
@@ -639,6 +648,64 @@ skills propias en el consumidor ni garantiza que aparezcan en su selector.
 Otros agentes pueden leer esos archivos; su descubrimiento automático necesita
 comprobarse en cada cliente. Cowork/Chat y sesiones sin acceso al filesystem
 requieren su propia integración; esta guía no presume esa carga.
+
+<a id="project-discovery"></a>
+## Project Discovery: preparar contexto antes de proponer
+
+Usa esta skill cuando necesites entender un sistema existente o actualizar el
+conocimiento de algunos componentes. Funciona con uno o múltiples repositorios,
+incluidos monorepos. Es un paso opcional, separado de los workflows de OpenSpec.
+
+1. Abre el S0 del sistema con tu agente y asegúrate de usar la skill local.
+2. Indica qué repositorios puede leer y qué quieres comprender. No hace falta
+   revisar todo el sistema para actualizar un solo componente.
+3. El agente analiza, cita fuentes y presenta un borrador con archivos destino,
+   hechos, inferencias y preguntas. Durante esa fase los repositorios quedan
+   sin modificaciones.
+4. Revisa el borrador. Cuando apruebes su contenido y rutas, el agente lo guarda
+   únicamente en `context/` y comprueba que no cambió archivos fuera del alcance.
+
+En Codex usa `$project-discovery`; en Claude Code, `/project-discovery`. También
+puedes escribir en el chat, sustituyendo las rutas de ejemplo:
+
+```text
+Usa Project Discovery de este S0. Puedes leer D:\my-system-web y
+D:\my-system-api para comprender la arquitectura y los componentes existentes.
+Prepara un borrador de contexto con sus fuentes y las dudas pendientes.
+```
+
+Para actualizar selectivamente:
+
+```text
+Usa Project Discovery para revisar sólo el componente de notificaciones en
+D:\my-system-notifications. Presenta el diff propuesto para
+context/components/notifications.md y los enlaces del índice que deban cambiar.
+```
+
+La fuente común está en `skills/project-discovery/SKILL.md`; `.agents/skills/`
+y `.claude/skills/` contienen puentes. Si no aparece en tu selector, pide leer
+explícitamente esa fuente. Mantén los tres directorios al copiar la skill a una
+instancia existente; los recursos del método viven junto a su fuente común.
+
+El contexto puede organizarse en `context/project.md`, `context/architecture.md`
+y `context/components/`, sin exigir todos esos documentos en cada sistema.
+Discovery describe lo observado; no convierte código en requisitos aprobados.
+No toca `openspec/config.yaml`, schemas, specs, changes, identidad ni workflows
+oficiales. Después puedes pedir una propuesta con OpenSpec y consultar el
+contexto relevante; no se inicia una propuesta automáticamente.
+
+La publicación requiere **Git y Python >=3.10** para el verificador incluido,
+sin paquetes adicionales. El [procedimiento de comprobación](skills/project-discovery/references/scope-checks.md)
+captura una referencia antes del análisis y compara la escritura posterior
+con las rutas aprobadas. Si falta una herramienta o una fuente sólo está en ZIP,
+la skill puede entregar un borrador con sus límites, sin acreditar una publicación
+verificada. La aprobación del contenido sigue siendo humana: el helper sólo
+comprueba archivos y estado Git.
+
+Al adoptar la skill en un S0 creado antes de esta versión, incorpora sus archivos
+y el enlace de instrucciones mediante un PR selectivo. No vuelvas a crear el S0
+ni reemplaces su contexto o configuración. La incorporación y las comprobaciones
+del core se registran en [VALIDATION.md](VALIDATION.md).
 
 <a id="daily-work"></a>
 ## Después de instalar: un cambio de PO a QA
