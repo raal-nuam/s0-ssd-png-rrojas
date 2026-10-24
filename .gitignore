@@ -4,6 +4,7 @@
 *.code-workspace
 .vscode/
 .claude/settings.local.json
+CLAUDE.local.md
 
 # Secretos y archivos transitorios
 .env

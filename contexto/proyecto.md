@@ -6,10 +6,15 @@ Esta plantilla permite compartir por Git el contexto, las especificaciones y los
 cambios OpenSpec de un sistema. PO refina necesidades; DEV propone e implementa
 en repositorios de código; QA deriva casos y verifica versiones identificadas.
 El núcleo usa `spec-driven`, sin dependencia de Jira ni infraestructura adicional.
+Las instrucciones comunes viven en `AGENTS.md` y los métodos PO/QA en
+`.agents/skills/`. Codex y Claude consumen esas mismas fuentes; el modelo se
+selecciona en cada cliente, sin cambiar el contexto ni las specs del sistema.
 
 Al adoptar la plantilla se sustituye esta página por el contexto confirmado del
-sistema: propósito, usuarios, alcance, componentes, vocabulario y fuentes. No hay
-componentes de producto ni reglas de negocio institucionales predefinidos.
+sistema: propósito, usuarios, alcance y límites, componentes, vocabulario y fuentes.
+Cada instancia tiene identidad y repositorio Git propios y puede describir uno
+o varios repositorios de código. No hay componentes de producto ni reglas de
+negocio institucionales predefinidos.
 
 ## Componentes y fuentes
 
@@ -18,7 +23,13 @@ componentes de producto ni reglas de negocio institucionales predefinidos.
 - Propuestas e historial: [openspec/changes/](../openspec/changes/).
 - Necesidades de origen: texto aportado por el usuario, issue o HDU; Jira opcional.
 - Código, contratos y tests: los repositorios consumidores que identifique cada
-  sistema. Sus URLs Git se añaden aquí al adoptar la plantilla, sin rutas personales.
+  sistema. Al adoptar, indica sus responsabilidades y URLs Git, sin rutas personales.
+- Un mapa más amplio puede mantenerse en `repositorios.yaml`, extensión opcional
+  de S0. No hace falta crearlo si esta página basta; OpenSpec no interpreta ese
+  inventario ni lo usa para conceder acceso o sincronizar código.
+- Si un subsistema tiene otro S0, identifica su fuente canónica y el contrato de
+  integración relevante. Sus requisitos internos permanecen en ese S0; aquí se
+  describe el comportamiento y las dependencias que corresponden a este sistema.
 
 ## Vocabulario y límites
 

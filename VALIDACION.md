@@ -1,11 +1,89 @@
-# Validación de S0 Core 0.1
+# Validación de S0 Core 0.2
 
 Fecha: **24 de octubre de 2026**, zona **America/Santiago**.
 Origen: ejecución de `Plan_Implementacion_S0_Core.md`, versión 0.1.
+Ampliación 0.2: plantilla de instancias independientes, sistemas multirrepositorio
+y capacidades compartidas entre agentes.
 
 La implementación técnica del núcleo está comprobada localmente. La adopción
 institucional y la certificación de clientes requieren las comprobaciones humanas
 indicadas abajo; no se consideran aprobadas por tener archivos o tests presentes.
+
+## Plantilla e instancias multirrepositorio
+
+`s0-core-template` es el maestro de archivos y métodos. Cada sistema derivado
+tiene identidad OpenSpec y repositorio Git independientes, y puede conectar uno
+o varios repositorios de código al mismo store. `repositorios.yaml` es opcional;
+no se distribuye un inventario ficticio ni se añaden campos propios al formato
+OpenSpec. Los requisitos internos de otro S0 se referencian en su fuente canónica.
+
+El 24 de octubre se activó y verificó por la API de GitHub **`is_template: true`**
+en `fdelvalle01/s0-core-template`, conservando visibilidad privada y rama
+predeterminada `main`. La actualización 0.2 está en el
+[PR #2](https://github.com/fdelvalle01/s0-core-template/pull/2): debe integrarse
+para que las nuevas instancias creadas desde `main` incluyan estos cambios.
+
+| Comprobación de esta ampliación | Resultado observado |
+| --- | --- |
+| Nueva identidad con metadata heredada presente | `register --id nuevo --yes` y `setup` rechazan la discrepancia con `store_metadata_id_mismatch` |
+| Bootstrap de instancia con Git existente | Retirar únicamente el marker heredado y ejecutar `store register . --id <sistema> --yes` genera identidad oficial; conserva el mismo `HEAD` |
+| Dos instancias Git independientes | `s0-alfa` usa `sistema-alfa`; `s0-beta` usa `sistema-beta`; ambas pasan `store doctor` |
+| Tres consumidores, init Codex/Claude y `context --json` | `alfa-web` y `alfa-api` resuelven alfa; `beta-app` resuelve beta; todos conservan el puntero y carecen de specs/changes locales |
+| Mismo nombre de cambio en sistemas distintos | `cambio-compartido` se crea separadamente desde alfa-web y beta-app; alfa-api ve el de alfa y rechaza crearlo otra vez |
+| Inventario opcional | Sólo alfa tiene `repositorios.yaml`; beta opera sin inventario |
+| Instrucciones y métodos de cada instancia | `AGENTS.md`, importación Claude y dos puentes resuelven las fuentes del mismo S0 |
+| Skills multirrepositorio y configuración | Dos canónicas pasan `quick_validate.py`; YAML válido y reglas nativas `spec-driven` |
+| Revisión funcional independiente de sólo lectura | Escenario web/API con otro S0 inaccesible: criterios y casos trazables, sin inventar estados/SLA, requisitos externos, archivos ni ejecución QA |
+| Maestro tras los cambios | `doctor` y `store doctor` correctos; validación estricta sin elementos; specs e historial conservan sólo `.gitkeep` |
+
+Las instancias se construyeron localmente desde una instantánea de los archivos
+de la plantilla, con Git nuevo y registros XDG aislados. No se creó un repositorio
+derivado real en GitHub. Se comprobó la adopción equivalente sobre archivos y
+Git; la generación remota mediante **Use this template** queda por probar en la
+primera adopción real. Los cambios de prueba contienen sólo el scaffold nativo:
+verifican resolución y separación, no un desarrollo funcional multirrepositorio.
+Scripts y salidas completas permanecen fuera del núcleo, en el entorno local de
+validación (`template-multirepo/identity-results.json` y
+`template-multirepo/two-systems/two-systems-results.json`).
+
+La revisión de las skills fue una lectura y aplicación simulada por otro agente,
+no una sesión de Claude ni una prueba de descubrimiento automático. Se mantienen
+los pendientes de clientes de la sección siguiente. Las actualizaciones del
+maestro a instancias existentes se adoptan manualmente por PR; no hay un mecanismo
+de distribución automática que certificar.
+
+## Ampliación transversal: Codex y Claude
+
+El usuario amplió el requisito para que el mismo S0 sirva a distintos agentes y
+modelos. Las instrucciones compartidas están en `AGENTS.md`; `CLAUDE.md` importa
+ese archivo mediante `@AGENTS.md`. Las dos skills propias tienen una única fuente
+en `.agents/skills/`; las entradas Claude conservan nombre/descripción y leen esa
+fuente mediante rutas relativas. No se usan enlaces simbólicos ni sincronizadores.
+Las seis skills OpenSpec por cliente se generan oficialmente con la CLI fijada.
+
+| Comprobación de esta ampliación | Resultado observado |
+| --- | --- |
+| `init --tools claude,codex --profile core --no-animation` | Integraciones oficiales generadas; Codex usa skills y Claude skills/comandos |
+| Validación de dos canónicas y dos puentes Claude | Las cuatro entradas pasan `quick_validate.py`; nombres/descripciones corresponden |
+| Resolución de instrucciones y puentes | `CLAUDE.md` importa el `AGENTS.md` local; cada puente llega al archivo canónico del mismo repositorio |
+| Adopción en store nuevo con ID distinto | 8 skills en cada cliente y 6 comandos Claude; specs/historial vacíos; identidad oficial nueva |
+| `init` y `update --force` en adopción | Hashes de instrucciones, configuración, canónicas y puentes propios preservados |
+| Consumidor dual `store-only` | Puntero preservado, raíz externa correcta y sin specs/changes locales tras init/update |
+| Clon con `core.symlinks=false` y registro aislado | Fuentes y puentes accesibles como archivos ordinarios; validación estricta y doctor correctos |
+| Descubrimiento real de Codex | `skills/list` del app-server devuelve las 8 skills del repositorio habilitadas, sin errores |
+| Lectura independiente desde canónicas y puentes, con cwd en otro repositorio | Mismos criterios propuestos y casos preparados; referencias correctas, sin escrituras ni aprobación ficticia ante fuente Jira inaccesible |
+
+El descubrimiento se ejecutó con **Codex CLI 0.164.0-alpha.11.1**, sin iniciar
+conversación ni turno de modelo. Comprueba nombres y rutas del catálogo, no la
+ejecución de cada método ni la carga de instrucciones generales. Los archivos
+auxiliares y registros de esta prueba permanecen fuera del núcleo compartido.
+La ejecución real de skills en Claude Code/Desktop y los escenarios funcionales
+desde sesiones nuevas siguen pendientes; no se presentan como pruebas realizadas.
+
+Las instrucciones y métodos se pueden leer desde otro agente con acceso a los
+archivos. Su descubrimiento automático depende del cliente y debe comprobarse al
+adoptarlo. Un puntero `store:` no instala skills ni carga instrucciones del store
+en otro repositorio; el README explica el acceso desde cada raíz.
 
 ## Base y decisiones F0
 
@@ -16,19 +94,20 @@ indicadas abajo; no se consideran aprobadas por tener archivos o tests presentes
 - Store: **s0-core**, identidad y estructura creadas con `store setup`; no se
   reutilizó ni editó manualmente la identidad del ZIP inicial.
 - Repositorio: [fdelvalle01/s0-core-template](https://github.com/fdelvalle01/s0-core-template).
-  Rama del núcleo: `s0/implementar-core`, para revisar contra `main`.
-- Publicación: [PR #1 en borrador](https://github.com/fdelvalle01/s0-core-template/pull/1).
-  El merge requiere revisión; el bootstrap de `main` no incluye todavía el núcleo
-  propuesto. Para probar la entrega se clona la rama del PR como indica el README.
+  El núcleo inicial está en `main`; la ampliación 0.2 se desarrolla en
+  `s0/soporte-multiagente`.
+- Publicación inicial: [PR #1 fusionado](https://github.com/fdelvalle01/s0-core-template/pull/1).
+  La ampliación se revisa en el [PR #2](https://github.com/fdelvalle01/s0-core-template/pull/2), sin reescribir el historial del piloto.
 - Responsable Git: propietario del repositorio indicado por el usuario. Host:
   GitHub personal privado. Roles institucionales, protección de rama, revisores y
   política de datos se definen al adoptar cada sistema; no se configuraron por inferencia.
 - `spec-driven`, un store por sistema y consumidores `store-only`; seis workflows
-  Claude oficiales y exactamente dos skills institucionales. Sin Jira obligatorio.
+  oficiales por integración Codex/Claude y dos capacidades institucionales compartidas.
+  Sin Jira obligatorio ni selección de un modelo en el núcleo.
 - CLI y registros de prueba aislados mediante `XDG_CONFIG_HOME` y `XDG_DATA_HOME`.
   No se modificó la instalación global ni se reemplazaron registros del usuario.
 
-## Evidencia ejecutada
+## Evidencia del piloto inicial
 
 | Comprobación | Resultado observado |
 | --- | --- |
@@ -49,7 +128,7 @@ indicadas abajo; no se consideran aprobadas por tener archivos o tests presentes
 | Sync del piloto y `archive --skip-specs --yes` | Spec vigente consolidada y cambio archivado; validación/doctor posteriores correctos |
 
 La simulación de skills se realizó con otro agente leyendo las skills y el contexto,
-en modo sólo lectura. No equivale a una sesión real de Claude Code/Claude Desktop.
+en modo sólo lectura. No equivale a ejecutar métodos en sesiones reales de cada cliente.
 La comprobación de restricciones es simulada: no certifica ACL de Jira, de una
 cuenta institucional ni de carpetas inaccesibles.
 
@@ -83,11 +162,11 @@ visibles las acciones humanas, externas o de cliente que todavía faltan.
 | --- | --- | --- |
 | AC-01 Store nuevo | Técnico local | Setup oficial y Git; publicación del núcleo en el repositorio indicado |
 | AC-02 Onboarding | Parcial | Clon y registro en otro perfil probados; falta repetir en otra máquina |
-| AC-03 Contexto | Parcial | Agente independiente usa contexto y explicita ausencia de reglas; falta consulta desde Claude Code |
-| AC-04 PO | Parcial | Refinamiento ambiguo sin escritura en simulación; falta descubrimiento/uso real en VS Code + Claude Code |
-| AC-05 DEV | Parcial | Cambio completo creado en store desde consumidor, validado; falta ejecutar propose en el cliente Claude objetivo |
+| AC-03 Contexto | Parcial | Agente independiente usa contexto y explicita ausencia de reglas; falta consulta equivalente en sesiones de Codex y Claude |
+| AC-04 PO | Parcial | Simulación sin escritura y discovery real Codex; falta invocación real de la skill en ambos clientes y discovery Claude |
+| AC-05 DEV | Parcial | Cambio completo creado en store desde consumidor, validado; falta repetir propose en los clientes objetivo |
 | AC-06 Git | Parcial | Ramas y PR del núcleo revisables; faltan revisión por otra cuenta y PR remoto del consumidor |
-| AC-07 QA | Parcial | Matriz trazable, 15 tests y simulación de skill; falta invocación de skill desde Claude Code |
+| AC-07 QA | Parcial | Matriz trazable, 15 tests y simulación de skill; falta invocación real en Codex y Claude |
 | AC-08 Integración | Técnico local | Puntero preservado, raíz externa y ausencia de specs/changes en consumidor |
 | AC-09 Implementación | Técnico local | Código y tests sólo en consumidor autorizado; `instructions apply` identifica raíces correctas |
 | AC-10 Verificación | Técnico local | Ejecución 15/15 sobre commit conocido, entorno/datos/comando y TAP conservados en consumidor |
@@ -102,19 +181,20 @@ desarrollo institucional con agentes según el criterio de adopción del plan.
 | Fase | Entrega | Pendiente verificable |
 | --- | --- | --- |
 | F0 | Versión, identidad, host, límites y responsables Git documentados | Definir política institucional al adoptar un sistema |
-| F1 | Núcleo, contexto, README e integración oficial | Onboarding en otra máquina |
-| F2 | Dos skills validadas y simuladas por otro agente | Descubrimiento y uso en una sesión nueva de VS Code + Claude Code |
+| F1 | Núcleo, contexto, instrucciones comunes e integraciones oficiales Codex/Claude | Onboarding en otra máquina |
+| F2 | Dos métodos canónicos, puentes validados y discovery real Codex | Invocación real en ambos clientes y discovery Claude |
 | F3 | Consumidor separado, `store:` y resolución probada | PR de código en un remoto designado; workspace personal no versionado |
 | F4 | Cambio completo, matriz QA, ejecución y cierre técnico del piloto | Revisión de personas, PR cruzados y merge |
 | F5 | Instrucciones de uso común en README | Repetir lectura, skills y propuesta en Claude Desktop Code |
-| F6 opcional | Límites de Cowork/Codex/Jira/Worksets documentados | Pilotos separados si se decide adoptarlos |
+| F6 opcional | Acceso al núcleo desde otros agentes y límites de Cowork/Jira/Worksets documentados | Pilotos separados si se decide adoptarlos |
 
-Para cerrar los puntos de cliente: clonar la rama del núcleo, registrar el store,
-abrir VS Code con Claude Code, comprobar los ocho nombres de skills y seis
-comandos, invocar las dos skills con una HDU sintética y ejecutar un cambio de
-piloto con acceso sólo a S0 y consumidor. Registrar versión del cliente, commit,
-resultado y revisión real; repetir luego en Claude Desktop Code. Si no hay acceso
-a Jira o a una carpeta, el cliente debe comunicarlo sin inventar evidencia.
+Para cerrar los puntos de cliente: clonar el núcleo, registrar el store e iniciar
+sesiones nuevas de Codex y Claude desde su raíz. En cada uno comprobar los ocho
+nombres e invocar las dos skills con la misma HDU sintética; en Claude comprobar
+también los seis comandos. Ejecutar un cambio de piloto con acceso a S0 y
+consumidor. Registrar versión del cliente, commit, resultado y revisión real;
+repetir luego en los clientes Desktop que use el equipo. Si no hay acceso a Jira
+o a una carpeta, comunicarlo sin inventar evidencia.
 
 ## Referencias comprobadas
 
@@ -122,3 +202,7 @@ Se contrastaron la ayuda de la CLI fijada, la fuente oficial de la misma versió
 y las páginas oficiales de [Stores](https://openspec.dev/docs/stores),
 [CLI](https://openspec.dev/docs/cli) y [Profiles](https://openspec.dev/docs/profiles).
 `sync` es un workflow de agente; no se inventó un comando `openspec sync`.
+Para la ampliación se consultaron también las fuentes oficiales de
+[skills en Codex](https://learn.chatgpt.com/docs/build-skills),
+[skills en Claude](https://code.claude.com/docs/en/skills) e
+[instrucciones compartidas con Claude](https://code.claude.com/docs/en/memory).
