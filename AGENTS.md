@@ -6,10 +6,10 @@ las mismas reglas funcionales con cualquier cliente que pueda leer los archivos.
 
 ## Fuentes y raíz de trabajo
 
-- Lee `contexto/proyecto.md` cuando la tarea requiera conocimiento del sistema.
+- Lee `context/project.md` cuando la tarea requiera conocimiento del sistema.
   Las reglas y el schema están en `openspec/config.yaml`.
 - Cada instancia S0 corresponde a un sistema con uno o varios repositorios de
-  código. Usa el mapa de componentes del contexto; si existe `repositorios.yaml`,
+  código. Usa el mapa de componentes del contexto; si existe `repositories.yaml`,
   consulta sólo las entradas pertinentes. Es una extensión opcional de S0, no
   configuración de OpenSpec ni autorización para clonar o modificar repositorios.
 - `openspec/specs/` describe lo vigente; `openspec/changes/` contiene propuestas
@@ -25,8 +25,8 @@ las mismas reglas funcionales con cualquier cliente que pueda leer los archivos.
 
 ## Capacidades compartidas
 
-- Refinamiento PO: [.agents/skills/refinar-hdu/SKILL.md](.agents/skills/refinar-hdu/SKILL.md).
-- Preparación QA: [.agents/skills/preparar-pruebas/SKILL.md](.agents/skills/preparar-pruebas/SKILL.md).
+- Refinamiento PO: [.agents/skills/refine-user-story/SKILL.md](.agents/skills/refine-user-story/SKILL.md).
+- Preparación QA: [.agents/skills/prepare-tests/SKILL.md](.agents/skills/prepare-tests/SKILL.md).
 
 Lee la skill correspondiente al realizar esa tarea, aunque el cliente no la
 descubra automáticamente. Resolver un store no instala sus skills ni carga sus
@@ -39,6 +39,10 @@ No atribuyas aprobaciones humanas ni ejecuciones a archivos o casos preparados.
 Redacta en español y conserva trazabilidad con fuentes y revisiones identificables.
 
 ## Mantenimiento de la plantilla
+
+Usa inglés para nombres de carpetas, archivos propios, skills y claves de
+inventario. Conserva los nombres oficiales de OpenSpec. El idioma de los nombres
+técnicos no cambia la redacción en español de instrucciones y resultados.
 
 Mantén las reglas comunes en este archivo y los métodos PO/QA sólo en sus skills
 canónicas de `.agents/skills/`. `CLAUDE.md` y las entradas propias de `.claude/`

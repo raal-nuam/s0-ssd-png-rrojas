@@ -1,5 +1,5 @@
 ---
-name: refinar-hdu
+name: refine-user-story
 description: Refinar una necesidad o historia de usuario para PO con contexto y especificaciones del sistema, criterios verificables y dudas explícitas. Usar para aclarar alcance funcional antes de planificar o implementar.
 ---
 
@@ -13,7 +13,7 @@ Recibe una necesidad en texto. Una clave o enlace Jira es una fuente opcional:
 texto necesario y continúa con el material disponible; no inventes su contenido.
 
 Identifica el sistema y la fuente de la solicitud. En un S0 lee
-`contexto/proyecto.md`; en un consumidor con `store:` resuelve primero la raíz
+`context/project.md`; en un consumidor con `store:` resuelve primero la raíz
 mediante `openspec context --json` y lee el contexto de esa raíz. Si el store no
 se resuelve o el archivo es inaccesible, comunica la limitación; no crees otro
 OpenSpec ni uses un proyecto vecino. Lee sólo las specs y cambios relacionados.
@@ -21,7 +21,7 @@ Cita rutas, escenarios e identificadores consultados; indica rama o revisión
 cuando se conozcan. Un cambio activo expresa una propuesta, no una regla vigente.
 
 Usa el mapa de componentes del contexto y, si existe y es pertinente,
-`repositorios.yaml`. Un S0 puede cubrir uno o varios repositorios; identifica los
+`repositories.yaml`. Un S0 puede cubrir uno o varios repositorios; identifica los
 componentes afectados sin exigir acceso a todo su código para refinar. Si un
 subsistema tiene otro S0, consulta sólo sus requisitos o contratos relevantes
 cuando sean accesibles y referencia esa fuente, sin duplicar sus reglas internas.
