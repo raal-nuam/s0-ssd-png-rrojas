@@ -1,0 +1,17 @@
+# Estado y permisos de cada estación
+.local/
+.s0-core-local/
+*.code-workspace
+.vscode/
+.claude/settings.local.json
+
+# Secretos y archivos transitorios
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
