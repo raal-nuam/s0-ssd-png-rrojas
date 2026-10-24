@@ -52,12 +52,12 @@ Para incorporarte a un S0 ya adoptado, clona **su repositorio**, sin cambiar su
 identidad. Sustituye la URL y el ID de ejemplo por los reales:
 
 ```powershell
-git clone https://github.com/tu-equipo/s0-mi-sistema.git s0-mi-sistema
-cd s0-mi-sistema
+git clone https://github.com/your-team/s0-my-system.git s0-my-system
+cd s0-my-system
 openspec store register .
 openspec store list
-openspec status --store mi-sistema
-openspec store doctor mi-sistema
+openspec status --store my-system
+openspec store doctor my-system
 code .
 ```
 
@@ -72,6 +72,11 @@ están en [AGENTS.md](AGENTS.md); `CLAUDE.md` importa ese archivo. Las propias s
 mantienen en `.agents/skills/`; sus entradas de `.claude/skills/` sólo indican
 cómo leer esa misma fuente.
 
+Los nombres de carpetas, archivos propios, skills y claves de inventario se
+escriben en inglés. La documentación y las respuestas pueden mantenerse en
+español. Las skills usan verbos de acción: `refine-user-story` y `prepare-tests`;
+«user story» corresponde a historia de usuario (HDU).
+
 Abre una sesión nueva en la raíz S0 y comprueba las entradas del cliente elegido:
 
 | Tarea | Codex | Claude Code |
@@ -82,18 +87,18 @@ Abre una sesión nueva en la raíz S0 y comprueba las entradas del cliente elegi
 | Actualizar el plan | `$openspec-update-change` | `/opsx:update` |
 | Sincronizar specs | `$openspec-sync-specs` | `/opsx:sync` |
 | Archivar | `$openspec-archive-change` | `/opsx:archive` |
-| Refinar HDU | `$refinar-hdu` | `/refinar-hdu` |
-| Preparar casos QA | `$preparar-pruebas` | `/preparar-pruebas` |
+| Refinar HDU | `$refine-user-story` | `/refine-user-story` |
+| Preparar casos QA | `$prepare-tests` | `/prepare-tests` |
 
 La tabla muestra las formas de invocación previstas por las integraciones.
 Tener archivos instalados y comprobar su descubrimiento efectivo son pruebas
-distintas; el resultado observado por cliente se registra en [VALIDACION.md](VALIDACION.md).
+distintas; el resultado observado por cliente se registra en [VALIDATION.md](VALIDATION.md).
 
 También puedes pedir el trabajo en lenguaje natural:
 
 ```text
-Usa refinar-hdu con esta necesidad: el operador debe cancelar varias órdenes.
-Usa preparar-pruebas sobre los criterios que acabamos de acordar.
+Usa refine-user-story con esta necesidad: el operador debe cancelar varias órdenes.
+Usa prepare-tests sobre los criterios que acabamos de acordar.
 ```
 
 `propose` prepara artefactos; `apply` implementa cuando lo solicitas. Las skills
@@ -108,18 +113,18 @@ Una HDU puede ser texto; Jira requiere una conexión autorizada y es opcional.
 openspec/config.yaml              Schema, contexto conciso y reglas
 openspec/specs/.gitkeep            Requisitos vigentes; vacío en esta plantilla
 openspec/changes/archive/.gitkeep  Cambios e historial; vacío al comenzar
-contexto/proyecto.md              Contexto confirmado del sistema
-repositorios.yaml                Inventario opcional; cada sistema puede crearlo
+context/project.md               Contexto confirmado del sistema
+repositories.yaml                Inventario opcional; cada sistema puede crearlo
 AGENTS.md                        Instrucciones comunes para agentes
 CLAUDE.md                        Puente que importa AGENTS.md
 .agents/skills/openspec-*/        Seis skills oficiales para Codex
-.agents/skills/refinar-hdu/       Fuente común de refinamiento PO
-.agents/skills/preparar-pruebas/  Fuente común de preparación QA
+.agents/skills/refine-user-story/ Fuente común de refinamiento PO
+.agents/skills/prepare-tests/     Fuente común de preparación QA
 .claude/commands/opsx/            Seis comandos oficiales generados
 .claude/skills/openspec-*/        Seis skills oficiales para Claude
-.claude/skills/refinar-hdu/       Puente a la fuente común de PO
-.claude/skills/preparar-pruebas/  Puente a la fuente común de QA
-VALIDACION.md                     Evidencia y pendientes del piloto de la plantilla
+.claude/skills/refine-user-story/ Puente a la fuente común de PO
+.claude/skills/prepare-tests/     Puente a la fuente común de QA
+VALIDATION.md                     Evidencia y pendientes del piloto de la plantilla
 ```
 
 Mantén una página de contexto con propósito, usuarios, alcance, vocabulario,
@@ -132,7 +137,7 @@ personalizados, `.base/`, inventarios, actualizadores ni un visor.
 
 1. En [s0-core-template](https://github.com/fdelvalle01/s0-core-template), elige
    **Use this template → Create a new repository**. Define propietario, nombre
-   como `s0-mi-sistema` y visibilidad. Usa sólo la rama predeterminada, sin
+   como `s0-my-system` y visibilidad. Usa sólo la rama predeterminada, sin
    **Include all branches**, para no copiar ramas de piloto o propuestas.
 2. Clona el repositorio recién creado. GitHub inicia un historial independiente
    con el contenido de la plantilla; no es un fork. Comprueba con `git remote -v`
@@ -143,12 +148,12 @@ personalizados, `.base/`, inventarios, actualizadores ni un visor.
    regenere. No ejecutes este paso sobre el maestro ni sobre un S0 ya adoptado.
 
 ```powershell
-git clone https://github.com/tu-equipo/s0-mi-sistema.git s0-mi-sistema
-cd s0-mi-sistema
+git clone https://github.com/your-team/s0-my-system.git s0-my-system
+cd s0-my-system
 git remote -v
 Get-Content -LiteralPath .openspec-store/store.yaml
 
-$s0Id = 'mi-sistema'
+$s0Id = 'my-system'
 Remove-Item -LiteralPath .openspec-store/store.yaml
 openspec store register . --id $s0Id --yes
 openspec store doctor $s0Id
@@ -164,12 +169,12 @@ registraste accidentalmente este clon como `s0-core`, revisa `store list` y
 desregistra sólo esa asociación si apunta a este clon; conserva el registro del
 maestro si apunta a otro checkout.
 
-4. Sustituye `contexto/proyecto.md` y adapta este README con datos confirmados:
+4. Sustituye `context/project.md` y adapta este README con datos confirmados:
    propósito, usuarios, límites, ID, URL del S0, componentes y fuentes canónicas.
    `openspec/config.yaml` mantiene el schema y las reglas nativas. Las specs y
    los cambios comienzan vacíos; el inventario de repositorios es opcional.
 5. Las integraciones Codex/Claude ya vienen incluidas. Conserva las rutas de las
-   skills y sus puentes. `VALIDACION.md` describe **pruebas de la plantilla**, no
+   skills y sus puentes. `VALIDATION.md` describe **pruebas de la plantilla**, no
    pruebas de tu sistema: reemplázalo por evidencia propia o retíralo y ajusta
    los enlaces del README. Registra la versión/commit del maestro utilizado.
 6. Revisa el diff y publica la nueva identidad y el contexto mediante un commit
@@ -184,31 +189,31 @@ specs de los sistemas derivados.
 ## Un S0, uno o varios repositorios
 
 Un S0 representa el **sistema o producto**, no necesariamente un microservicio.
-Puede contener capacidades como `gestion-ordenes`, `market-data` y `autenticacion`
+Puede contener capacidades como `order-management`, `market-data` y `authentication`
 aunque su implementación esté repartida entre quince repositorios. Cada cambio
 identifica los componentes afectados y enlaza sus PR; no necesita una copia de
 las specs por repositorio de código.
 
 Para pocos componentes basta documentar nombre, responsabilidad y URL Git en
-`contexto/proyecto.md`. Opcionalmente, el sistema puede crear `repositorios.yaml`
+`context/project.md`. Opcionalmente, el sistema puede crear `repositories.yaml`
 en la raíz del S0:
 
 ```yaml
-repositorios:
-  - nombre: tws-frontend
-    tipo: frontend
-    tecnologia: React
-  - nombre: order-gateway
-    tipo: backend
-    tecnologia: Java
-  - nombre: market-data-gateway
-    tipo: backend
-    tecnologia: Go
+repositories:
+  - name: tws-frontend
+    type: frontend
+    technology: React
+  - name: order-gateway
+    type: backend
+    technology: Java
+  - name: market-data-gateway
+    type: backend
+    technology: Go
 ```
 
 Es un ejemplo ficticio y una **extensión opcional de S0**, no configuración que
 OpenSpec interprete ni un archivo distribuido por defecto. Puedes añadir `url`,
-`responsabilidad` y, si corresponde, una referencia al S0 responsable. No incluyas
+`responsibility` y, si corresponde, una referencia al S0 responsable. No incluyas
 rutas personales, credenciales ni instrucciones ejecutables. El inventario ayuda
 a localizar componentes; no clona repositorios ni concede acceso por sí mismo.
 
@@ -225,7 +230,7 @@ Registra primero el S0 en la máquina. En la raíz Git del consumidor, crea
 `openspec/config.yaml` con un único puntero (usa el ID real de tu sistema):
 
 ```yaml
-store: mi-sistema
+store: my-system
 ```
 
 Repite este puntero en cada repositorio de código del mismo sistema. Todos
@@ -273,16 +278,16 @@ adicional por participar.
 | DEV | HDU, contexto y specs | `proposal.md`, `design.md`, `tasks.md` y deltas de specs; código en sus repositorios |
 | QA | HDU, specs y escenarios del cambio | Casos, automatizaciones y resultados en la suite o herramientas correspondientes |
 
-1. **PO:** aporta la HDU en texto o mediante una fuente accesible. `refinar-hdu`
-   consulta contexto/specs y devuelve objetivo, alcance, criterios y dudas.
+1. **PO:** aporta la HDU en texto o mediante una fuente accesible. `refine-user-story`
+   consulta el contexto y las specs y devuelve objetivo, alcance, criterios y dudas.
 2. **DEV:** explora y propone. OpenSpec crea `proposal.md`, deltas en `specs/`,
-   `design.md` y `tasks.md` en `openspec/changes/<cambio>/` del S0.
-3. **Equipo:** revisa el plan en una rama `s0/<hdu-o-slug>` y PR. La revisión de
+   `design.md` y `tasks.md` en `openspec/changes/<change>/` del S0.
+3. **Equipo:** revisa el plan en una rama `s0/<story-or-slug>` y PR. La revisión de
    documentos no acredita aceptación del software; la CLI no impone aprobadores.
 4. **DEV:** solicita `apply` con código accesible y autorizado. Implementación y
    tests permanecen en los repositorios consumidores afectados, con sus PR
    enlazados al cambio del S0.
-5. **QA:** `preparar-pruebas` deriva casos trazables. Automatizar y ejecutar es
+5. **QA:** `prepare-tests` deriva casos trazables. Automatizar y ejecutar es
    trabajo explícito en la suite, identificando commit/build, entorno y datos.
 6. **Equipo:** revisa resultados y alcance. El workflow `sync` consolida specs
    y `archive` cierra el cambio; usa la invocación del cliente indicada en la
@@ -328,6 +333,24 @@ Al actualizar OpenSpec, verifica también que conserva las fuentes y los puentes
 
 ### Actualizar una instancia desde el maestro
 
+Si adoptaste los nombres anteriores, aplica estos renombres en un PR de la
+instancia y actualiza sus enlaces, configuración e invocaciones:
+
+| Nombre anterior | Nombre actual |
+| --- | --- |
+| `contexto/proyecto.md` | `context/project.md` |
+| `refinar-hdu` | `refine-user-story` en `.agents/skills/` y `.claude/skills/` |
+| `preparar-pruebas` | `prepare-tests` en `.agents/skills/` y `.claude/skills/` |
+| `repositorios.yaml`, si existe | `repositories.yaml` |
+| `VALIDACION.md` | `VALIDATION.md` |
+
+En el inventario opcional, usa `repositories`, `name`, `type`, `technology` y
+`responsibility` en lugar de `repositorios`, `nombre`, `tipo`, `tecnologia` y
+`responsabilidad`; `url` se conserva. Mantén los valores propios del sistema.
+Las carpetas de skills se renombran junto con su campo `name` y los enlaces de
+los puentes. Inicia una sesión nueva del cliente para comprobar los nombres
+actuales. No se necesita crear el inventario para adoptar estos cambios.
+
 Cada S0 evoluciona por separado. Una mejora de `s0-core-template` no llega
 automáticamente a los proyectos existentes. Si quieres incorporarla, compara el
 diff del maestro con la versión adoptada y prepara un PR selectivo en el S0 del
@@ -349,7 +372,7 @@ descubrimiento y uso en una sesión nueva, con su versión y el commit del S0.
 Claude Desktop Code requiere su propia prueba. La estructura no garantiza
 resultados idénticos entre modelos ni concede acceso a carpetas o conectores.
 
-Con otro agente, pide que lea `AGENTS.md`, `contexto/proyecto.md` y la skill
+Con otro agente, pide que lea `AGENTS.md`, `context/project.md` y la skill
 concreta de `.agents/skills/`. Si OpenSpec ofrece una integración oficial para
 ese cliente, genérala con la CLI acordada y compruébala. La lectura explícita de
 archivos no acredita descubrimiento automático; evita prometerlo universalmente.
@@ -358,7 +381,7 @@ En Cowork/Chat no se supone carga automática de las carpetas del repositorio:
 empaquetado y habilitación son un piloto separado. Jira y Worksets siguen siendo
 opcionales.
 
-El [registro de validación](VALIDACION.md) distingue pruebas locales ejecutadas de
+El [registro de validación](VALIDATION.md) distingue pruebas locales ejecutadas de
 revisión humana, permisos reales y clientes pendientes. Un piloto local no implica
 certificación institucional completa.
 

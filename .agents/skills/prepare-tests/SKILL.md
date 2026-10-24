@@ -1,5 +1,5 @@
 ---
-name: preparar-pruebas
+name: prepare-tests
 description: Derivar casos QA trazables y riesgos desde una HDU, un cambio OpenSpec o specs identificadas. Usar para preparar pruebas y señalar cobertura o dudas, sin confundir planificación con ejecución.
 ---
 
@@ -15,7 +15,7 @@ y las specs se leen del store resuelto, no del directorio de código. Si falta
 acceso, declara qué no pudiste verificar sin crear un OpenSpec alternativo.
 Jira es opcional y requiere conexión y acceso autorizados; acepta texto como fuente.
 
-Consulta el mapa de componentes y, si existe y es pertinente, `repositorios.yaml`.
+Consulta el mapa de componentes y, si existe y es pertinente, `repositories.yaml`.
 Identifica qué componentes y contratos participan en los escenarios. Un subsistema
 con otro S0 conserva allí sus requisitos internos: referencia su fuente canónica
 y diferencia su cobertura de la integración que corresponde a este sistema.

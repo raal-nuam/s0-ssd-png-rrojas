@@ -24,7 +24,7 @@ negocio institucionales predefinidos.
 - Necesidades de origen: texto aportado por el usuario, issue o HDU; Jira opcional.
 - Código, contratos y tests: los repositorios consumidores que identifique cada
   sistema. Al adoptar, indica sus responsabilidades y URLs Git, sin rutas personales.
-- Un mapa más amplio puede mantenerse en `repositorios.yaml`, extensión opcional
+- Un mapa más amplio puede mantenerse en `repositories.yaml`, extensión opcional
   de S0. No hace falta crearlo si esta página basta; OpenSpec no interpreta ese
   inventario ni lo usa para conceder acceso o sincronizar código.
 - Si un subsistema tiene otro S0, identifica su fuente canónica y el contrato de

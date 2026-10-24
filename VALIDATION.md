@@ -9,19 +9,45 @@ La implementación técnica del núcleo está comprobada localmente. La adopció
 institucional y la certificación de clientes requieren las comprobaciones humanas
 indicadas abajo; no se consideran aprobadas por tener archivos o tests presentes.
 
+## Nombres técnicos en inglés
+
+La corrección de nombres usa `context/project.md`, `refine-user-story`,
+`prepare-tests`, `repositories.yaml` opcional y este archivo `VALIDATION.md`.
+El README documenta la migración de nombres y claves del inventario. La prosa
+permanece en español; los métodos PO/QA y los workflows OpenSpec no cambian.
+
+- Las cuatro entradas propias pasan `quick_validate.py`. Los nombres coinciden
+  con sus carpetas; ambos puentes tienen la misma descripción que su canónica
+  y sus enlaces resuelven al archivo correcto. Las carpetas antiguas ya no existen.
+- La revisión independiente comprobó nueve enlaces locales y las referencias
+  al nuevo contexto en `AGENTS.md` y la configuración. Los nombres antiguos sólo
+  aparecen en migración o en evidencia histórica identificada.
+- Se repitió el descubrimiento real con **Codex CLI 0.164.0-alpha.11.1**, versión
+  comprobada en el binario: `skills/list` devuelve **8 skills de repositorio
+  habilitadas, 0 errores**, incluidas `refine-user-story` y `prepare-tests`, sin
+  entradas con los nombres anteriores. No se inició un turno de modelo.
+- `doctor`, `store doctor` y la validación estricta del maestro vacío finalizaron
+  correctamente. La identidad del store y los archivos oficiales no tienen cambios.
+
+La evidencia nueva está en el entorno local de validación, separada de la
+anterior: `english-names/naming-check.json` y `english-names/skills-discovery.json`.
+Las evidencias de los pilotos previos conservan los nombres de su revisión
+original. Esta comprobación acredita descubrimiento Codex y estructura de los
+puentes Claude; no acredita ejecución de skills ni descubrimiento real en Claude.
+
 ## Plantilla e instancias multirrepositorio
 
 `s0-core-template` es el maestro de archivos y métodos. Cada sistema derivado
 tiene identidad OpenSpec y repositorio Git independientes, y puede conectar uno
-o varios repositorios de código al mismo store. `repositorios.yaml` es opcional;
+o varios repositorios de código al mismo store. `repositories.yaml` es opcional;
 no se distribuye un inventario ficticio ni se añaden campos propios al formato
 OpenSpec. Los requisitos internos de otro S0 se referencian en su fuente canónica.
 
 El 24 de octubre se activó y verificó por la API de GitHub **`is_template: true`**
 en `fdelvalle01/s0-core-template`, conservando visibilidad privada y rama
-predeterminada `main`. La actualización 0.2 está en el
-[PR #2](https://github.com/fdelvalle01/s0-core-template/pull/2): debe integrarse
-para que las nuevas instancias creadas desde `main` incluyan estos cambios.
+predeterminada `main`. La actualización 0.2 se integró mediante el
+[PR #2](https://github.com/fdelvalle01/s0-core-template/pull/2), commit de merge
+`2f6fcac`. La convención de nombres en inglés se aplica en un cambio posterior.
 
 | Comprobación de esta ampliación | Resultado observado |
 | --- | --- |
@@ -30,7 +56,7 @@ para que las nuevas instancias creadas desde `main` incluyan estos cambios.
 | Dos instancias Git independientes | `s0-alfa` usa `sistema-alfa`; `s0-beta` usa `sistema-beta`; ambas pasan `store doctor` |
 | Tres consumidores, init Codex/Claude y `context --json` | `alfa-web` y `alfa-api` resuelven alfa; `beta-app` resuelve beta; todos conservan el puntero y carecen de specs/changes locales |
 | Mismo nombre de cambio en sistemas distintos | `cambio-compartido` se crea separadamente desde alfa-web y beta-app; alfa-api ve el de alfa y rechaza crearlo otra vez |
-| Inventario opcional | Sólo alfa tiene `repositorios.yaml`; beta opera sin inventario |
+| Inventario opcional | Sólo alfa tiene inventario; beta opera sin él. En ese piloto se llamaba `repositorios.yaml` |
 | Instrucciones y métodos de cada instancia | `AGENTS.md`, importación Claude y dos puentes resuelven las fuentes del mismo S0 |
 | Skills multirrepositorio y configuración | Dos canónicas pasan `quick_validate.py`; YAML válido y reglas nativas `spec-driven` |
 | Revisión funcional independiente de sólo lectura | Escenario web/API con otro S0 inaccesible: criterios y casos trazables, sin inventar estados/SLA, requisitos externos, archivos ni ejecución QA |
@@ -94,10 +120,10 @@ en otro repositorio; el README explica el acceso desde cada raíz.
 - Store: **s0-core**, identidad y estructura creadas con `store setup`; no se
   reutilizó ni editó manualmente la identidad del ZIP inicial.
 - Repositorio: [fdelvalle01/s0-core-template](https://github.com/fdelvalle01/s0-core-template).
-  El núcleo inicial está en `main`; la ampliación 0.2 se desarrolla en
-  `s0/soporte-multiagente`.
+  El núcleo 0.2 está integrado en `main`; el renombre a inglés se desarrolla en
+  `s0/english-names`.
 - Publicación inicial: [PR #1 fusionado](https://github.com/fdelvalle01/s0-core-template/pull/1).
-  La ampliación se revisa en el [PR #2](https://github.com/fdelvalle01/s0-core-template/pull/2), sin reescribir el historial del piloto.
+  La ampliación 0.2 se integró en el [PR #2](https://github.com/fdelvalle01/s0-core-template/pull/2), sin reescribir el historial del piloto.
 - Responsable Git: propietario del repositorio indicado por el usuario. Host:
   GitHub personal privado. Roles institucionales, protección de rama, revisores y
   política de datos se definen al adoptar cada sistema; no se configuraron por inferencia.
