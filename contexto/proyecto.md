@@ -6,6 +6,9 @@ Esta plantilla permite compartir por Git el contexto, las especificaciones y los
 cambios OpenSpec de un sistema. PO refina necesidades; DEV propone e implementa
 en repositorios de código; QA deriva casos y verifica versiones identificadas.
 El núcleo usa `spec-driven`, sin dependencia de Jira ni infraestructura adicional.
+Las instrucciones comunes viven en `AGENTS.md` y los métodos PO/QA en
+`.agents/skills/`. Codex y Claude consumen esas mismas fuentes; el modelo se
+selecciona en cada cliente, sin cambiar el contexto ni las specs del sistema.
 
 Al adoptar la plantilla se sustituye esta página por el contexto confirmado del
 sistema: propósito, usuarios, alcance, componentes, vocabulario y fuentes. No hay

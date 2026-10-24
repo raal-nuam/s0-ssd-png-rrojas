@@ -2,6 +2,7 @@ schema: spec-driven
 
 context: |
   S0 Core: plantilla de contexto y especificaciones compartidas por sistema.
+  Aplicar AGENTS.md como instrucciones comunes para cualquier agente.
   Antes de refinar o proponer, leer contexto/proyecto.md en la raíz del store.
   El comportamiento acordado vive en openspec/specs/; los cambios activos son propuestas.
   El código y las pruebas ejecutables viven en repositorios consumidores separados.
