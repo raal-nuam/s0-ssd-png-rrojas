@@ -9,11 +9,53 @@ La implementación técnica del núcleo está comprobada localmente. La adopció
 institucional y la certificación de clientes requieren las comprobaciones humanas
 indicadas abajo; no se consideran aprobadas por tener archivos o tests presentes.
 
+## Guía de adopción y primera instancia real
+
+La guía se reorganizó en tres recorridos: sistema existente con uno o varios
+repositorios, proyecto nuevo sin código e incorporación a un S0 ya configurado.
+El [README](README.md) permite elegir el caso; [INSTALLATION.md](INSTALLATION.md)
+separa preparación compartida, registro local cuando se usa la CLI y lectura
+PO/QA desde la raíz sin CLI. Las skills y los workflows no se modificaron.
+
+El usuario creó `fdelvalle01/s0-summitapp` mediante GitHub Template. Su preparación
+se publicó con el commit `7ea5fc8` y el PR #1 se integró en `bf68068`. La lectura
+del clon confirmó identidad `summitapp`, `main` limpio y contexto inicial propio.
+El consumidor existente resolvió ese S0 después de crear el puntero e inicializar
+las integraciones. El [recorrido de SummitApp](docs/summitapp-walkthrough.md)
+conserva comandos y pendientes: las integraciones del consumidor todavía no
+estaban publicadas y sus instrucciones antiguas necesitaban reconciliación.
+No se migraron cambios anteriores ni se ejecutó una HDU funcional nueva.
+
+La comprobación adicional usó **OpenSpec 1.14.3** en fixtures y registros XDG
+aislados, sin modificar la instalación global ni los repositorios SummitApp:
+
+| Comprobación | Resultado observado |
+| --- | --- |
+| PowerShell y argumento multiherramienta | Sin comillas el shim `.ps1` recibe un arreglo; con `"claude,codex"` recibe una cadena correcta |
+| CLI efectiva en el proceso de validación inspeccionado | PATH prioriza el wrapper BrainProjects 1.13.2; el wrapper npm corresponde a 1.14.3. La sesión del usuario sí había corregido esa precedencia |
+| `init` dual desde consumidor con puntero | Conserva el puntero byte a byte, genera integraciones y no crea specs/changes locales |
+| `init` sobre planificación local existente | Conserva configuración, specs e historial; no convierte ni migra ese contenido automáticamente |
+| Consumidor con store implícito o `--store` del mismo ID | Ambos incluyen consumidor y S0 en `actionContext.allowedEditRoots` |
+| Otro store explícito, o desde fuera del consumidor | Sólo incluye el store; no infiere repositorios de implementación ni distribuye tareas |
+| Inventario | Ninguna fixture necesitó `repositories.yaml` |
+
+Las salidas están en el entorno local separado, bajo
+`installation-guide/routing-results.json`. Esta evidencia resuelve dudas de
+instalación y alcance de comandos; no sustituye sesiones reales de Codex/Claude,
+onboarding en otra máquina ni implementación multirrepositorio de producto.
+
+La revisión final de los cuatro documentos comprobó **31 enlaces locales y
+anclas**, **2 ejemplos YAML** y **25 bloques PowerShell** sin errores de sintaxis.
+Los bloques se analizaron con `Parser::ParseInput` en PowerShell 5.1, sin ejecutar
+los comandos de instalación/publicación del texto. `git diff --check` pasó.
+Los resultados están en `installation-guide/docs-check.json` y
+`installation-guide/document-parser-results.json`, fuera del core distribuido.
+
 ## Nombres técnicos en inglés
 
 La corrección de nombres usa `context/project.md`, `refine-user-story`,
 `prepare-tests`, `repositories.yaml` opcional y este archivo `VALIDATION.md`.
-El README documenta la migración de nombres y claves del inventario. La prosa
+La guía de instalación documenta la migración de nombres y claves del inventario. La prosa
 permanece en español; los métodos PO/QA y los workflows OpenSpec no cambian.
 
 - Las cuatro entradas propias pasan `quick_validate.py`. Los nombres coinciden
@@ -62,11 +104,10 @@ predeterminada `main`. La actualización 0.2 se integró mediante el
 | Revisión funcional independiente de sólo lectura | Escenario web/API con otro S0 inaccesible: criterios y casos trazables, sin inventar estados/SLA, requisitos externos, archivos ni ejecución QA |
 | Maestro tras los cambios | `doctor` y `store doctor` correctos; validación estricta sin elementos; specs e historial conservan sólo `.gitkeep` |
 
-Las instancias se construyeron localmente desde una instantánea de los archivos
-de la plantilla, con Git nuevo y registros XDG aislados. No se creó un repositorio
-derivado real en GitHub. Se comprobó la adopción equivalente sobre archivos y
-Git; la generación remota mediante **Use this template** queda por probar en la
-primera adopción real. Los cambios de prueba contienen sólo el scaffold nativo:
+En ese piloto, las instancias se construyeron localmente desde una instantánea
+de los archivos de la plantilla, con Git nuevo y registros XDG aislados. La
+generación remota mediante **Use this template** se observó después en SummitApp,
+como se describe al inicio de este registro. Los cambios de prueba contienen sólo el scaffold nativo:
 verifican resolución y separación, no un desarrollo funcional multirrepositorio.
 Scripts y salidas completas permanecen fuera del núcleo, en el entorno local de
 validación (`template-multirepo/identity-results.json` y
@@ -89,7 +130,7 @@ Las seis skills OpenSpec por cliente se generan oficialmente con la CLI fijada.
 
 | Comprobación de esta ampliación | Resultado observado |
 | --- | --- |
-| `init --tools claude,codex --profile core --no-animation` | Integraciones oficiales generadas; Codex usa skills y Claude skills/comandos |
+| `init --tools "claude,codex" --profile core --no-animation` | Integraciones oficiales generadas; Codex usa skills y Claude skills/comandos |
 | Validación de dos canónicas y dos puentes Claude | Las cuatro entradas pasan `quick_validate.py`; nombres/descripciones corresponden |
 | Resolución de instrucciones y puentes | `CLAUDE.md` importa el `AGENTS.md` local; cada puente llega al archivo canónico del mismo repositorio |
 | Adopción en store nuevo con ID distinto | 8 skills en cada cliente y 6 comandos Claude; specs/historial vacíos; identidad oficial nueva |
@@ -120,8 +161,8 @@ en otro repositorio; el README explica el acceso desde cada raíz.
 - Store: **s0-core**, identidad y estructura creadas con `store setup`; no se
   reutilizó ni editó manualmente la identidad del ZIP inicial.
 - Repositorio: [fdelvalle01/s0-core-template](https://github.com/fdelvalle01/s0-core-template).
-  El núcleo 0.2 está integrado en `main`; el renombre a inglés se desarrolla en
-  `s0/english-names`.
+  El núcleo 0.2 y el renombre a inglés están integrados en `main`; este último
+  mediante el [PR #3](https://github.com/fdelvalle01/s0-core-template/pull/3), merge `65a1588`.
 - Publicación inicial: [PR #1 fusionado](https://github.com/fdelvalle01/s0-core-template/pull/1).
   La ampliación 0.2 se integró en el [PR #2](https://github.com/fdelvalle01/s0-core-template/pull/2), sin reescribir el historial del piloto.
 - Responsable Git: propietario del repositorio indicado por el usuario. Host:
@@ -131,7 +172,9 @@ en otro repositorio; el README explica el acceso desde cada raíz.
   oficiales por integración Codex/Claude y dos capacidades institucionales compartidas.
   Sin Jira obligatorio ni selección de un modelo en el núcleo.
 - CLI y registros de prueba aislados mediante `XDG_CONFIG_HOME` y `XDG_DATA_HOME`.
-  No se modificó la instalación global ni se reemplazaron registros del usuario.
+  En ese piloto no se modificó la instalación global ni se reemplazaron registros
+  del usuario. La instalación npm global realizada después por el usuario durante
+  la adopción SummitApp es un paso distinto, documentado en su recorrido.
 
 ## Evidencia del piloto inicial
 
@@ -211,7 +254,7 @@ desarrollo institucional con agentes según el criterio de adopción del plan.
 | F2 | Dos métodos canónicos, puentes validados y discovery real Codex | Invocación real en ambos clientes y discovery Claude |
 | F3 | Consumidor separado, `store:` y resolución probada | PR de código en un remoto designado; workspace personal no versionado |
 | F4 | Cambio completo, matriz QA, ejecución y cierre técnico del piloto | Revisión de personas, PR cruzados y merge |
-| F5 | Instrucciones de uso común en README | Repetir lectura, skills y propuesta en Claude Desktop Code |
+| F5 | README con tres entradas, guía de instalación y recorrido real SummitApp | Probar la guía con otro integrante; repetir lectura, skills y propuesta en Claude Desktop Code |
 | F6 opcional | Acceso al núcleo desde otros agentes y límites de Cowork/Jira/Worksets documentados | Pilotos separados si se decide adoptarlos |
 
 Para cerrar los puntos de cliente: clonar el núcleo, registrar el store e iniciar
