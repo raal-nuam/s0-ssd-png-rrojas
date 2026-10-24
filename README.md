@@ -75,11 +75,16 @@ personalizados, `.base/`, inventarios, actualizadores ni un visor.
 ## Crear un S0 para otro sistema
 
 No cambies a mano `.openspec-store/store.yaml` ni publiques todos los sistemas con
-el ID de la plantilla. Desde fuera de cualquier repositorio, crea una instancia
-con identidad propia mediante la CLI. Ejemplo con nombre ficticio:
+el ID de la plantilla. Crea una instancia con identidad propia mediante la CLI.
+La secuencia siguiente parte de la raíz del
+clon de esta plantilla y deja ambas carpetas como hermanas; el nombre es ficticio:
 
 ```powershell
-openspec store setup mi-sistema --path ..\s0-mi-sistema
+$s0Template = (Get-Location).Path
+$s0Destino = Join-Path (Split-Path -Parent $s0Template) 's0-mi-sistema'
+Set-Location (Split-Path -Parent $s0Template)
+openspec store setup mi-sistema --path $s0Destino
+Set-Location $s0Template
 ```
 
 `store setup` crea la estructura oficial, registra el store e inicializa Git con
@@ -95,6 +100,12 @@ Copy-Item -LiteralPath .claude\skills\refinar-hdu,.claude\skills\preparar-prueba
 cd ..\s0-mi-sistema
 openspec init --tools claude --profile core --no-animation
 ```
+
+`--profile core` elige los seis workflows; la preferencia local `delivery` decide
+si se generan skills, comandos o ambos. Para generar ambas integraciones comprueba
+`openspec config get delivery` y, si corresponde, usa
+`openspec config set delivery both` antes de `init`. Ese ajuste cambia la
+preferencia de la máquina; no modifica el store ni los permisos del agente.
 
 Sustituye el contexto y las referencias a la plantilla en este README por datos
 confirmados del sistema. No copies `.git/`, `.openspec-store/`, `VALIDACION.md`,
@@ -120,6 +131,8 @@ openspec status
 ```
 
 El inicializador conserva el puntero y sólo añade integraciones al consumidor.
+La misma preferencia local `delivery` se aplica aquí; compruébala si necesitas
+ambas formas de invocación.
 No crees `openspec/specs/` ni `openspec/changes/` allí: tienen precedencia sobre el
 puntero. Confirma que `context` resuelve la raíz del S0. Para implementar abre S0
 y el código en un workspace con acceso a ambas carpetas. Guarda los workspaces
