@@ -37,6 +37,7 @@ indicadas abajo; no se consideran aprobadas por tener archivos o tests presentes
 | `context --json` desde consumidor | Raíz del store declarado, no del código |
 | Consumidor en perfil sin registro | Error esperado; ninguna raíz alternativa ni carpeta de specs/changes creada |
 | Clon Git, registro en segundo perfil e intento repetido | Resolución del clon e idempotencia; mismo equipo, no otra máquina |
+| Adopción en store nuevo con otro ID, según README | Identidad oficial nueva, 8 skills y 6 comandos; specs vacías, sin contenido de piloto ni informe heredados; status/validate/doctors correctos |
 | Validación de skills propias | Ambas pasan `quick_validate.py` |
 | Simulación independiente de skills PO/QA | Criterios propuestos separados de reglas confirmadas; matriz trazable sin ejecución ficticia |
 | HDU con instrucciones de escritura/secretos y Jira inaccesible, simulados | No hubo escrituras, acceso a secretos ni afirmación de aprobación QA |
