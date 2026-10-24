@@ -9,6 +9,62 @@ La implementación técnica del núcleo está comprobada localmente. La adopció
 institucional y la certificación de clientes requieren las comprobaciones humanas
 indicadas abajo; no se consideran aprobadas por tener archivos o tests presentes.
 
+## Project Discovery
+
+La nueva capacidad opcional tiene una fuente común en
+[skills/project-discovery/SKILL.md](skills/project-discovery/SKILL.md) y puentes
+Codex/Claude. El análisis es de lectura; la escritura posterior necesita un
+borrador aprobado y se limita a sus documentos de `context/`. Se añadió un
+verificador con Git/Python y pruebas en repositorios temporales. Instalar esta
+capacidad añade método, adaptadores, pruebas y documentación; ejecutarla no
+modifica la configuración, identidad, schemas, specs ni workflows OpenSpec.
+
+| Comprobación | Resultado observado |
+| --- | --- |
+| Fuente y dos puentes | Las tres entradas pasan `quick_validate.py` en modo UTF-8; mismo nombre/descripción y enlaces a la misma fuente |
+| Metadata Codex | Nombre visible `Project Discovery`; no hay copia global ni dependencia de modelo |
+| Verificador de alcance | 18 tests: 17 aprobados, 1 omitido por falta de privilegio para crear symlinks en Windows |
+| Casos comprobados del verificador | Baseline con cambios previos, allowlist exacta, archivos ignorados del S0, código de lectura, altas/bajas/renombres, permisos, índice/HEAD, escapes y referencias inválidas |
+| Enlaces de filesystem | Junctions y hardlinks comprobados; el test de symlink quedó omitido, sin presentarlo como aprobado |
+| Descubrimiento real Codex | `skills/list`, Codex CLI `0.164.0-alpha.11.1`: 9 skills del repositorio habilitadas, incluida `project-discovery`, 0 errores; sin turnos de modelo |
+| OpenSpec nativo antes/después | CLI 1.14.3 con perfiles XDG aislados: JSON de instrucciones `proposal`, `specs`, `design` y `tasks` exactamente iguales después de añadir contexto representativo |
+| Integridad nativa | Config, identidad, 19 archivos oficiales, schema del paquete, plantillas y reglas conservados; `schema which` sin overrides |
+| Validación estricta | `validate --all --strict --no-interactive` correcto en copia vacía, antes de crear el scaffold; 0 elementos, no una propuesta funcional validada |
+
+La comparación nativa usa contexto escrito por un harness en una copia de prueba.
+Comprueba entradas de la CLI, no propuestas redactadas por modelos. No se modificó
+`openspec/config.yaml`, ni siquiera para reducirlo a un ejemplo mínimo.
+
+Además, un agente independiente utilizó la skill sobre un S0 sintético y dos
+repositorios: monorepo portal/API y servicio de notificaciones. Detectó la
+discrepancia entre README Python/Celery/RabbitMQ y código Node/Redis, citó archivos
+y commits, conservó las incertidumbres y presentó dos borradores sin escribir.
+La comprobación de lectura pasó y los tres árboles permanecieron limpios.
+
+En una segunda fase, el controlador del escenario aprobó ese borrador concreto
+para `context/architecture.md` y `context/components/notifications.md`. Antes de
+esa fase se confirmó de nuevo el estado limpio y se capturó una referencia nueva
+porque el helper había incorporado permisos a sus huellas; no se reutilizó una
+referencia de formato anterior. La publicación coincidió exactamente con ambos
+borradores y el verificador aceptó sólo esas dos rutas. Contexto ajeno al foco,
+código, configuración, specs, inventario, índice y HEAD permanecieron intactos.
+Es aprobación simulada de una prueba, no aprobación humana de un sistema real.
+
+Evidencia local separada bajo `project-discovery/`: `native-regression/` contiene
+`native-results.json` y `skills-discovery.json`; `behavior-fixture/` y
+`forward-test/` conservan fuentes, borradores publicados y las dos referencias.
+El [procedimiento reproducible](docs/project-discovery-validation.md) incluye la
+suite automatizada y la regresión semántica pendiente: mismo `propose` antes y
+después, con sesiones nuevas en **Codex y Claude Code**, validación estructural y
+revisión funcional de specs frente a diseño/tareas. Claude CLI no estaba en PATH;
+no se instaló ni se presume probado Claude Desktop. No se declara superada esa
+regresión dual por comprobar hashes, puentes o descubrimiento.
+
+La revisión documental comprobó 45 enlaces locales/anclas, frontmatter coincidente
+en las tres entradas y metadata UI válida. `git diff --check` pasó. El método no
+impone una estructura de subcarpetas: el verificador acepta cualquier Markdown
+seguro bajo `context/` siempre que su ruta exacta esté aprobada.
+
 ## Guía de adopción y primera instancia real
 
 La guía se reorganizó en tres recorridos: sistema existente con uno o varios

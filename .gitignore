@@ -16,3 +16,6 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+
+# Caché local de las comprobaciones Python
+__pycache__/

@@ -28,6 +28,13 @@ La [recapitulación de SummitApp](docs/summitapp-walkthrough.md) conserva los pa
 y comandos de nuestra primera adopción real, las correcciones de PowerShell y
 los pendientes. Es un ejemplo histórico, no una instalación que debas repetir.
 
+Para comprender un sistema existente antes de proponer cambios, usa
+**[Project Discovery](skills/project-discovery/SKILL.md)**. Inspecciona fuentes
+autorizadas, presenta contexto verificable y publica sólo el borrador aprobado
+en `context/`. Es opcional; no modifica configuración, schemas, specs ni workflows
+OpenSpec. El [paso de contextualización](INSTALLATION.md#project-discovery)
+explica cómo invocarlo y qué comprueba.
+
 ## Qué se comparte y dónde
 
 ```mermaid
@@ -56,7 +63,8 @@ mediante un PR selectivo, conservando la identidad y el contenido del sistema.
 | `openspec/config.yaml` | Schema nativo `spec-driven`, contexto conciso y reglas |
 | `AGENTS.md` | Instrucciones comunes para los agentes |
 | `CLAUDE.md` | Referencia a esas mismas instrucciones |
-| `.agents/skills/` | Workflows oficiales Codex y fuentes compartidas de las dos skills propias |
+| `.agents/skills/` | Workflows oficiales Codex, métodos PO/QA y puente a Project Discovery |
+| `skills/project-discovery/` | Fuente común de Discovery, referencias y verificador de alcance |
 | `.claude/skills/`, `.claude/commands/opsx/` | Integración Claude; las skills propias son puentes a las fuentes compartidas |
 | `repositories.yaml`, opcional | Inventario de componentes cuando el contexto no basta; OpenSpec no lo interpreta |
 
@@ -78,6 +86,7 @@ cliente con selector de skills también puedes seleccionar la entrada local.
 
 | Tarea | Codex | Claude Code |
 | --- | --- | --- |
+| Descubrir contexto | `$project-discovery` | `/project-discovery` |
 | Explorar | `$openspec-explore` | `/opsx:explore` |
 | Proponer | `$openspec-propose` | `/opsx:propose` |
 | Implementar | `$openspec-apply-change` | `/opsx:apply` |
@@ -87,9 +96,12 @@ cliente con selector de skills también puedes seleccionar la entrada local.
 | Refinar una historia | `$refine-user-story` | `/refine-user-story` |
 | Preparar casos QA | `$prepare-tests` | `/prepare-tests` |
 
-Las dos skills propias entregan su resultado en conversación por defecto.
+Las skills PO/QA entregan su resultado en conversación por defecto.
 Refinar no crea tickets ni cambios. Preparar casos no ejecuta pruebas. El
 [recorrido PO → DEV → QA](INSTALLATION.md#daily-work) explica qué sigue en cada caso.
+Discovery también empieza con un borrador en conversación; la escritura posterior
+está limitada a los archivos de contexto aprobados y se comprueba con Git y el
+verificador incluido (Python >=3.10). Su análisis no requiere CLI OpenSpec.
 
 ## Versiones, mantenimiento y evidencia
 
