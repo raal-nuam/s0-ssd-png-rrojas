@@ -1,11 +1,56 @@
-# Validación de S0 Core 0.1
+# Validación de S0 Core 0.2
 
 Fecha: **24 de octubre de 2026**, zona **America/Santiago**.
 Origen: ejecución de `Plan_Implementacion_S0_Core.md`, versión 0.1.
+Ampliación 0.2: plantilla de instancias independientes, sistemas multirrepositorio
+y capacidades compartidas entre agentes.
 
 La implementación técnica del núcleo está comprobada localmente. La adopción
 institucional y la certificación de clientes requieren las comprobaciones humanas
 indicadas abajo; no se consideran aprobadas por tener archivos o tests presentes.
+
+## Plantilla e instancias multirrepositorio
+
+`s0-core-template` es el maestro de archivos y métodos. Cada sistema derivado
+tiene identidad OpenSpec y repositorio Git independientes, y puede conectar uno
+o varios repositorios de código al mismo store. `repositorios.yaml` es opcional;
+no se distribuye un inventario ficticio ni se añaden campos propios al formato
+OpenSpec. Los requisitos internos de otro S0 se referencian en su fuente canónica.
+
+El 24 de octubre se activó y verificó por la API de GitHub **`is_template: true`**
+en `fdelvalle01/s0-core-template`, conservando visibilidad privada y rama
+predeterminada `main`. La actualización 0.2 está en el
+[PR #2](https://github.com/fdelvalle01/s0-core-template/pull/2): debe integrarse
+para que las nuevas instancias creadas desde `main` incluyan estos cambios.
+
+| Comprobación de esta ampliación | Resultado observado |
+| --- | --- |
+| Nueva identidad con metadata heredada presente | `register --id nuevo --yes` y `setup` rechazan la discrepancia con `store_metadata_id_mismatch` |
+| Bootstrap de instancia con Git existente | Retirar únicamente el marker heredado y ejecutar `store register . --id <sistema> --yes` genera identidad oficial; conserva el mismo `HEAD` |
+| Dos instancias Git independientes | `s0-alfa` usa `sistema-alfa`; `s0-beta` usa `sistema-beta`; ambas pasan `store doctor` |
+| Tres consumidores, init Codex/Claude y `context --json` | `alfa-web` y `alfa-api` resuelven alfa; `beta-app` resuelve beta; todos conservan el puntero y carecen de specs/changes locales |
+| Mismo nombre de cambio en sistemas distintos | `cambio-compartido` se crea separadamente desde alfa-web y beta-app; alfa-api ve el de alfa y rechaza crearlo otra vez |
+| Inventario opcional | Sólo alfa tiene `repositorios.yaml`; beta opera sin inventario |
+| Instrucciones y métodos de cada instancia | `AGENTS.md`, importación Claude y dos puentes resuelven las fuentes del mismo S0 |
+| Skills multirrepositorio y configuración | Dos canónicas pasan `quick_validate.py`; YAML válido y reglas nativas `spec-driven` |
+| Revisión funcional independiente de sólo lectura | Escenario web/API con otro S0 inaccesible: criterios y casos trazables, sin inventar estados/SLA, requisitos externos, archivos ni ejecución QA |
+| Maestro tras los cambios | `doctor` y `store doctor` correctos; validación estricta sin elementos; specs e historial conservan sólo `.gitkeep` |
+
+Las instancias se construyeron localmente desde una instantánea de los archivos
+de la plantilla, con Git nuevo y registros XDG aislados. No se creó un repositorio
+derivado real en GitHub. Se comprobó la adopción equivalente sobre archivos y
+Git; la generación remota mediante **Use this template** queda por probar en la
+primera adopción real. Los cambios de prueba contienen sólo el scaffold nativo:
+verifican resolución y separación, no un desarrollo funcional multirrepositorio.
+Scripts y salidas completas permanecen fuera del núcleo, en el entorno local de
+validación (`template-multirepo/identity-results.json` y
+`template-multirepo/two-systems/two-systems-results.json`).
+
+La revisión de las skills fue una lectura y aplicación simulada por otro agente,
+no una sesión de Claude ni una prueba de descubrimiento automático. Se mantienen
+los pendientes de clientes de la sección siguiente. Las actualizaciones del
+maestro a instancias existentes se adoptan manualmente por PR; no hay un mecanismo
+de distribución automática que certificar.
 
 ## Ampliación transversal: Codex y Claude
 
@@ -49,10 +94,10 @@ en otro repositorio; el README explica el acceso desde cada raíz.
 - Store: **s0-core**, identidad y estructura creadas con `store setup`; no se
   reutilizó ni editó manualmente la identidad del ZIP inicial.
 - Repositorio: [fdelvalle01/s0-core-template](https://github.com/fdelvalle01/s0-core-template).
-  El núcleo inicial está en `main`; la ampliación transversal se desarrolla en
+  El núcleo inicial está en `main`; la ampliación 0.2 se desarrolla en
   `s0/soporte-multiagente`.
 - Publicación inicial: [PR #1 fusionado](https://github.com/fdelvalle01/s0-core-template/pull/1).
-  La ampliación se revisa mediante otro PR, sin reescribir el historial del piloto.
+  La ampliación se revisa en el [PR #2](https://github.com/fdelvalle01/s0-core-template/pull/2), sin reescribir el historial del piloto.
 - Responsable Git: propietario del repositorio indicado por el usuario. Host:
   GitHub personal privado. Roles institucionales, protección de rama, revisores y
   política de datos se definen al adoptar cada sistema; no se configuraron por inferencia.

@@ -8,8 +8,16 @@ las mismas reglas funcionales con cualquier cliente que pueda leer los archivos.
 
 - Lee `contexto/proyecto.md` cuando la tarea requiera conocimiento del sistema.
   Las reglas y el schema están en `openspec/config.yaml`.
+- Cada instancia S0 corresponde a un sistema con uno o varios repositorios de
+  código. Usa el mapa de componentes del contexto; si existe `repositorios.yaml`,
+  consulta sólo las entradas pertinentes. Es una extensión opcional de S0, no
+  configuración de OpenSpec ni autorización para clonar o modificar repositorios.
 - `openspec/specs/` describe lo vigente; `openspec/changes/` contiene propuestas
   e historial. Distingue una propuesta activa de un requisito consolidado.
+- Respeta el S0 canónico de cada subsistema. Si tiene otro S0, referencia sus
+  requisitos o contratos y limita aquí el cambio al alcance de este sistema;
+  no dupliques sus especificaciones internas. Un cambio en ambos S0 debe
+  identificar sus fuentes, límites y acciones autorizadas.
 - En un consumidor con `store:`, resuelve la raíz con `openspec context --json`.
   Lee el contexto y los artefactos de esa raíz. Si no se resuelve, comunica la
   limitación sin crear specs locales ni elegir un sistema vecino.
@@ -38,3 +46,8 @@ son puentes a esas fuentes. No necesitan enlaces simbólicos ni scripts de copia
 Los workflows `openspec-*` son generados por OpenSpec; actualízalos con la CLI
 acordada, sin editarlos a mano. Valida los artefactos con
 `openspec validate --all --strict --no-interactive`; eso no ejecuta tests de producto.
+
+Las instancias Git son independientes del maestro. Incorpora sus actualizaciones
+de forma manual, revisando el diff y conservando identidad del store, contexto,
+inventario propio, specs e historial. No propagues cambios automáticamente entre
+la plantilla, sus instancias u otros S0.

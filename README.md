@@ -1,14 +1,37 @@
-# S0 Core
+# S0 Core — plantilla para sistemas
 
-Plantilla mínima para compartir contexto, especificaciones y cambios de un sistema
-por Git. Usa OpenSpec nativo `spec-driven`. El código y los tests viven en los
-repositorios de producto; PO, DEV y QA consultan las mismas fuentes.
+S0 Core es una plantilla reutilizable para crear repositorios independientes de
+contexto y especificaciones, basados en OpenSpec. Cada instancia representa un
+sistema o proyecto, admite uno o múltiples repositorios de código y proporciona
+una base común de skills para PO, DEV y QA, sin imponer procesos institucionales
+adicionales.
+
+`s0-core-template` es el repositorio maestro. Cada sistema crea su propio S0 desde
+GitHub Template, con identidad OpenSpec, remoto e historial Git propios. Usa
+OpenSpec nativo `spec-driven`; el código y los tests permanecen en los repositorios
+de producto. Las specs de distintos sistemas no se mezclan.
+
+```mermaid
+flowchart TD
+    T["s0-core-template · plantilla maestra"] --> N["s0-nxt · contexto, specs y cambios propios"]
+    T --> M["s0-marketdata · contexto, specs y cambios propios"]
+    N --> F["tws-frontend"]
+    N --> O["order-gateway"]
+    N --> G["market-data-gateway"]
+    M --> A["marketdata-api"]
+    M --> C["marketdata-consumer"]
+    M --> D["marketdata-adapter"]
+```
+
+Los nombres del diagrama son ejemplos de organización, no componentes descubiertos
+ni repositorios creados por esta plantilla. Las flechas desde el maestro representan
+la creación inicial; no una sincronización continua.
 
 El núcleo no fija un proveedor ni un modelo. Incluye integraciones de Codex y
 Claude Code para aplicar los mismos métodos y reglas; otros agentes pueden
 consumir los archivos comunes cuando tengan acceso a ellos.
 
-Versión inicial: **0.1**. CLI comprobada: **OpenSpec 1.14.3**, con Node.js
+Versión documentada del núcleo: **0.2**. CLI comprobada: **OpenSpec 1.14.3**, con Node.js
 **>=20.19.0** para la distribución npm. Stores sigue siendo beta: actualiza la
 versión sólo después de repetir la validación. No necesitas Node si utilizas el
 binario oficial equivalente.
@@ -22,22 +45,29 @@ npm fijada si la política del equipo lo permite:
 ```powershell
 npm install -g @fission-ai/openspec@1.14.3
 openspec --version
-git clone https://github.com/fdelvalle01/s0-core-template.git s0-core
-cd s0-core
+```
+
+Para un sistema nuevo, sigue [Crear un S0 desde la plantilla](#crear-un-s0-desde-la-plantilla).
+Para incorporarte a un S0 ya adoptado, clona **su repositorio**, sin cambiar su
+identidad. Sustituye la URL y el ID de ejemplo por los reales:
+
+```powershell
+git clone https://github.com/tu-equipo/s0-mi-sistema.git s0-mi-sistema
+cd s0-mi-sistema
 openspec store register .
 openspec store list
-openspec status --store s0-core
-openspec store doctor s0-core
+openspec status --store mi-sistema
+openspec store doctor mi-sistema
 code .
 ```
 
 El registro es local a tu máquina; no sincroniza Git. Actualiza el clon con
 `git pull` antes de trabajar y comprueba rama/commit. Un ID sólo puede resolver
-un checkout por registro: si ya usas `s0-core`, revisa `store list` antes de
+un checkout por registro: si ya usas ese ID, revisa `store list` antes de
 registrar otro clon. No reemplaces un registro existente sin saber qué usa.
 
 El repositorio incluye los seis workflows oficiales para ambos clientes y dos
-skills institucionales con una única fuente funcional. Las instrucciones comunes
+skills propias con una única fuente funcional. Las instrucciones comunes
 están en [AGENTS.md](AGENTS.md); `CLAUDE.md` importa ese archivo. Las propias se
 mantienen en `.agents/skills/`; sus entradas de `.claude/skills/` sólo indican
 cómo leer esa misma fuente.
@@ -67,7 +97,7 @@ Usa preparar-pruebas sobre los criterios que acabamos de acordar.
 ```
 
 `propose` prepara artefactos; `apply` implementa cuando lo solicitas. Las skills
-institucionales devuelven su resultado en conversación por defecto: refinar no
+propias devuelven su resultado en conversación por defecto: refinar no
 crea cambios/tickets y preparar casos no ejecuta tests ni acredita aprobación QA.
 Una HDU puede ser texto; Jira requiere una conexión autorizada y es opcional.
 
@@ -79,6 +109,7 @@ openspec/config.yaml              Schema, contexto conciso y reglas
 openspec/specs/.gitkeep            Requisitos vigentes; vacío en esta plantilla
 openspec/changes/archive/.gitkeep  Cambios e historial; vacío al comenzar
 contexto/proyecto.md              Contexto confirmado del sistema
+repositorios.yaml                Inventario opcional; cada sistema puede crearlo
 AGENTS.md                        Instrucciones comunes para agentes
 CLAUDE.md                        Puente que importa AGENTS.md
 .agents/skills/openspec-*/        Seis skills oficiales para Codex
@@ -97,64 +128,98 @@ leerla cuando corresponda, no se incrusta automáticamente. Las specs describen
 comportamientos observables. No se exigen `jira.md`, `revision.md`, `qa.md`, schemas
 personalizados, `.base/`, inventarios, actualizadores ni un visor.
 
-## Crear un S0 para otro sistema
+## Crear un S0 desde la plantilla
 
-No cambies a mano `.openspec-store/store.yaml` ni publiques todos los sistemas con
-el ID de la plantilla. Crea una instancia con identidad propia mediante la CLI.
-La secuencia siguiente parte de la raíz del clon de esta plantilla y deja ambas
-carpetas como hermanas. Sustituye el ID y el nombre ficticios por los del sistema;
-el directorio de destino debe ser nuevo:
+1. En [s0-core-template](https://github.com/fdelvalle01/s0-core-template), elige
+   **Use this template → Create a new repository**. Define propietario, nombre
+   como `s0-mi-sistema` y visibilidad. Usa sólo la rama predeterminada, sin
+   **Include all branches**, para no copiar ramas de piloto o propuestas.
+2. Clona el repositorio recién creado. GitHub inicia un historial independiente
+   con el contenido de la plantilla; no es un fork. Comprueba con `git remote -v`
+   que `origin` apunta al **nuevo sistema**, no al maestro.
+3. Dale una identidad OpenSpec propia con la secuencia siguiente, **una sola vez
+   en el clon nuevo, antes de registrarlo**. La metadata heredada contiene
+   `id: s0-core`; retira únicamente ese archivo genérico y deja que la CLI lo
+   regenere. No ejecutes este paso sobre el maestro ni sobre un S0 ya adoptado.
 
 ```powershell
-$s0Template = (Get-Location).Path
+git clone https://github.com/tu-equipo/s0-mi-sistema.git s0-mi-sistema
+cd s0-mi-sistema
+git remote -v
+Get-Content -LiteralPath .openspec-store/store.yaml
+
 $s0Id = 'mi-sistema'
-$s0Destino = Join-Path (Split-Path -Parent $s0Template) 's0-mi-sistema'
-Set-Location (Split-Path -Parent $s0Template)
-openspec store setup $s0Id --path $s0Destino
-Set-Location $s0Template
-```
-
-`store setup` crea la estructura oficial, registra el store e inicializa Git con
-un commit; no vuelvas a ejecutar `git init`. Desde el clon de esta plantilla,
-copia las instrucciones comunes, las dos fuentes propias y sus puentes:
-
-```powershell
-Copy-Item -LiteralPath AGENTS.md,CLAUDE.md,.gitignore,.gitattributes,README.md -Destination $s0Destino
-Copy-Item -LiteralPath contexto -Destination $s0Destino -Recurse
-Copy-Item -LiteralPath openspec\config.yaml -Destination (Join-Path $s0Destino 'openspec\config.yaml')
-$s0Canonicas = Join-Path $s0Destino '.agents\skills'
-$s0Puentes = Join-Path $s0Destino '.claude\skills'
-New-Item -ItemType Directory -Force -Path $s0Canonicas,$s0Puentes | Out-Null
-Copy-Item -LiteralPath .agents\skills\refinar-hdu,.agents\skills\preparar-pruebas -Destination $s0Canonicas -Recurse
-Copy-Item -LiteralPath .claude\skills\refinar-hdu,.claude\skills\preparar-pruebas -Destination $s0Puentes -Recurse
-Set-Location $s0Destino
-openspec config get delivery
-```
-
-La generación oficial se hace en la raíz del nuevo S0. `--profile core` elige los
-seis workflows; la preferencia local `delivery` decide si se generan skills,
-comandos o ambos. La entrega de esta plantilla usa `both`. Si tu preferencia es
-distinta y quieres reproducirla, ejecuta `openspec config set delivery both`
-antes de inicializar. Ese ajuste cambia la preferencia de la máquina; no modifica
-el store ni los permisos del agente.
-
-```powershell
-openspec init --tools claude,codex --profile core --no-animation
-openspec status --store $s0Id
+Remove-Item -LiteralPath .openspec-store/store.yaml
+openspec store register . --id $s0Id --yes
 openspec store doctor $s0Id
+openspec status --store $s0Id
 ```
 
-Sustituye el contexto y las referencias a la plantilla en este README por datos
-confirmados del sistema: ID, URLs Git, componentes y fuentes. Actualiza también
-los enlaces a la validación de la plantilla para enlazar tu propia evidencia o
-retirarlos si no aplican. No copies `.git/`, `.openspec-store/`, `VALIDACION.md`,
-specs del piloto ni estado local. Las carpetas `specs/` y `changes/archive/`
-comienzan vacías. No hace falta copiar todos los directorios de agente: las
-oficiales se generan y las propias conservan su estructura relativa sin symlinks.
-Conecta después el remoto **del sistema**, publica mediante ramas/PR y configura
-la protección de rama según la política del host Git.
+La URL y el ID son ejemplos. El ID identifica al sistema y debe coincidir en todos
+sus consumidores. `register` no modifica el historial Git. En OpenSpec 1.14.3,
+`register --id` **rechaza** una identidad existente distinta, incluso con `--yes`;
+por eso se regenera el archivo heredado, sin editar su YAML a mano ni ejecutar
+`git init`. Si falla el registro, resuelve el error antes de continuar. Si ya
+registraste accidentalmente este clon como `s0-core`, revisa `store list` y
+desregistra sólo esa asociación si apunta a este clon; conserva el registro del
+maestro si apunta a otro checkout.
 
-## Conectar un repositorio de código
+4. Sustituye `contexto/proyecto.md` y adapta este README con datos confirmados:
+   propósito, usuarios, límites, ID, URL del S0, componentes y fuentes canónicas.
+   `openspec/config.yaml` mantiene el schema y las reglas nativas. Las specs y
+   los cambios comienzan vacíos; el inventario de repositorios es opcional.
+5. Las integraciones Codex/Claude ya vienen incluidas. Conserva las rutas de las
+   skills y sus puentes. `VALIDACION.md` describe **pruebas de la plantilla**, no
+   pruebas de tu sistema: reemplázalo por evidencia propia o retíralo y ajusta
+   los enlaces del README. Registra la versión/commit del maestro utilizado.
+6. Revisa el diff y publica la nueva identidad y el contexto mediante un commit
+   y PR **en el repositorio del sistema**. Los siguientes integrantes clonan y
+   ejecutan `openspec store register .`; no regeneran la identidad.
+
+La función Template y el historial independiente están descritos en la
+[guía oficial de GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+Para mantener el maestro, trabaja en su propio clon y PR; no añadas allí las
+specs de los sistemas derivados.
+
+## Un S0, uno o varios repositorios
+
+Un S0 representa el **sistema o producto**, no necesariamente un microservicio.
+Puede contener capacidades como `gestion-ordenes`, `market-data` y `autenticacion`
+aunque su implementación esté repartida entre quince repositorios. Cada cambio
+identifica los componentes afectados y enlaza sus PR; no necesita una copia de
+las specs por repositorio de código.
+
+Para pocos componentes basta documentar nombre, responsabilidad y URL Git en
+`contexto/proyecto.md`. Opcionalmente, el sistema puede crear `repositorios.yaml`
+en la raíz del S0:
+
+```yaml
+repositorios:
+  - nombre: tws-frontend
+    tipo: frontend
+    tecnologia: React
+  - nombre: order-gateway
+    tipo: backend
+    tecnologia: Java
+  - nombre: market-data-gateway
+    tipo: backend
+    tecnologia: Go
+```
+
+Es un ejemplo ficticio y una **extensión opcional de S0**, no configuración que
+OpenSpec interprete ni un archivo distribuido por defecto. Puedes añadir `url`,
+`responsabilidad` y, si corresponde, una referencia al S0 responsable. No incluyas
+rutas personales, credenciales ni instrucciones ejecutables. El inventario ayuda
+a localizar componentes; no clona repositorios ni concede acceso por sí mismo.
+
+Si un subsistema tiene su propio S0, acuerda qué capacidades son canónicas en
+cada uno. El S0 del sistema describe los contratos e integraciones que le
+corresponden y referencia los requisitos internos del subsistema por URL y
+revisión; evita mantener dos copias de la misma especificación. Un cambio que
+afecta ambos se coordina con cambios/PR enlazados en cada S0. Si una fuente no
+está accesible, registra la limitación sin inventar sus requisitos.
+
+## Conectar uno o varios repositorios de código
 
 Registra primero el S0 en la máquina. En la raíz Git del consumidor, crea
 `openspec/config.yaml` con un único puntero (usa el ID real de tu sistema):
@@ -162,6 +227,16 @@ Registra primero el S0 en la máquina. En la raíz Git del consumidor, crea
 ```yaml
 store: mi-sistema
 ```
+
+Repite este puntero en cada repositorio de código del mismo sistema. Todos
+resuelven el mismo S0; un repositorio de otro sistema usa su ID correspondiente.
+Para los ejemplos del diagrama, los tres repositorios NXT apuntarían a `nxt` y
+los tres de MarketData a `marketdata`, una vez creados y registrados esos stores.
+
+`--profile core` selecciona los seis workflows. Comprueba la preferencia local
+con `openspec config get delivery`: decide si genera skills, comandos o ambos.
+Si quieres ambos como en esta plantilla, ejecuta `openspec config set delivery both`
+antes de inicializar. Ese ajuste cambia la preferencia de la máquina.
 
 Luego, siempre desde esa raíz:
 
@@ -172,8 +247,7 @@ openspec status
 ```
 
 El inicializador conserva el puntero y sólo añade integraciones al consumidor.
-La misma preferencia local `delivery` se aplica aquí; compruébala si necesitas
-skills y comandos. No crees `openspec/specs/` ni `openspec/changes/` allí: tienen
+No crees `openspec/specs/` ni `openspec/changes/` allí: tienen
 precedencia sobre el puntero. Confirma que `context` resuelve la raíz del S0.
 
 El puntero no instala las skills propias del S0 ni carga sus instrucciones en
@@ -189,6 +263,16 @@ opcional.
 
 ## Un cambio de PO a QA
 
+Todos trabajan sobre el Git compartido del sistema: contexto, specs vigentes y
+cambios propuestos. Ningún rol necesita generar obligatoriamente un archivo
+adicional por participar.
+
+| Rol | Qué consume | Qué produce |
+| --- | --- | --- |
+| PO | Contexto, specs y cambios existentes | HDU en Jira u otra fuente, o refinamiento en conversación; revisión funcional en PR |
+| DEV | HDU, contexto y specs | `proposal.md`, `design.md`, `tasks.md` y deltas de specs; código en sus repositorios |
+| QA | HDU, specs y escenarios del cambio | Casos, automatizaciones y resultados en la suite o herramientas correspondientes |
+
 1. **PO:** aporta la HDU en texto o mediante una fuente accesible. `refinar-hdu`
    consulta contexto/specs y devuelve objetivo, alcance, criterios y dudas.
 2. **DEV:** explora y propone. OpenSpec crea `proposal.md`, deltas en `specs/`,
@@ -196,7 +280,8 @@ opcional.
 3. **Equipo:** revisa el plan en una rama `s0/<hdu-o-slug>` y PR. La revisión de
    documentos no acredita aceptación del software; la CLI no impone aprobadores.
 4. **DEV:** solicita `apply` con código accesible y autorizado. Implementación y
-   tests permanecen en el repositorio consumidor, con su PR enlazado al S0.
+   tests permanecen en los repositorios consumidores afectados, con sus PR
+   enlazados al cambio del S0.
 5. **QA:** `preparar-pruebas` deriva casos trazables. Automatizar y ejecutar es
    trabajo explícito en la suite, identificando commit/build, entorno y datos.
 6. **Equipo:** revisa resultados y alcance. El workflow `sync` consolida specs
@@ -241,10 +326,25 @@ wrappers propios como puentes, sin duplicar reglas. Revisa estos cambios por PR
 y comprueba que los enlaces relativos resuelven después de clonar o adoptar.
 Al actualizar OpenSpec, verifica también que conserva las fuentes y los puentes.
 
+### Actualizar una instancia desde el maestro
+
+Cada S0 evoluciona por separado. Una mejora de `s0-core-template` no llega
+automáticamente a los proyectos existentes. Si quieres incorporarla, compara el
+diff del maestro con la versión adoptada y prepara un PR selectivo en el S0 del
+sistema, conservando sus personalizaciones. Revisa instrucciones y skills antes
+de copiar cambios; no sustituyas su identidad, contexto, inventario, specs ni
+historial con los de la plantilla. No hay un actualizador automático en esta
+versión.
+
+`git pull` actualiza el repositorio al que pertenece el clon; `openspec update`
+regenera integraciones oficiales. Ninguno distribuye los cambios propios del
+maestro a las instancias. Cambiar de modelo o de cliente tampoco crea otro S0:
+los agentes leen y modifican los mismos artefactos autorizados del sistema.
+
 ## Clientes y alcance de la certificación
 
 Codex y Claude Code cuentan con integraciones de proyecto equivalentes y
-consumen las mismas fuentes institucionales. Cada cliente necesita comprobar
+consumen las mismas fuentes compartidas. Cada cliente necesita comprobar
 descubrimiento y uso en una sesión nueva, con su versión y el commit del S0.
 Claude Desktop Code requiere su propia prueba. La estructura no garantiza
 resultados idénticos entre modelos ni concede acceso a carpetas o conectores.
@@ -264,6 +364,8 @@ certificación institucional completa.
 
 ## Referencias oficiales
 
+- [Crear y mantener un repositorio plantilla en GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-template-repository).
+- [Crear un repositorio independiente desde una plantilla](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
 - [Stores y resolución store-only](https://openspec.dev/docs/stores).
 - [CLI y flags soportados](https://openspec.dev/docs/cli).
 - [Perfiles y seis workflows core](https://openspec.dev/docs/profiles).

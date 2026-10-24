@@ -15,6 +15,13 @@ y las specs se leen del store resuelto, no del directorio de código. Si falta
 acceso, declara qué no pudiste verificar sin crear un OpenSpec alternativo.
 Jira es opcional y requiere conexión y acceso autorizados; acepta texto como fuente.
 
+Consulta el mapa de componentes y, si existe y es pertinente, `repositorios.yaml`.
+Identifica qué componentes y contratos participan en los escenarios. Un subsistema
+con otro S0 conserva allí sus requisitos internos: referencia su fuente canónica
+y diferencia su cobertura de la integración que corresponde a este sistema.
+Si esa fuente no es accesible, declara el límite de cobertura sin inventar reglas.
+El inventario no autoriza clonar repositorios ni ejecutar suites.
+
 Entrega en conversación una matriz con estas columnas:
 
 | ID | Criterio/spec y escenario | Tipo | Precondiciones | Datos | Pasos | Resultado esperado | Capa sugerida | Dudas |
@@ -25,6 +32,9 @@ propuestos por riesgo sin requisito confirmado. Cubre positivos, negativos,
 permisos y bordes pertinentes. No inventes credenciales, datos reales ni reglas
 para completar la matriz. Señala requisitos no comprobables y las decisiones que
 faltan. Diferencia specs vigentes de propuestas en cambios activos.
+Cuando intervengan varios componentes, identifica en «Capa sugerida» el componente
+o repositorio responsable y prepara casos de sus contratos e integración según
+los requisitos disponibles. No necesitas nuevas columnas ni archivos por componente.
 
 Declara el estado real de la evidencia:
 

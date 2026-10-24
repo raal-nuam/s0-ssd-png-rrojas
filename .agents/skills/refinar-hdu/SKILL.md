@@ -20,12 +20,23 @@ OpenSpec ni uses un proyecto vecino. Lee sólo las specs y cambios relacionados.
 Cita rutas, escenarios e identificadores consultados; indica rama o revisión
 cuando se conozcan. Un cambio activo expresa una propuesta, no una regla vigente.
 
+Usa el mapa de componentes del contexto y, si existe y es pertinente,
+`repositorios.yaml`. Un S0 puede cubrir uno o varios repositorios; identifica los
+componentes afectados sin exigir acceso a todo su código para refinar. Si un
+subsistema tiene otro S0, consulta sólo sus requisitos o contratos relevantes
+cuando sean accesibles y referencia esa fuente, sin duplicar sus reglas internas.
+Señala límites o contratos desconocidos; el inventario no autoriza acceder a
+repositorios ni modificar otros S0.
+
 Entrega en conversación, con lenguaje funcional para el PO:
 
 - Objetivo y problema que se intenta resolver.
 - Actores, alcance y fuera de alcance.
 - Reglas confirmadas y criterios de aceptación observables, incluyendo errores,
   permisos y bordes pertinentes.
+- Cuando intervengan varios componentes, relaciona los criterios con sus
+  responsabilidades y contratos, distinguiendo qué pertenece a este sistema y
+  qué depende de un subsistema con fuente canónica propia.
 - Dudas, dependencias y supuestos que requieren definición, separados de lo
   confirmado. Relaciona cada criterio con la fuente o identifícalo como propuesta.
 
