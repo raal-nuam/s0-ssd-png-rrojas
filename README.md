@@ -26,6 +26,11 @@ openspec store doctor s0-core
 code .
 ```
 
+Para probar esta entrega antes de fusionar el
+[PR inicial](https://github.com/fdelvalle01/s0-core-template/pull/1), clona
+`git clone --branch s0/implementar-core https://github.com/fdelvalle01/s0-core-template.git s0-core`.
+La rama `main` contiene sólo el bootstrap oficial hasta que ese PR se fusione.
+
 El registro es local a tu máquina; no sincroniza Git. Actualiza el clon con
 `git pull` antes de trabajar y comprueba rama/commit. Un ID sólo puede resolver
 un checkout por registro: si ya usas `s0-core`, revisa `store list` antes de

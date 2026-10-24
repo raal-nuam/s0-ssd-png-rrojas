@@ -17,6 +17,9 @@ indicadas abajo; no se consideran aprobadas por tener archivos o tests presentes
   reutilizó ni editó manualmente la identidad del ZIP inicial.
 - Repositorio: [fdelvalle01/s0-core-template](https://github.com/fdelvalle01/s0-core-template).
   Rama del núcleo: `s0/implementar-core`, para revisar contra `main`.
+- Publicación: [PR #1 en borrador](https://github.com/fdelvalle01/s0-core-template/pull/1).
+  El merge requiere revisión; el bootstrap de `main` no incluye todavía el núcleo
+  propuesto. Para probar la entrega se clona la rama del PR como indica el README.
 - Responsable Git: propietario del repositorio indicado por el usuario. Host:
   GitHub personal privado. Roles institucionales, protección de rama, revisores y
   política de datos se definen al adoptar cada sistema; no se configuraron por inferencia.
