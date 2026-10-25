@@ -1,6 +1,6 @@
 # Verificar S0 Core
 
-Comprobaciones reproducibles de la plantilla y Project Discovery. Se ejecutan en
+Comprobaciones reproducibles de la plantilla, conexión local y Project Discovery. Se ejecutan en
 copias aisladas, con datos sintéticos; los resultados de cada sistema se conservan
 en su propio repositorio o herramienta de QA.
 
@@ -37,7 +37,55 @@ o personales. Una plantilla sin requisitos ni cambios puede devolver listas vac�
 4. Verifica catálogo y ejecución por separado en cada cliente; registra versión,
    modelo, revisión y fuentes usadas. La presencia de archivos no acredita discovery.
 
-## 2. Verificador de Project Discovery
+## 2. Conexión local con connect-project
+
+Ejecuta estos escenarios en copias aisladas. La matriz indica qué comprobar;
+los resultados y límites de la validación realizada se resumen debajo.
+
+| Escenario | Resultado que debe comprobarse |
+| --- | --- |
+| Clon manual nuevo del S0 | Identidad propia oficial, registro correcto y Git existente conservado |
+| Sin CLI, con Node.js >=20.19.0 y npm | Instala OpenSpec 1.14.3 y verifica el ejecutable utilizado |
+| PATH con otra versión | Usa ruta explícita comprobada, sin atribuir esa versión a procesos ya abiertos |
+| Falta una herramienta indispensable | Indica fase y requisito pendientes; no declara conexión completa |
+| Registro correcto y repetición | Conserva identidad, punteros e instrucciones válidas; evita cambios innecesarios |
+| ID registrado en otro checkout | Señala conflicto y conserva la asociación existente |
+| Monorepo y varios Git | Un puntero por raíz Git, mismo S0 y sin specs/changes locales paralelos |
+| Consumidor con planificación previa | Bloquea la migración automática; conserva config, specs e historial |
+| Proyecto sin código | Prepara S0 y borrador limitado sin inventar consumidores ni implementación |
+| Python no disponible | La preparación posible continúa; Discovery sólo entrega borrador sin publicar |
+| Cierre de conexión | Diffs locales revisables, sin commit, push ni PR; comienza borrador de Discovery |
+
+Separa el diff de preparación de la referencia Discovery, capturada después.
+Comprueba fuente canónica y puente Claude.
+
+Comprobado con OpenSpec **1.14.3** y registros/preferencias aislados:
+
+- Conexión mediante un agente evaluador de un monorepo y varios Git; resolución,
+  instrucciones e integraciones correctas. Discovery presentó un borrador sin
+  escribir contexto y su verificador confirmó lectura sin cambios.
+- Reejecución sin diferencias de archivos, identidad, registro, HEAD, índice o
+  preferencias; sin `init` redundante ni bloques de instrucciones duplicados.
+- Bloqueo de un consumidor con configuración, specs e historial previos, sin
+  modificar tampoco sus instrucciones. Conflictos de ID/ruta conservan registros.
+- Instalación real de la CLI en un prefijo npm desechable y selección de su ruta
+  explícita frente a una versión anterior simulada en PATH. La prueba de Node/npm
+  ausentes se detuvo sin cambios; se conservaron las instalaciones del usuario.
+- Perfil temporal con `delivery=both`: seis skills por cliente y seis comandos
+  Claude, preservando preferencias persistentes. Se comprobó también el caso de
+  integraciones previas sólo con skills: un perfil vacío puede inferir `skills`,
+  por lo que se fija `both` explícitamente sólo dentro de la configuración temporal.
+- Las entradas pasan el validador de skills y el puente Claude resuelve la fuente común.
+  El catálogo real de Codex devolvió **10 skills habilitadas y 0 errores**, sin
+  iniciar un turno de modelo. Los 19 archivos oficiales del core se conservaron.
+
+Las evidencias y fixtures se conservan fuera de la plantilla. La instalación usó
+la CLI oficial; el wrapper antiguo y la ausencia de herramientas se simularon en
+procesos aislados. No se acredita ejecución en una sesión real de Claude Code.
+Los casos completos sin código y sin Python permanecen como escenarios de la
+matriz pendientes de ejecutar; las pruebas de la CLI no sustituyen esos recorridos.
+
+## 3. Verificador de Project Discovery
 
 Desde la raíz, sin generar caches Python en la plantilla:
 
@@ -52,7 +100,7 @@ bajo `context/`, archivos protegidos/ignorados, código de lectura, rutas, permi
 HEAD e índice. El [contrato de alcance](.agents/skills/project-discovery/SKILL.md#scope-checks)
 explica su cobertura y límites.
 
-## 3. Comportamiento de Discovery
+## 4. Comportamiento de Discovery
 
 Usa un S0 y dos o tres repositorios sintéticos: incluye monorepo, servicio
 separado, documentación contradictoria y una dependencia desconocida.
@@ -66,7 +114,7 @@ separado, documentación contradictoria y una dependencia desconocida.
 4. Configuración, identidad, specs, changes, workflows, código, HEAD e índice
    deben permanecer intactos. Comprueba la fuente canónica y el puente Claude.
 
-## 4. Regresión funcional nativa en Codex y Claude
+## 5. Regresión funcional nativa en Codex y Claude
 
 Prepara dos copias equivalentes del S0 y las mismas fuentes autorizadas. Fija
 CLI, schema oficial, cliente, modelo y prompt; aísla registros y preferencias CLI.

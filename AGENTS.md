@@ -25,6 +25,7 @@ las mismas reglas funcionales con cualquier cliente que pueda leer los archivos.
 
 ## Capacidades compartidas
 
+- Conectar un proyecto: [.agents/skills/connect-project/SKILL.md](.agents/skills/connect-project/SKILL.md).
 - Contextualización opcional: [.agents/skills/project-discovery/SKILL.md](.agents/skills/project-discovery/SKILL.md).
 - Refinamiento PO: [.agents/skills/refine-user-story/SKILL.md](.agents/skills/refine-user-story/SKILL.md).
 - Preparación QA: [.agents/skills/prepare-tests/SKILL.md](.agents/skills/prepare-tests/SKILL.md).
@@ -48,6 +49,8 @@ técnicos no cambia la redacción en español de instrucciones y resultados.
 Mantén las reglas comunes en este archivo y los métodos propios sólo en sus skills
 canónicas de `.agents/skills/`. `CLAUDE.md` y las entradas propias de `.claude/`
 son puentes a esas fuentes. No necesitan enlaces simbólicos ni scripts de copia.
+`connect-project` prepara la instancia y sus consumidores con la CLI oficial;
+deja cambios locales y pasa después a Discovery para presentar el borrador.
 Project Discovery reúne su método completo y el verificador de `scripts/` en
 `.agents/skills/project-discovery/`; Claude utiliza un puente a esa misma fuente.
 Es independiente y no es un paso obligatorio de OpenSpec;
