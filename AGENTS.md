@@ -6,6 +6,10 @@ las mismas reglas funcionales con cualquier cliente que pueda leer los archivos.
 
 ## Fuentes y raíz de trabajo
 
+- Antes de ejecutar workflows OpenSpec en cada sesión, comprueba que el ejecutable
+  devuelve **1.14.3**. Si PATH selecciona otra versión, usa la ruta comprobada
+  durante toda la sesión; no cambies permanentemente PATH. Si falta esa CLI,
+  informa el requisito y aplica el alcance de instalación ya autorizado.
 - Lee `context/project.md` cuando la tarea requiera conocimiento del sistema.
   Las reglas y el schema están en `openspec/config.yaml`.
 - Cada instancia S0 corresponde a un sistema con uno o varios repositorios de
@@ -56,7 +60,7 @@ Project Discovery reúne su método completo y el verificador de `scripts/` en
 Es independiente y no es un paso obligatorio de OpenSpec;
 documentar contexto no autoriza cambiar configuración ni artefactos OpenSpec.
 Los workflows `openspec-*` son generados por OpenSpec; actualízalos con la CLI
-acordada, sin editarlos a mano. Valida los artefactos con
+comprobada, sin editarlos a mano. Valida los artefactos con
 `openspec validate --all --strict --no-interactive`; eso no ejecuta tests de producto.
 
 Las instancias Git son independientes del maestro. Incorpora sus actualizaciones

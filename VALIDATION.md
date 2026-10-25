@@ -1,18 +1,49 @@
-# Verificar S0 Core
+# Validación del core
 
-Comprobaciones reproducibles de la plantilla, conexión local y Project Discovery. Se ejecutan en
-copias aisladas, con datos sintéticos; los resultados de cada sistema se conservan
-en su propio repositorio o herramienta de QA.
+Referencia para mantener la plantilla: qué se comprobó, qué sigue pendiente y
+cómo repetir las verificaciones. La instalación y el uso están en
+[INSTALLATION.md](INSTALLATION.md) y [PLAYBOOK.md](PLAYBOOK.md).
 
-## Requisitos
+## Estado y fuentes de evidencia
 
-- Git y OpenSpec **1.14.3** para comprobar adopción y workflows nativos.
-- Python **>=3.10**, sólo biblioteca estándar, para el verificador de Discovery.
-- Agentes compatibles con acceso a las fuentes para las pruebas de comportamiento.
+Revisión documental: **2026-10-25**. Esta edición no repite las pruebas históricas.
+Los informes publicados identifican las entregas correspondientes:
 
-## 1. Estructura y adopción del core
+| Informe | Publicación¹ | Revisión de entrega | Entorno declarado |
+| --- | --- | --- | --- |
+| [PR #6: organización de Discovery](https://github.com/fdelvalle01/s0-core-template/pull/6) | 2026-10-24 | [2b552cc](https://github.com/fdelvalle01/s0-core-template/commit/2b552cc819d031ca67f8710c85adb3560ae18105) | Windows; verificador Git/Python y comprobaciones estructurales |
+| [PR #7: connect-project](https://github.com/fdelvalle01/s0-core-template/pull/7) | 2026-10-24 | [6d58fbd](https://github.com/fdelvalle01/s0-core-template/commit/6d58fbd88d79b6557e7b95b6212ed377dfcbd771) | OpenSpec 1.14.3; repositorios sintéticos, registros y preferencias aislados; catálogo Codex |
 
-Desde la raíz de una copia de prueba:
+¹ Fechas de publicación en America/Santiago, no fechas exactas de ejecución.
+Los PR contienen resúmenes de resultados, no logs completos. Los registros brutos
+y fixtures se conservaron fuera de la plantilla y no están enlazados desde esos
+informes. Tampoco se identifica allí el modelo ni todas las versiones de cliente.
+Son antecedentes de esas entregas, no una certificación de cualquier revisión futura.
+
+| Área | Resultado documentado | Fuente |
+| --- | --- | --- |
+| Verificador Discovery | 18 tests: 17 aprobados y 1 omitido por privilegios Windows para crear symlinks | PR #6 |
+| Conexión local | S0 nuevo, monorepo y dos Git adicionales; resolución e integraciones correctas; borrador Discovery sin escritura | PR #7 |
+| Reejecución y conflictos | Sin cambios innecesarios en archivos/estado Git/preferencias; planificación previa y asociaciones de registro conservadas | PR #7 |
+| CLI y preferencias | Instalación real en prefijo npm desechable; selección de 1.14.3 frente a wrapper anterior simulado; herramientas ausentes simuladas; generación temporal con `delivery=both` | PR #7 |
+| Catálogo e integraciones | Codex: 10 skills habilitadas, 0 errores, sin iniciar un turno de modelo; archivos oficiales del core conservados | PR #7 |
+| Recorridos completos sin código y sin Python | **Pendientes**; los controles parciales no acreditan estos recorridos | PR #7 |
+| Sesión real Claude Code y regresión semántica dual | **Pendientes**; catálogo, hashes y estructura no acreditan ejecución de los métodos | PR #6 / PR #7 |
+
+En futuras validaciones registra fecha de ejecución, commit probado, sistema,
+CLI, cliente/modelo cuando intervengan, resultado y enlace al informe o logs
+accesibles al equipo. Conserva fallos y omisiones; no conviertas un caso omitido
+en aprobado ni sobrescribas antecedentes con resultados de otro entorno.
+
+## Comprobaciones reproducibles
+
+Trabaja en copias aisladas con datos sintéticos. Usa Git y OpenSpec **1.14.3**;
+para Discovery, Python **>=3.10** y su biblioteca estándar. Comprueba primero el
+ejecutable efectivo según [la referencia de CLI](INSTALLATION.md#cli-setup).
+
+### Estructura y resolución
+
+Desde la raíz de la copia de prueba, usando la CLI comprobada:
 
 ```powershell
 openspec --version
@@ -23,69 +54,25 @@ openspec doctor
 git diff --check
 ```
 
-Comprueba que el schema efectivo es el oficial del paquete, sin overrides locales
-o personales. Una plantilla sin requisitos ni cambios puede devolver listas vacías.
+El schema efectivo debe ser el oficial del paquete, sin overrides. La plantilla
+sin requisitos o cambios puede devolver inventarios vacíos. Comprueba enlaces,
+fuentes propias y puentes Claude; verifica catálogo y ejecución por separado.
 
-1. Adopta una instancia con ID propio siguiendo [INSTALLATION.md](INSTALLATION.md).
-   Comprueba identidad oficial, remoto propio y registro local del checkout.
-2. Conecta uno o varios consumidores con `store:`. Desde cada raíz,
-   `openspec context --json` debe resolver el S0; el puntero debe conservarse y no
-   deben aparecer `openspec/specs/` ni `openspec/changes/` locales.
-3. Comprueba fuentes propias en `.agents/skills/`, puentes Claude, nombres, enlaces
-   y acceso desde un clon limpio. Al generar o actualizar integraciones oficiales,
-   conserva configuración, contexto y métodos propios.
-4. Verifica catálogo y ejecución por separado en cada cliente; registra versión,
-   modelo, revisión y fuentes usadas. La presencia de archivos no acredita discovery.
+Para repetir la conexión, sigue estos escenarios con `connect-project`:
 
-## 2. Conexión local con connect-project
-
-Ejecuta estos escenarios en copias aisladas. La matriz indica qué comprobar;
-los resultados y límites de la validación realizada se resumen debajo.
-
-| Escenario | Resultado que debe comprobarse |
+| Escenario | Comprobar |
 | --- | --- |
-| Clon manual nuevo del S0 | Identidad propia oficial, registro correcto y Git existente conservado |
-| Sin CLI, con Node.js >=20.19.0 y npm | Instala OpenSpec 1.14.3 y verifica el ejecutable utilizado |
-| PATH con otra versión | Usa ruta explícita comprobada, sin atribuir esa versión a procesos ya abiertos |
-| Falta una herramienta indispensable | Indica fase y requisito pendientes; no declara conexión completa |
-| Registro correcto y repetición | Conserva identidad, punteros e instrucciones válidas; evita cambios innecesarios |
-| ID registrado en otro checkout | Señala conflicto y conserva la asociación existente |
-| Monorepo y varios Git | Un puntero por raíz Git, mismo S0 y sin specs/changes locales paralelos |
-| Consumidor con planificación previa | Bloquea la migración automática; conserva config, specs e historial |
-| Proyecto sin código | Prepara S0 y borrador limitado sin inventar consumidores ni implementación |
-| Python no disponible | La preparación posible continúa; Discovery sólo entrega borrador sin publicar |
-| Cierre de conexión | Diffs locales revisables, sin commit, push ni PR; comienza borrador de Discovery |
+| Instancia nueva, monorepo y varios Git | ID propio; `context --json` desde cada consumidor resuelve el mismo S0; sin specs/changes locales paralelos |
+| Segunda ejecución | Identidad, punteros, instrucciones, HEAD, índice y preferencias conservados; sin generación redundante |
+| Registro en conflicto o planificación previa | Bloqueo explícito, contenido y asociaciones preservados, resultados parciales identificados |
+| CLI ausente, PATH antiguo o requisito ausente | Instalación/selección de versión según herramientas disponibles; requisito pendiente explícito; preferencias persistentes conservadas |
+| Sin código o sin Python | Preparación posible y borrador limitado; sin arquitectura inventada ni escritura de contexto sin comprobaciones |
 
-Separa el diff de preparación de la referencia Discovery, capturada después.
-Comprueba fuente canónica y puente Claude.
+El cierre deja diffs locales sin stage, commit, push ni PR. Captura la referencia
+de Discovery después de la preparación técnica y verifica lectura sin cambios
+antes de presentar su borrador.
 
-Comprobado con OpenSpec **1.14.3** y registros/preferencias aislados:
-
-- Conexión mediante un agente evaluador de un monorepo y varios Git; resolución,
-  instrucciones e integraciones correctas. Discovery presentó un borrador sin
-  escribir contexto y su verificador confirmó lectura sin cambios.
-- Reejecución sin diferencias de archivos, identidad, registro, HEAD, índice o
-  preferencias; sin `init` redundante ni bloques de instrucciones duplicados.
-- Bloqueo de un consumidor con configuración, specs e historial previos, sin
-  modificar tampoco sus instrucciones. Conflictos de ID/ruta conservan registros.
-- Instalación real de la CLI en un prefijo npm desechable y selección de su ruta
-  explícita frente a una versión anterior simulada en PATH. La prueba de Node/npm
-  ausentes se detuvo sin cambios; se conservaron las instalaciones del usuario.
-- Perfil temporal con `delivery=both`: seis skills por cliente y seis comandos
-  Claude, preservando preferencias persistentes. Se comprobó también el caso de
-  integraciones previas sólo con skills: un perfil vacío puede inferir `skills`,
-  por lo que se fija `both` explícitamente sólo dentro de la configuración temporal.
-- Las entradas pasan el validador de skills y el puente Claude resuelve la fuente común.
-  El catálogo real de Codex devolvió **10 skills habilitadas y 0 errores**, sin
-  iniciar un turno de modelo. Los 19 archivos oficiales del core se conservaron.
-
-Las evidencias y fixtures se conservan fuera de la plantilla. La instalación usó
-la CLI oficial; el wrapper antiguo y la ausencia de herramientas se simularon en
-procesos aislados. No se acredita ejecución en una sesión real de Claude Code.
-Los casos completos sin código y sin Python permanecen como escenarios de la
-matriz pendientes de ejecutar; las pruebas de la CLI no sustituyen esos recorridos.
-
-## 3. Verificador de Project Discovery
+### Verificador y comportamiento de Discovery
 
 Desde la raíz, sin generar caches Python en la plantilla:
 
@@ -93,47 +80,34 @@ Desde la raíz, sin generar caches Python en la plantilla:
 py -3 -B -m unittest discover -s .agents/skills/project-discovery/scripts -p test_project_discovery_scope.py -v
 ```
 
-Estado técnico de referencia: **18 tests, 17 aprobados y 1 omitido** en Windows
-por falta de privilegio para crear symlinks. Un caso omitido conserva ese estado.
-La suite usa Git temporales: cubre cambios previos, allowlist exacta de Markdown
-bajo `context/`, archivos protegidos/ignorados, código de lectura, rutas, permisos,
-HEAD e índice. El [contrato de alcance](.agents/skills/project-discovery/SKILL.md#scope-checks)
-explica su cobertura y límites.
+La suite cubre cambios previos, rutas permitidas exactas, archivos protegidos,
+HEAD/índice, permisos y enlaces. Aunque usa carpetas temporales, hereda la
+configuración y variables Git del entorno: hooks, firma o plantillas personales
+pueden afectar su reproducibilidad. Ese aislamiento sigue pendiente de mejorar.
 
-## 4. Comportamiento de Discovery
+Para comprobar el método completo, usa dos o tres Git sintéticos con documentación
+contradictoria y una dependencia desconocida. Pide un borrador a un agente sin
+adelantar conclusiones; revisa fuentes, hechos/inferencias y cobertura. Comprueba
+lectura sin cambios y, tras aprobar contenido y rutas, publicación limitada a ese
+contexto contra la misma referencia. El [contrato de Discovery](.agents/skills/project-discovery/SKILL.md#scope-checks)
+define las operaciones y límites exactos.
 
-Usa un S0 y dos o tres repositorios sintéticos: incluye monorepo, servicio
-separado, documentación contradictoria y una dependencia desconocida.
+### Regresión funcional en Codex y Claude
 
-1. Captura la referencia inicial fuera de los repositorios y pide a un agente
-   independiente un borrador para un foco concreto, sin darle las conclusiones.
-2. Comprueba fuentes y revisiones, hechos frente a inferencias, incertidumbres y
-   conservación del contexto ajeno al foco. Verifica lectura sin allowlist.
-3. Aprueba contenido y rutas concretos. Publica sólo ese diff de `context/` y
-   verifica con la misma referencia y las rutas exactas aprobadas.
-4. Configuración, identidad, specs, changes, workflows, código, HEAD e índice
-   deben permanecer intactos. Comprueba la fuente canónica y el puente Claude.
+En copias equivalentes, fija revisión, CLI, schema, cliente, modelo y necesidad;
+aísla registros y preferencias. Conserva hashes de configuración, identidad y
+archivos oficiales para comprobar que Discovery no los modifica.
+Compara una propuesta nativa antes y después de Discovery aprobado: conserva los
+artefactos, valida con la CLI y revisa requisitos observables, decisiones de diseño
+y tareas comprobables. Repite en cada cliente sin sustituirlo por el otro.
+No se espera identidad textual; registra diferencias de significado, fallos y
+fuentes. Este recorrido sigue pendiente según la tabla de estado.
 
-## 5. Regresión funcional nativa en Codex y Claude
+## Límites de lo comprobado
 
-Prepara dos copias equivalentes del S0 y las mismas fuentes autorizadas. Fija
-CLI, schema oficial, cliente, modelo y prompt; aísla registros y preferencias CLI.
-
-1. Guarda hashes de configuración, identidad, schemas, plantillas y workflows.
-2. Genera una propuesta con la skill oficial local `openspec-propose` y una
-   necesidad funcional concreta. Conserva proposal, specs, design y tasks.
-3. En la otra copia, ejecuta Discovery, revisa/publica sólo contexto aprobado y
-   verifica que no alteró archivos nativos. No añadas reglas para forzar resultados.
-4. En una sesión nueva repite el mismo `propose`; valida ambas copias con la CLI.
-5. Revisa el significado: specs con comportamiento observable y escenarios;
-   diseño con decisiones técnicas; tareas con implementación y comprobaciones.
-   Un contrato técnico observable puede pertenecer a una spec.
-6. Repite el par con cada cliente. Conserva fallos, omisiones y fuentes; no esperes
-   identidad textual entre resultados ni sustituyas un cliente por otro.
-
-**Pendiente:** completar esta regresión semántica dual con ejecución de modelos.
-Hashes iguales, instrucciones CLI iguales y catálogos no demuestran su resultado.
-
-El helper verifica cambios de archivos, no aprobación humana, exactitud del texto
-ni escrituras transitorias revertidas. Las comprobaciones estructurales no ejecutan
-el producto ni certifican permisos de conectores, onboarding o aceptación funcional.
+El verificador detecta diferencias de archivos y estado Git; no acredita aprobación
+humana, veracidad del texto ni escrituras transitorias revertidas. El análisis puede
+ser selectivo, pero las huellas cubren los archivos incluidos de cada raíz capturada:
+la arquitectura multirrepositorio no equivale a un benchmark de rendimiento.
+Validación estructural, archivo de cambios y catálogo de skills no prueban aceptación
+funcional, ejecución del producto ni permisos de otros clientes o conectores.
