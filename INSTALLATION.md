@@ -1,8 +1,11 @@
 # Conectar y usar S0 en tu equipo
 
-Elige tu recorrido. El responsable crea y clona el S0 manualmente; después pide
-`connect-project` al agente. La skill prepara la conexión local y continúa con
-un borrador de contexto. El equipo revisa ese borrador antes de guardarlo.
+**Primera adopción:** crear manualmente con GitHub Template → clonar → abrir
+la raíz S0 con el agente → pedir `connect-project` → revisar el borrador de
+Discovery. [Empieza con el paso a paso de conexión](#existing-system).
+
+Una persona prepara el S0 del sistema; los demás reciben esa configuración.
+El equipo revisa el contenido del borrador antes de guardarlo. Elige tu recorrido:
 
 | Tu situación | Recorrido |
 | --- | --- |
@@ -262,6 +265,32 @@ un componente de un sistema ya conectado, puedes pedir directamente
 `$project-discovery`, `/project-discovery` o su fuente local
 [.agents/skills/project-discovery/SKILL.md](.agents/skills/project-discovery/SKILL.md).
 
+El objetivo es conservar conocimiento del sistema actual que ayude a encontrar
+y entender sus partes: mapa de componentes, arquitectura y relaciones, tecnologías,
+interfaces y protocolos, construcción y artefactos generados, infraestructura y
+despliegue. Cada dato debe tener fuente; separa lo observado de lo inferido o
+desconocido. Leer un script de build no acredita haberlo ejecutado.
+
+Mantén `context/project.md` como índice y separa el detalle en otros documentos
+sólo cuando aporte valor:
+
+| Documento | Qué ayuda a consultar |
+| --- | --- |
+| `context/project.md` | Índice del sistema: propósito, límites, componentes, fuentes y preguntas abiertas |
+| `context/architecture.md` | Vista actual de relaciones, flujos, interfaces y protocolos observados |
+| `context/components/<component-name>.md` | Detalle de un componente: responsabilidad, tecnologías, entradas/salidas, build y artefactos |
+| `context/infrastructure.md` | Infraestructura, entornos y despliegue conocidos, cuando merecen una vista propia |
+
+No necesitas todos esos archivos ni uno por servicio. Un repositorio puede
+contener varios componentes, y un componente puede abarcar más de un repositorio.
+Los widgets pueden describirse en una sección del frontend, sin un documento
+por widget. Referencia dependencias y contratos de otro S0 en su fuente canónica,
+sin copiar sus especificaciones internas.
+
+`context/architecture.md` describe el estado conocido hoy. El `design.md` de
+un cambio OpenSpec propone decisiones para ese cambio; no sustituye esa vista
+actual ni convierte una propuesta en implementación existente.
+
 Indica las fuentes y el foco. Revisa el diff propuesto antes de guardar contexto.
 La publicación exige Git/Python y el [verificador de alcance](.agents/skills/project-discovery/SKILL.md#scope-checks),
 con la misma referencia antes y después del borrador aprobado. Sus archivos
@@ -273,6 +302,9 @@ Sin Python o una fuente verificable, entrega un borrador limitado sin publicar.
 
 <a id="daily-work"></a>
 ## Del contexto a un cambio
+
+Para el uso diario por PO, DEV y QA, consulta [PLAYBOOK.md](PLAYBOOK.md):
+roles, recorridos de trabajo y revisión humana.
 
 | Paso | Resultado |
 | --- | --- |

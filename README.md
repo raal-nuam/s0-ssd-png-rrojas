@@ -10,6 +10,30 @@ adicionales.
 ese mismo repositorio con el contexto, las specs y las skills ya compartidas.**
 Un sistema puede tener uno, diez o veinte repositorios de código y un único S0.
 
+## Inicio rápido del responsable
+
+**Crear desde plantilla → clonar y abrir el S0 → pedir `connect-project` → revisar el contexto.**
+
+1. En [s0-core-template](https://github.com/fdelvalle01/s0-core-template), usa **Use this template → Create a new repository** para crear el S0 de tu sistema.
+2. Clona **el repositorio nuevo** y abre su raíz con Codex o Claude, con acceso al código que quieres conectar.
+3. Envía la petición siguiente en el chat del agente, sustituyendo los datos entre corchetes.
+4. Revisa el borrador de contexto. Cuando apruebes su contenido y archivos destino, el agente lo guarda y verifica.
+
+```text
+Lee AGENTS.md y usa la skill local .agents/skills/connect-project/SKILL.md.
+Este S0 corresponde a [nombre y propósito del sistema].
+Puedes configurar este S0 y el código ubicado en [ruta o lista de repositorios].
+Continúa con Project Discovery hasta presentar el borrador de contexto.
+```
+
+La IA comprueba la CLI, prepara identidad, registro, conexiones e integraciones
+y presenta el contexto para revisar. Los cambios quedan locales; después de
+revisarlos, publícalos mediante el proceso Git del equipo. Los comandos manuales
+están en la [referencia avanzada](INSTALLATION.md#cli-setup).
+
+Para continuar con historias y cambios, consulta el
+[playbook de PO, DEV y QA](PLAYBOOK.md), con responsabilidades, skills y revisiones humanas.
+
 ## Empieza por tu caso
 
 | Tu situación | Qué vas a hacer | Guía paso a paso |
@@ -20,11 +44,7 @@ Un sistema puede tener uno, diez o veinte repositorios de código y un único S0
 
 PO y QA pueden leer, refinar historias y preparar casos desde la carpeta S0 con
 un agente compatible, **sin instalar OpenSpec ni repetir la configuración del
-sistema**. Para la primera conexión, el responsable crea el repositorio con
-GitHub Template, lo clona y lo abre con el agente; después pide
-**[connect-project](.agents/skills/connect-project/SKILL.md)**. La skill prepara
-la conexión local y continúa con un borrador de Discovery para revisar.
-La CLI es necesaria para la conexión y los workflows nativos; la skill puede
+sistema**. La CLI es necesaria para la conexión y los workflows nativos; `connect-project` puede
 instalar OpenSpec 1.14.3 si encuentra Node.js >=20.19.0 y npm. Los requisitos están en la
 [guía de instalación](INSTALLATION.md#requirements).
 
@@ -56,7 +76,8 @@ mediante un PR selectivo, conservando la identidad y el contenido del sistema.
 
 | Archivo o carpeta | Para qué sirve |
 | --- | --- |
-| `context/project.md` | Propósito, usuarios, límites, componentes y fuentes del sistema |
+| `context/project.md` | Propósito, usuarios, límites, mapa resumido de componentes y fuentes; índice del conocimiento del sistema |
+| Otros documentos bajo `context/`, opcionales | Arquitectura, tecnologías, interfaces, infraestructura y detalle de componentes, según la evidencia y el tamaño del sistema |
 | `openspec/specs/` | Especificaciones vigentes |
 | `openspec/changes/` | Propuestas activas e historial archivado |
 | `.openspec-store/store.yaml` | Identidad del S0, generada por la CLI oficial |
@@ -114,6 +135,7 @@ Node.js **>=20.19.0**; el binario autónomo equivalente no. Stores sigue siendo 
 una actualización de versión necesita validar nuevamente la adopción.
 
 - [Instalación y uso](INSTALLATION.md): tres recorridos, herramientas y soluciones a problemas habituales.
+- [Playbook PO, DEV y QA](PLAYBOOK.md): qué hace cada rol, qué utiliza y cuándo interviene una persona.
 - [Mantenimiento](INSTALLATION.md#maintenance): actualizar integraciones y adoptar mejoras de la plantilla.
 - [VALIDATION.md](VALIDATION.md): comprobaciones reproducibles y límites de validación del core.
 
