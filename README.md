@@ -10,6 +10,10 @@ adicionales.
 ese mismo repositorio con el contexto, las specs y las skills ya compartidas.**
 Un sistema puede tener uno, diez o veinte repositorios de código y un único S0.
 
+Para comprender la arquitectura completa o dar contexto a otra IA, consulta
+[CORE_OVERVIEW.md](CORE_OVERVIEW.md): estructura, skills, recorridos, evidencia
+y límites del estado actual en un único documento.
+
 ## Inicio rápido del responsable
 
 **Crear desde plantilla → clonar y abrir el S0 → pedir `connect-project` → revisar el contexto.**
