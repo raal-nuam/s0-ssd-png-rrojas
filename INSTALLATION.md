@@ -77,8 +77,8 @@ openspec --version
 ```
 
 El último comando debe mostrar `1.14.3`. Si muestra otra versión, **la instalación
-puede estar bien y Windows estar ejecutando otra copia anterior**. Nos ocurrió
-con un wrapper de BrainProjects que devolvía `1.13.2`. Comprueba las rutas:
+puede estar bien y Windows estar ejecutando otra copia anterior**. Comprueba
+las rutas del comando y la versión instalada por npm:
 
 ```powershell
 Get-Command openspec -All | Select-Object Source
@@ -242,7 +242,7 @@ modifica ese archivo ni añade instrucciones para generar artefactos.
 Adapta también el inicio del README de la instancia: nombre, propósito, ID, URL
 y enlace directo al [recorrido de incorporación](#join-team). Así PO y QA no
 confundirán el S0 del sistema con una plantilla que aún deben configurar.
-Conserva esta guía como referencia. `VALIDATION.md` registra pruebas del core;
+Conserva esta guía como referencia. `VALIDATION.md` describe cómo verificar el core;
 no demuestra que tu producto se haya probado. Identifica la versión/commit de
 la plantilla adoptada y registra la validación de tu sistema por separado.
 
@@ -682,10 +682,12 @@ D:\my-system-notifications. Presenta el diff propuesto para
 context/components/notifications.md y los enlaces del índice que deban cambiar.
 ```
 
-La fuente común está en `skills/project-discovery/SKILL.md`; `.agents/skills/`
-y `.claude/skills/` contienen puentes. Si no aparece en tu selector, pide leer
-explícitamente esa fuente. Mantén los tres directorios al copiar la skill a una
-instancia existente; los recursos del método viven junto a su fuente común.
+La fuente completa está en `.agents/skills/project-discovery/SKILL.md`, con las
+indicaciones de contenido y comprobación integradas. Su verificador vive en
+`scripts/`, dentro de esa misma skill; `.claude/skills/project-discovery/`
+contiene el puente Claude. Si no aparece en tu selector, pide leer explícitamente
+la fuente completa. Al incorporarla a una instancia existente, conserva todo
+`.agents/skills/project-discovery/` y su puente `.claude/skills/project-discovery/`.
 
 El contexto puede organizarse en `context/project.md`, `context/architecture.md`
 y `context/components/`, sin exigir todos esos documentos en cada sistema.
@@ -695,7 +697,7 @@ oficiales. Después puedes pedir una propuesta con OpenSpec y consultar el
 contexto relevante; no se inicia una propuesta automáticamente.
 
 La publicación requiere **Git y Python >=3.10** para el verificador incluido,
-sin paquetes adicionales. El [procedimiento de comprobación](skills/project-discovery/references/scope-checks.md)
+sin paquetes adicionales. El [procedimiento de comprobación](.agents/skills/project-discovery/SKILL.md#scope-checks)
 captura una referencia antes del análisis y compara la escritura posterior
 con las rutas aprobadas. Si falta una herramienta o una fuente sólo está en ZIP,
 la skill puede entregar un borrador con sus límites, sin acreditar una publicación
@@ -704,8 +706,8 @@ comprueba archivos y estado Git.
 
 Al adoptar la skill en un S0 creado antes de esta versión, incorpora sus archivos
 y el enlace de instrucciones mediante un PR selectivo. No vuelvas a crear el S0
-ni reemplaces su contexto o configuración. La incorporación y las comprobaciones
-del core se registran en [VALIDATION.md](VALIDATION.md).
+ni reemplaces su contexto o configuración. Las comprobaciones reproducibles del
+core están en [VALIDATION.md](VALIDATION.md).
 
 <a id="daily-work"></a>
 ## Después de instalar: un cambio de PO a QA
@@ -781,8 +783,8 @@ En el inventario opcional usa `repositories`, `name`, `type`, `technology` y
 `responsabilidad`; `url` se conserva. Mantén los valores propios del sistema.
 No necesitas crear un inventario para adoptar los nombres nuevos.
 
-Consulta el [registro de validación](VALIDATION.md) para distinguir lo comprobado
-de las pruebas de clientes y onboarding todavía pendientes. La referencia de
+Consulta la [guía de validación](VALIDATION.md) para repetir las comprobaciones
+del core y conocer sus límites; comprueba los clientes que utilizarás. La referencia de
 comandos es la CLI fijada y las fuentes oficiales de
 [Stores](https://openspec.dev/docs/stores), [CLI](https://openspec.dev/docs/cli),
 [Profiles](https://openspec.dev/docs/profiles) y
