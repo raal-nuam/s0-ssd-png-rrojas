@@ -11,7 +11,7 @@ import tempfile
 import unittest
 
 
-SCRIPT = Path(__file__).resolve().parents[1] / 'skills/project-discovery/scripts/check_discovery_scope.py'
+SCRIPT = Path(__file__).resolve().with_name('check_discovery_scope.py')
 
 
 class ScopeGuardTests(unittest.TestCase):
@@ -26,7 +26,7 @@ class ScopeGuardTests(unittest.TestCase):
             self.git(root, 'config', 'user.name', 'Scope Test')
             self.git(root, 'config', 'user.email', 'scope@example.invalid')
         for name in ('AGENTS.md', 'openspec/config.yaml', '.openspec-store/store.yaml',
-                     '.agents/skills/native/SKILL.md', 'skills/project-discovery/SKILL.md',
+                     '.agents/skills/native/SKILL.md', '.agents/skills/project-discovery/SKILL.md',
                      'context/project.md'):
             self.write(self.s0 / name, f'original {name}\n')
         self.write(self.s0 / '.gitignore', '.local/\n')
@@ -98,7 +98,7 @@ class ScopeGuardTests(unittest.TestCase):
 
     def test_protected_paths_remain_protected_even_when_already_dirty(self):
         protected = ('openspec/config.yaml', '.openspec-store/store.yaml', 'AGENTS.md',
-                     '.agents/skills/native/SKILL.md', 'skills/project-discovery/SKILL.md')
+                     '.agents/skills/native/SKILL.md', '.agents/skills/project-discovery/SKILL.md')
         for name in protected:
             with self.subTest(path=name):
                 self.write(self.s0 / name, 'dirty before snapshot\n')

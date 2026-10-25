@@ -24,12 +24,8 @@ sistema**. La CLI se necesita para configurar el store o ejecutar workflows
 nativos como `propose` y `apply`. Los requisitos completos están en la
 [guía de instalación](INSTALLATION.md#requirements).
 
-La [recapitulación de SummitApp](docs/summitapp-walkthrough.md) conserva los pasos
-y comandos de nuestra primera adopción real, las correcciones de PowerShell y
-los pendientes. Es un ejemplo histórico, no una instalación que debas repetir.
-
 Para comprender un sistema existente antes de proponer cambios, usa
-**[Project Discovery](skills/project-discovery/SKILL.md)**. Inspecciona fuentes
+**[Project Discovery](.agents/skills/project-discovery/SKILL.md)**. Inspecciona fuentes
 autorizadas, presenta contexto verificable y publica sólo el borrador aprobado
 en `context/`. Es opcional; no modifica configuración, schemas, specs ni workflows
 OpenSpec. El [paso de contextualización](INSTALLATION.md#project-discovery)
@@ -63,8 +59,8 @@ mediante un PR selectivo, conservando la identidad y el contenido del sistema.
 | `openspec/config.yaml` | Schema nativo `spec-driven`, contexto conciso y reglas |
 | `AGENTS.md` | Instrucciones comunes para los agentes |
 | `CLAUDE.md` | Referencia a esas mismas instrucciones |
-| `.agents/skills/` | Workflows oficiales Codex, métodos PO/QA y puente a Project Discovery |
-| `skills/project-discovery/` | Fuente común de Discovery, referencias y verificador de alcance |
+| `.agents/skills/` | Workflows oficiales Codex y fuentes completas de las skills propias |
+| `.agents/skills/project-discovery/scripts/` | Verificador de alcance y tests de Discovery con Git/Python |
 | `.claude/skills/`, `.claude/commands/opsx/` | Integración Claude; las skills propias son puentes a las fuentes compartidas |
 | `repositories.yaml`, opcional | Inventario de componentes cuando el contexto no basta; OpenSpec no lo interpreta |
 
@@ -109,11 +105,11 @@ Núcleo **0.2**, CLI comprobada **OpenSpec 1.14.3**. La instalación npm requier
 Node.js **>=20.19.0**; el binario autónomo equivalente no. Stores sigue siendo beta;
 una actualización de versión necesita validar nuevamente la adopción.
 
-- [Instalación y uso](INSTALLATION.md): tres recorridos, herramientas y soluciones a los problemas encontrados.
+- [Instalación y uso](INSTALLATION.md): tres recorridos, herramientas y soluciones a problemas habituales.
 - [Mantenimiento](INSTALLATION.md#maintenance): actualizar integraciones y adoptar mejoras de la plantilla.
-- [VALIDATION.md](VALIDATION.md): pruebas realizadas y pendientes de clientes y adopción.
+- [VALIDATION.md](VALIDATION.md): comprobaciones reproducibles y límites de validación del core.
 
-La generación de archivos y el descubrimiento de skills se han comprobado con el
-alcance indicado en ese registro. La ejecución en sesiones reales de ambos
-clientes, incluido Claude Desktop Code, conserva sus comprobaciones pendientes.
+La validación estructural y un catálogo de skills no acreditan la ejecución de
+los métodos ni la calidad semántica de sus resultados. Comprueba los clientes
+que utilizará tu equipo; la regresión funcional dual sigue pendiente.
 Un cambio de modelo no crea otro S0 ni garantiza resultados idénticos.
