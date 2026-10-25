@@ -5,9 +5,9 @@ ideas sin conocer la conversación de desarrollo. Este archivo es opcional para
 usar S0. Resume el diseño; las instrucciones operativas tienen sus propias fuentes.
 
 - **Fecha de revisión:** 2026-10-25.
-- **Base auditada:** `8d7e50a6b94a1b849741fa0be75ee8d38459a902`, anterior a esta
-  simplificación documental. Los métodos y la estructura descritos corresponden
-  a esa base; esta edición concentra las guías y la regla de CLI en sus fuentes.
+- **Base de revisión:** `2e9fd3dbeeca8e047ceedc04e84be0a4d22f2eb6`; esta edición
+  incorpora la ampliación de `connect-project` a fuentes remotas y mixtas.
+  Las comprobaciones ejecutadas se documentan por separado en `VALIDATION.md`.
 - **Dependencia fijada:** OpenSpec 1.14.3, schema oficial `spec-driven`.
 
 ## Qué es y qué comparte
@@ -31,6 +31,9 @@ en inglés y la redacción es en español por defecto.
 flowchart TD
     T["s0-core-template"] -->|"Use this template"| S["S0 del sistema: Git independiente"]
     S --> C["Contexto, specs, cambios y skills"]
+    F["Rutas locales y URLs Git autorizadas"] --> CP["connect-project: prepara copias y conecta"]
+    CP --> W
+    CP --> A
     W["Consumidor web: store my-system"] --> R["Registro local: ID a ruta"]
     A["Consumidor API: store my-system"] --> R
     R --> S
@@ -51,6 +54,11 @@ El puntero no instala las skills propias ni carga automáticamente las instrucci
 del S0 en otro cliente. El agente debe leer las fuentes de la raíz resuelta.
 Cada entorno que use la CLI desde consumidores necesita sus checkouts y registro;
 PO/QA pueden consultar el S0 directamente sin preparar todos los servicios.
+
+Para fuentes remotas, `connect-project` obtiene copias locales mediante Git y
+las conecta con el mismo mecanismo. El responsable elige el workspace externo;
+las descargas permanecen allí, separadas del S0. Para una fuente nueva sin rama
+indicada consulta la predeterminada; el resultado identifica el SHA realmente preparado.
 
 ## Mapa de archivos
 
@@ -98,6 +106,12 @@ o `tests/`. Los archivos detallados de contexto y `repositories.yaml` son opcion
 Ese inventario puede listar componentes y URLs; OpenSpec no lo interpreta ni clona
 código, concede permisos o distribuye tareas a partir de él.
 
+El destino de las descargas se recuerda en Git local mediante `s0.sourcesRoot`.
+El índice `<workspace>/.s0-connections/<store-id>.json` registra instancia, fuentes,
+ramas, rutas, SHA y estado de las copias, incluidas las anteriores. Vive fuera del
+S0 y se contrasta con Git en cada uso; no sustituye las evidencias compartidas ni
+el snapshot de Discovery. No se añaden scripts, dependencias o carpetas al core.
+
 ## Los diez métodos
 
 Cada nombre corresponde a `.agents/skills/<nombre>/SKILL.md` y tiene una entrada
@@ -105,7 +119,7 @@ Claude. Las invocaciones de chat están en el playbook.
 
 | Método | Entrada → resultado |
 | --- | --- |
-| `connect-project` | S0 clonado y rutas locales → identidad, registro, punteros e integraciones; diffs locales y borrador Discovery |
+| `connect-project` | S0 clonado y rutas locales, URLs Git o ambas → copias preparadas, identidad, registro, punteros e integraciones; diffs locales y borrador Discovery. También actualiza fuentes mediante petición explícita |
 | `project-discovery` | Fuentes autorizadas y foco → contexto trazable en borrador; escritura posterior sólo de Markdown aprobado en `context/` |
 | `refine-user-story` | Necesidad, contexto y specs → alcance, criterios y dudas para PO, por defecto en conversación |
 | `prepare-tests` | HDU, specs o cambio identificado → matriz de casos trazables preparados, sin ejecución por defecto |
@@ -142,7 +156,7 @@ Las tareas identifican el repositorio cuando intervienen varios componentes.
 
 | Situación | Recorrido |
 | --- | --- |
-| Sistema existente | Crear S0 desde plantilla y clonarlo → `connect-project` con raíces locales → revisar Discovery → compartir diffs por Git |
+| Sistema existente | Crear S0 desde plantilla y clonarlo → `connect-project` con rutas o URLs Git → revisar Discovery → compartir diffs por Git |
 | Sistema nuevo | Crear/clonar S0 → definir propósito sin inventar código → preparar contexto inicial → conectar consumidores cuando existan |
 | Integrante de un equipo | Obtener el S0 y revisión ya preparados → leer contexto y usar las skills pertinentes; no crear otra instancia |
 
@@ -174,8 +188,16 @@ la escritura de contexto. Leer, refinar o preparar casos desde S0 no requiere CL
 
 `connect-project` usa la CLI oficial, preserva identidad y trabajo previo, informa
 conflictos y permite reejecución. Puede instalar la CLI fijada con npm disponible.
-Sus cambios son locales: no incluye commits, push, PR, migraciones o clones adicionales.
+Descarga sólo fuentes solicitadas usando el acceso Git HTTPS/SSH disponible.
+Sus cambios quedan locales: no incluye commits, push, PR ni migraciones.
 La comprobación del ejecutable al iniciar una sesión está en `AGENTS.md`.
+
+Reconectar reutiliza copias correctas sin consultar nuevas revisiones. Una
+actualización explícita prepara otra copia cuando corresponde, preservando la
+anterior; puede reutilizar una copia válida si la revisión no cambió. No hace pull,
+reset o cambios de rama sobre copias existentes ni elimina descargas antiguas.
+Informa discrepancias de rama/HEAD, acceso fallido y resultados parciales. La
+preparación Git no modifica el core, schemas ni workflows oficiales de OpenSpec.
 
 Discovery analiza archivos sin ejecutar producto, builds o tests. Captura una
 referencia antes del análisis; si continúa desde `connect-project`, la captura
@@ -185,9 +207,11 @@ El verificador compara archivos y estado Git; no prueba veracidad, aprobación
 humana ni escrituras transitorias revertidas. No es un sandbox y su coste depende
 del contenido de las raíces capturadas, aunque el análisis funcional sea selectivo.
 
-**La conexión directa por URLs GitHub continúa en exploración.** El flujo actual
-usa ubicaciones locales. Tampoco existe sincronización automática del contexto
-con el código, propagación de actualizaciones del maestro ni transacciones entre Git.
+La conexión remota requiere checkouts locales: no ofrece lectura sólo por API,
+cachés o worktrees. No hay actualización automática al ejecutar `explore` o
+`propose`, sincronización del contexto con el código, propagación de mejoras del
+maestro ni transacciones entre Git. La implementación posterior mantiene su petición
+y alcance explícitos; un inventario no autoriza editar todos sus repositorios.
 
 ## Evidencia y preguntas abiertas
 
@@ -196,13 +220,14 @@ conflictos, selección de CLI y catálogo, además de tests del verificador. La 
 canónica, sus revisiones y referencias están en [VALIDATION.md](VALIDATION.md).
 Este resumen no reproduce sus cifras ni acredita nuevas ejecuciones.
 
-Siguen pendientes la regresión semántica dual con modelos, la ejecución real de
-Claude Code y los recorridos completos sin código/sin Python. Admitir múltiples
-repositorios no equivale a un benchmark de escala ni a calidad funcional garantizada.
+La matriz distingue pruebas de operaciones Git, comprobaciones estructurales y
+ejecuciones reales de agentes. Admitir múltiples repositorios no equivale a un
+benchmark de escala; una prueba con remotos sintéticos no valida la autenticación
+en todos los proveedores ni garantiza calidad funcional.
 
 Para evaluar futuras mejoras quedan abiertas, sin compromiso de implementación,
-la lectura remota reproducible, la vigencia del contexto frente a varios commits,
-la distribución selectiva de mejoras y la equivalencia de comportamiento entre agentes.
+la vigencia del contexto frente a varios commits, la distribución selectiva de
+mejoras y la equivalencia de comportamiento entre agentes.
 
 ## Fuentes y uso de este resumen
 

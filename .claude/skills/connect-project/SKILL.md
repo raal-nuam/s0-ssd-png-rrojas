@@ -1,6 +1,6 @@
 ---
 name: connect-project
-description: Conectar y configurar una instancia S0 ya clonada con un proyecto, monorepo o varios repositorios. Usar al pedir enlazar el S0 con el código o preparar su adopción; comprueba OpenSpec, identidad e integraciones y continúa con un borrador de Project Discovery.
+description: Conectar una instancia S0 con repositorios locales, remotos o mixtos, o preparar un proyecto sin código. Usar al enlazar el código, adoptar S0 o pedir actualizar sus fuentes; configura OpenSpec e integraciones y continúa con un borrador de Project Discovery.
 ---
 
 Antes de ejecutar esta skill, lee y sigue íntegramente la

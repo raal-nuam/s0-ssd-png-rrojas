@@ -19,6 +19,7 @@ Los ejemplos usan nombres y rutas ficticios. Los prompts van en el chat del agen
 | --- | --- |
 | Crear desde GitHub Template | Cuenta con acceso a la plantilla y navegador |
 | Clonar y conectar | Git, agente con acceso a las carpetas y OpenSpec 1.14.3 |
+| Descargar fuentes remotas | Acceso Git HTTPS o SSH a esos repositorios y una carpeta de trabajo externa al S0 |
 | Leer, refinar historias o preparar casos desde el S0 | Editor o agente con acceso al S0; no requiere CLI OpenSpec |
 | Ejecutar workflows oficiales | CLI OpenSpec 1.14.3 y acceso a las fuentes pertinentes |
 | Guardar contexto mediante Discovery | Git y Python >=3.10 para verificar el alcance |
@@ -62,7 +63,7 @@ Set-Location s0-my-system
 ### Paso 3. Abre el S0 y pide la conexión
 
 Abre con tu agente la raíz que contiene `AGENTS.md`, `context/` y `openspec/`.
-En el chat, sustituye nombre, propósito y rutas:
+En el chat, sustituye nombre, propósito y fuentes. Si ya tienes el código local:
 
 ```text
 Usa la skill local .agents/skills/connect-project/SKILL.md.
@@ -74,8 +75,29 @@ Continúa con el borrador de contexto de Project Discovery.
 Para un monorepo indica una sola raíz Git, aunque contenga varios servicios.
 Para varios Git, enumera las raíces o una carpeta que los agrupe; el agente
 identifica los repositorios dentro de ese límite. Puedes conectar más después.
-El flujo actual utiliza carpetas locales: una URL no activa una conexión remota
-ni autoriza clones adicionales.
+
+Si el código está en GitHub, GitLab o Bitbucket, proporciona sus URLs Git:
+
+```text
+Usa connect-project para conectar este S0 con:
+- Web: https://github.com/your-team/web.git, rama development.
+- API: git@gitlab.com:your-team/api.git, rama main.
+Descarga las copias en D:\workspaces y presenta el borrador de Project Discovery.
+```
+
+También puedes mezclar fuentes en una petición:
+
+```text
+Usa connect-project para conectar D:\my-system-api y
+https://github.com/your-team/web.git, rama development.
+Descarga lo necesario en D:\workspaces y continúa con el borrador de Discovery.
+```
+
+Elige una carpeta de descargas fuera del S0 y que no esté dentro de otro Git.
+El agente recuerda ese destino en este clon del S0. Usa el acceso Git disponible;
+no necesita tokens en el chat. En una fuente nueva, si omites la rama, resuelve la
+predeterminada del remoto. No busca copias por todo el equipo ni descarga fuentes
+no solicitadas.
 
 La skill prepara identidad, registro, punteros e integraciones oficiales para
 Codex/Claude. Conserva cambios locales y una identidad ya adoptada. Si encuentra
@@ -84,8 +106,9 @@ sin borrarla ni migrarla. Los resultados parciales deben identificar lo pendient
 
 ### Paso 4. Revisa el contexto y comparte la preparación
 
-Después de configurar, Discovery presenta un borrador con fuentes y archivos
-destino. Revisa ese contenido antes de aprobar su escritura. **Sin Python/Git o
+Después de configurar, el agente informa las copias, ramas, SHA y cambios locales
+observados. Discovery toma entonces su referencia y presenta un borrador con fuentes
+y archivos destino. Revisa ese contenido antes de aprobar su escritura. **Sin Python/Git o
 una referencia válida, entrega sólo el borrador en conversación y no escribe
 archivos de contexto.** Las fuentes inaccesibles se declaran como limitaciones.
 
@@ -94,13 +117,31 @@ locales, sin stage, commit, push ni PR. Publícalos mediante el proceso del equi
 después comparte la URL del S0, su ID y el [recorrido de incorporación](#join-team).
 
 <a id="connect-code"></a>
-### Añadir repositorios después
+### Añadir repositorios o actualizar fuentes
 
-Pide `connect-project` desde el mismo S0 para las nuevas raíces Git. Conserva el
-ID existente; la reejecución reutiliza conexiones correctas y completa lo pendiente.
+Pide `connect-project` desde el mismo S0 para las nuevas rutas o URLs Git. Conserva
+el ID existente; la reejecución reutiliza conexiones correctas y completa lo pendiente
+sin buscar automáticamente nuevas revisiones.
+
+Para trabajar con código remoto más reciente, solicítalo expresamente:
+
+```text
+Usa connect-project para actualizar la fuente Web conectada, rama development.
+Conserva mi copia actual y prepara la revisión reciente en el workspace recordado.
+Continúa con Project Discovery hasta presentar el borrador.
+```
+
+La actualización prepara otra copia si corresponde y conserva íntegramente la
+anterior. Si la revisión no cambió y la copia sigue siendo válida, la reutiliza e
+informa sus cambios locales. No hace pull, reset ni cambios de rama sobre tu trabajo.
+Para actualizar desde una ruta local necesita un remoto y una rama inequívocos.
+Las copias no se eliminan automáticamente; un cambio manual de rama o HEAD en una
+copia registrada se informa, sin repararlo silenciosamente.
+
 Un mapa en `context/project.md` suele bastar. `repositories.yaml` es un inventario
-opcional, no interpretado por OpenSpec; puede contener responsabilidades y URLs,
-sin rutas personales ni credenciales.
+opcional, no interpretado por OpenSpec; puede contener responsabilidades, URLs y
+ramas, sin rutas personales ni credenciales. Indica qué entradas quieres conectar:
+su existencia no autoriza descargar todas.
 
 <a id="new-system"></a>
 ## 2. Comenzar un proyecto nuevo, sin código
@@ -117,7 +158,7 @@ para revisar, distinguiendo intención de implementación existente.
 Revisa el borrador y sus destinos antes de guardarlo, con los mismos requisitos
 de comprobación del paso 4. Publica la preparación por Git y continúa con el
 [playbook](PLAYBOOK.md). No necesitas crear servicios o repositorios vacíos.
-Cuando exista código, conecta sus raíces al mismo S0. Discovery es opcional y
+Cuando exista código, conecta sus repositorios al mismo S0. Discovery es opcional y
 no constituye un requisito previo de OpenSpec.
 
 <a id="join-team"></a>
@@ -138,7 +179,7 @@ rama/commit al revisar; un clon o ZIP no se actualiza solo. Recibe nuevas revisi
 conservando tu trabajo local.
 
 Si eres DEV y necesitas resolver el store desde código en esta máquina, pide
-`connect-project` desde el S0 con su ID existente y las raíces pertinentes.
+`connect-project` desde el S0 con su ID existente y las rutas o URLs pertinentes.
 Preparará lo que falte sin regenerar la identidad compartida.
 
 <a id="local-skills"></a>
@@ -176,6 +217,15 @@ Para trabajar con historias, cambios y pruebas, continúa en [PLAYBOOK.md](PLAYB
 Estos comandos sirven para diagnóstico o configuración manual deliberada.
 La primera conexión con el agente sigue el recorrido anterior. Usa el ejecutable
 1.14.3 comprobado en los comandos que siguen y la raíz indicada en cada sección.
+
+### Localizar las copias remotas
+
+`connect-project` recuerda el destino en la configuración Git local del S0:
+`git config --local --get s0.sourcesRoot`. Bajo ese workspace mantiene
+`.s0-connections/<store-id>.json` con la instancia, fuentes, ramas, rutas, SHA y
+estado de sus copias. Es un índice local que el agente contrasta con Git, no
+configuración OpenSpec ni evidencia suficiente del contexto. No se publica con
+el S0; las fuentes y revisiones pertinentes sí acompañan al contexto aprobado.
 
 ### Comprobar la CLI
 
