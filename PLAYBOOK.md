@@ -19,7 +19,7 @@ requieren la CLI; la comprobación de versión se establece en [AGENTS.md](AGENT
 
 | Tarea | Codex | Claude Code |
 | --- | --- | --- |
-| Conectar el proyecto | `$connect-project` | `/connect-project` |
+| Conectar el proyecto o actualizar sus fuentes | `$connect-project` | `/connect-project` |
 | Descubrir contexto | `$project-discovery` | `/project-discovery` |
 | Refinar una historia | `$refine-user-story` | `/refine-user-story` |
 | Preparar casos QA | `$prepare-tests` | `/prepare-tests` |
@@ -32,10 +32,17 @@ requieren la CLI; la comprobación de versión se establece en [AGENTS.md](AGENT
 
 `sync` es un workflow del agente; no existe un comando de terminal `openspec sync`.
 
+`connect-project` admite código local, URLs Git o ambos. Reconectar conserva las
+revisiones; para obtener código remoto reciente pide una actualización explícita
+según [la guía](INSTALLATION.md#connect-code). No se actualizan fuentes al abrir
+`explore` o `propose`. Para implementar, identifica los repositorios y copias
+autorizados; disponer de un inventario o un checkout no distribuye permisos.
+
 ## 2. Quién utiliza qué
 
 | Rol o etapa | Qué consulta | Qué pide | Qué obtiene y dónde |
 | --- | --- | --- | --- |
+| DEV/administrador: preparación | Fuentes y ramas del sistema | `connect-project` | Copias conectadas, revisiones identificadas y borrador Discovery; revisión humana antes de guardar contexto |
 | PO | Necesidad original, contexto, specs y cambios relacionados | `refine-user-story` | Objetivo, alcance, criterios y dudas; por defecto en conversación |
 | DEV: planificación | Necesidad refinada, contexto y código pertinente | `openspec-explore` cuando haga falta y `openspec-propose` | Artefactos según el schema: habitualmente propuesta, specs delta, diseño y tareas en el S0 |
 | DEV: revisión del plan | Artefactos existentes y nuevas decisiones | `openspec-update-change` | Ediciones de planificación confirmadas; conserva el código |

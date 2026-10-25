@@ -1,32 +1,39 @@
 ---
 name: connect-project
-description: Conectar y configurar una instancia S0 ya clonada con un proyecto, monorepo o varios repositorios. Usar al pedir enlazar el S0 con el código o preparar su adopción; comprueba OpenSpec, identidad e integraciones y continúa con un borrador de Project Discovery.
+description: Conectar una instancia S0 con repositorios locales, remotos o mixtos, o preparar un proyecto sin código. Usar al enlazar el código, adoptar S0 o pedir actualizar sus fuentes; configura OpenSpec e integraciones y continúa con un borrador de Project Discovery.
 ---
 
 # Connect Project
 
-Recibe el S0 actual y las rutas del código. Resuelve la preparación técnica con
-las herramientas del agente y OpenSpec oficial; el usuario no tiene que ejecutar
-la secuencia manual. Esta es la fuente común para Codex, Claude y otros agentes.
+Recibe el S0 actual y rutas locales o URLs Git HTTPS/SSH con rama opcional.
+Resuelve la preparación técnica con Git, las herramientas del agente y OpenSpec
+oficial. Esta es la fuente común para Codex, Claude y otros agentes.
 
 ## Alcance de esta petición
 
-La creación desde GitHub Template y el clon los hace el usuario. Trabaja sobre
+La creación desde GitHub Template y el clon del S0 los hace el usuario. Trabaja sobre
 esa instancia independiente: nunca conviertas `s0-core-template` en el S0 de un
 producto. Comprueba raíz Git, remoto e instrucciones antes de modificar archivos.
 Si el destino es el maestro o no puedes identificar el S0, comunica el dato que
 falta antes de preparar su identidad.
 
-Pedir la conexión autoriza configurar el S0 y los consumidores indicados, registrar
-el store e instalar OpenSpec 1.14.3 si están disponibles sus requisitos. No pide
-commits, cambios de rama, stage, push, PR, clones adicionales ni migraciones.
-Deja las diferencias locales para revisión y conserva el trabajo previo.
+Pedir la conexión autoriza configurar el S0 y los consumidores indicados, obtener
+las fuentes remotas solicitadas, registrar el store e instalar OpenSpec 1.14.3
+si están disponibles sus requisitos. Sólo una petición de **actualizar fuentes**
+autoriza buscar revisiones nuevas de conexiones existentes. No hagas commits,
+stage, push, PR, migraciones ni cambios de rama en copias existentes. Deja las
+diferencias locales para revisión y conserva el trabajo previo.
 No escribas código de producto ni crees specs, cambios o schemas. No añadas
-scripts, inventarios obligatorios, archivos de estado ni carpetas auxiliares al S0.
+scripts, dependencias nuevas, inventarios obligatorios, archivos de estado
+versionados ni carpetas auxiliares al S0. El índice de copias descrito más abajo
+vive fuera del S0 y no modifica el registro ni el schema de OpenSpec.
 
 ## 1. Comprueba el alcance y las herramientas
 
-- Usa sólo las rutas aportadas. Identifica sus raíces con `git rev-parse
+- Usa sólo las fuentes indicadas, incluidas entradas de `repositories.yaml`
+  seleccionadas por el usuario. El inventario no autoriza conectar otras entradas.
+  Distingue **conectar** (por defecto) de **actualizar**; una reejecución no implica
+  obtener lo último. Identifica las raíces locales con `git rev-parse
   --show-toplevel`, comprueba su estado y elimina duplicados: frontend y backend
   dentro de un único Git requieren una sola conexión.
 - Si la ruta es una carpeta agrupadora, busca Git dentro de ella, sin atravesar
@@ -38,7 +45,9 @@ scripts, inventarios obligatorios, archivos de estado ni carpetas auxiliares al 
   inaccesible se informa como bloqueada.
 - Lee instrucciones y configuración existentes antes de escribir. Un árbol sucio
   no impide trabajar si puedes preservar sus cambios. No hagas reset, limpieza
-  ni sustitución completa de archivos personalizados.
+  ni sustitución completa de archivos personalizados. No busques copias en todo
+  el equipo: consulta sólo rutas aportadas y copias del índice de esta instancia.
+  Dos rutas o ramas del mismo remoto no son duplicados por compartir URL.
 - Comprueba Git y las instalaciones de OpenSpec. Ejecuta `--version` sobre los
   candidatos reales; una instalación correcta puede estar detrás de otra en PATH.
   En Windows usa `Get-Command openspec -All` y, si hay npm, su prefijo global y
@@ -51,24 +60,114 @@ scripts, inventarios obligatorios, archivos de estado ni carpetas auxiliares al 
   Si falta Git o Node/npm, informa el requisito concreto; no instales otras
   herramientas del sistema por inferencia ni finjas una configuración completa.
 
-## 2. Resuelve la identidad sin sustituir otro sistema
+## 2. Comprueba la identidad antes de preparar fuentes
 
 Lee `.openspec-store/store.yaml`, el remoto del S0, su configuración y
-`store list --json` usando la CLI comprobada. Conserva una identidad ya adoptada:
-registra ese checkout con `store register .` si hace falta, sin regenerar metadata.
+`store list --json` usando la CLI comprobada. Conserva una identidad ya adoptada.
 Si el ID solicitado contradice esa identidad, informa el conflicto antes de
 conectar consumidores; esta skill no renombra sistemas existentes.
 
 Sólo en una adopción nueva confirmada desde plantilla, con remoto propio,
-contenido inicial genérico y sin specs ni cambios de producto, sustituye el
-marcador heredado. `id: s0-core` por sí solo no demuestra que sea descartable.
+contenido inicial genérico y sin specs ni cambios de producto, determina que el
+marcador heredado puede sustituirse; no lo retires hasta el paso 4.
+`id: s0-core` por sí solo no demuestra que sea descartable.
 Deriva el ID del nombre del repositorio remoto quitando `s0-`, salvo que el usuario
 lo haya indicado. Si no es válido o resulta ambiguo, pide ese dato.
 
-Comprueba primero que el ID no esté registrado en otra ruta ni la ruta bajo otro
-ID. No desregistres asociaciones ajenas para resolver conflictos. Retira sólo
-el marker heredado, conservando su contenido temporalmente fuera del repositorio,
-y deja crear la identidad oficial con `store register . --id <id> --yes`.
+Comprueba que el ID previsto no esté registrado en otra ruta ni la ruta bajo otro
+ID. No desregistres asociaciones ajenas. Si hay un conflicto de identidad o el S0
+es el maestro, detén la preparación antes de clonar o configurar consumidores.
+
+## 3. Prepara las fuentes remotas y las actualizaciones solicitadas
+
+Si la petición sólo conecta rutas locales, sin actualizarlas, o todavía no hay
+código, omite este paso: no crees workspace ni índice. Para obtener copias, usa el destino indicado o
+consulta `git config --local --get s0.sourcesRoot` desde el S0. Si falta, pide
+una carpeta de trabajo una vez. Resuelve su ruta real: no puede estar dentro
+del S0 ni de otra raíz Git. Puede contener las nuevas copias como hijas.
+Comprueba enlaces y destinos antes de escribir; no atravieses una redirección
+que salga del workspace autorizado. Recuerda el destino comprobado con
+`git config --local s0.sourcesRoot <ruta>`; no cambies configuración Git global.
+
+### Índice local de copias
+
+Usa `<workspace>/.s0-connections/<store-id>.json`, fuera de todas las raíces
+analizadas. Mantén JSON UTF-8 con `version: 1`, `s0: {id, root, remote}` y
+`copies`: entradas `{remote, branch, path, base_sha, status}`. Los nombres de
+claves son literales; los valores corresponden a la instancia y copias reales.
+`status` es `pending`, `prepared`, `connected` o `blocked`; `base_sha` puede ser
+null hasta verificar el clon. Conserva las entradas anteriores al añadir una
+revisión. No conviertas este índice en inventario compartido ni snapshot Discovery.
+
+Antes de reutilizarlo, valida versión, estructura, propietario (ID, raíz S0 y
+remoto), rutas dentro del workspace y ausencia de destinos compartidos con otro
+S0. Un índice inválido o ajeno bloquea la operación remota; no lo sobrescribas
+ni adoptes sus rutas. Para la copia seleccionada verifica raíz Git exacta y URL de `origin`
+(`git config --get remote.origin.url`, antes de posibles reglas `insteadOf`),
+rama y HEAD contra su entrada. Las copias históricas no seleccionadas conservan
+su registro aunque después alguien trabaje en ellas. No confíes sólo en el JSON
+ni en el nombre del directorio. No guardes contraseñas o tokens en URLs, índice, logs o contexto;
+usa las credenciales HTTPS/SSH ya disponibles. No cambies cuentas ni enumeres
+otros repositorios del proveedor.
+
+### Conectar o actualizar
+
+1. **Reconectar una fuente conocida:** selecciona la entrada correspondiente a la
+   URL y rama solicitadas; si hay varias revisiones y ninguna selección explícita,
+   inspecciona la última entrada que corresponda, incluido su estado pendiente
+   o bloqueado; no saltes a una revisión anterior para ocultar un fallo. Una rama
+   omitida reutiliza la selección anterior sólo si es inequívoca. No consultes el remoto
+   para actualizarla ni repitas un clon ya verificado. Si la entrada nunca fue
+   verificada (`base_sha: null`), inspecciona la descarga: completa lo comprobable
+   según el punto 5 o prepara una ruta libre conservando la incompleta. No compares
+   HEAD contra null. Conserva y declara los cambios locales de una copia verificada.
+   Si su rama, HEAD o remoto cambió, informa el bloqueo; no elijas otra copia a
+   escondidas ni la repares. Una petición explícita de actualizar permite preparar
+   otra. Una ruta local proporcionada sigue siendo una fuente local, no una orden
+   de igualarla a su remoto.
+2. **Fuente nueva o actualización explícita:** comprueba acceso con Git. Resuelve
+   la rama predeterminada mediante `git ls-remote --symref <url> HEAD` sólo cuando
+   no haya selección previa ni rama indicada; no asumas `main`. Comprueba la rama
+   exacta con `git ls-remote --exit-code --heads <url> refs/heads/<rama>`.
+   Valida la referencia y pasa URL, rama y destino como argumentos, sin construir
+   comandos ejecutables a partir de sus textos. Una rama ausente o remoto vacío
+   queda bloqueado; no selecciones otra rama silenciosamente.
+3. **Actualizar una fuente local:** usa la URL y rama expresas o su upstream
+   configurado si es inequívoco. Un remoto local `.` o una referencia sin URL/rama
+   resoluble requiere esos datos. No hagas fetch, pull, checkout, reset o limpieza
+   en ese checkout. La actualización prepara una copia externa y conserva tanto
+   sus cambios de producto como sus integraciones; no los traslada automáticamente.
+4. **Reutilizar o clonar:** si una actualización encuentra el mismo SHA base y una
+   copia registrada válida para esa rama, reutilízala y declara su estado sucio.
+   En otro caso reserva una ruta inexistente bajo el workspace, diferenciando S0,
+   repositorio, rama y revisión; resuelve colisiones con un sufijo sin sobrescribir.
+   Registra `pending` y ejecuta `git clone --single-branch --branch <rama> -- <url>
+   <destino>` con argumentos separados. No uses cachés, worktrees, submódulos
+   recursivos ni ejecutes código del producto. Sólo las copias nuevas seleccionan
+   rama. Si se proporcionó una copia local para reutilizar, sigue el flujo local
+   sobre esa raíz; no la adoptes por coincidencia de URL con otra entrada.
+5. **Verificar la copia nueva:** comprueba raíz, remoto, rama y `rev-parse HEAD`;
+   registra ese SHA realmente obtenido, que puede diferir de la consulta anterior
+   si la rama avanzó. Es la revisión observada en esta preparación, no una promesa
+   de actualidad permanente ni una captura atómica entre varios repositorios.
+   Marca `prepared`. En fallo, conserva la ruta y marca `blocked`; una reejecución
+   inspecciona lo existente y sólo completa lo verificable o usa una ruta libre.
+   Nunca borres una copia parcial para reintentar. Declara contenido inaccesible,
+   submódulos o LFS faltantes como límites de cobertura.
+
+Conserva el índice válido al actualizarlo (escritura temporal y reemplazo dentro
+de su directorio). Si falla su escritura, no sigas creando copias sin seguimiento.
+No limpies copias antiguas automáticamente. Reúne las raíces preparadas y locales
+autorizadas, elimina duplicados por raíz real y aplica las mismas comprobaciones
+de instrucciones y exclusión de otros S0 antes de conectarlas. Los fallos de una
+fuente no impiden trabajar con otras compatibles; identifica siempre lo pendiente.
+
+## 4. Registra y personaliza el S0
+
+Con la identidad comprobada, registra un store adoptado con `store register .`
+si hace falta, conservando metadata. Sólo para la adopción nueva comprobada en
+el paso 2, retira el marker heredado conservándolo temporalmente fuera del
+repositorio y deja crear la identidad con `store register . --id <id> --yes`.
 Si falla, restaura únicamente ese marker que acabas de retirar y explica el error;
 no continúes suponiendo que quedó registrado. No uses `git init` ni edites el ID
 a mano: 1.14.3 rechaza `--id` distinto cuando ya existe identidad.
@@ -84,7 +183,7 @@ de generación/verificación siguiente. Si faltan, ejecútalo desde su raíz,
 conservando su configuración, specs, cambios y skills propias. El S0 mantiene
 su raíz OpenSpec: no se sustituye su configuración por un puntero a sí mismo.
 
-## 3. Conecta cada consumidor compatible
+## 5. Conecta cada consumidor compatible
 
 En cada raíz Git seleccionada, aplica esta decisión antes de ejecutar `init`:
 
@@ -126,7 +225,7 @@ Si faltan archivos, inicializa los pendientes después de comprobar que no se
 sobrescribirán adaptaciones. Si hay integraciones personalizadas incompatibles,
 informa el bloqueo y conserva sus contenidos; no las regeneres a ciegas.
 
-## 4. Alinea las instrucciones y verifica
+## 6. Alinea las instrucciones y verifica
 
 Aplica las escrituras de instrucciones sólo a consumidores compatibles cuya
 conexión al S0 elegido esté comprobada. Los consumidores bloqueados conservan
@@ -159,24 +258,35 @@ consumidor ejecuta `context --json` y `status`: la raíz debe ser exactamente el
 S0 elegido. Comprueba los punteros conservados, las integraciones esperadas y
 la ausencia de specs/changes locales. Revisa diferencias y archivos nuevos con
 Git y `git diff --check`; no hagas stage para obtener el diff de archivos nuevos.
+Actualiza el estado de las copias del índice: `connected` sólo tras verificar
+su resolución e integraciones, `blocked` si la conexión está pendiente. Conserva
+el SHA base y distingue los cambios de integración de otras modificaciones locales.
 
 Una segunda ejecución reutiliza identidad, registro, punteros e instrucciones
 correctos y completa únicamente lo pendiente. Ante un fallo conserva las partes
 correctas y el trabajo previo; explica qué está conectado, qué falta y la causa.
 No hagas rollback general ni elimines fuentes para obtener una comprobación verde.
 
-## 5. Continúa con el borrador de contexto
+## 7. Continúa con el borrador de contexto
 
 Entrega un resumen breve de S0/ID, raíces únicas, conexiones y bloqueos, versión
-de CLI usada y archivos modificados. Luego lee y utiliza la skill local
+de CLI usada y archivos modificados. Para cada fuente identifica URL si aplica,
+rama, SHA base/HEAD actual, ruta y cambios locales; señala las copias anteriores
+conservadas. Luego lee y utiliza la skill local
 [project-discovery](../project-discovery/SKILL.md), pasando el S0 y los repositorios
-autorizados accesibles. No presupongas que su entrada aparece en otro cliente.
+autorizados accesibles de la selección resultante, no todas las copias históricas
+del workspace. No presupongas que su entrada aparece en otro cliente.
 
-El snapshot de Discovery se captura **después** de terminar la configuración:
-los cambios técnicos locales pasan a ser su referencia y Discovery sólo puede
+El snapshot de Discovery se captura **después** de terminar preparación Git,
+configuración e índice: los cambios técnicos locales pasan a ser su referencia
+y Discovery sólo puede
 publicar el contexto aprobado. No reduzcas sus protecciones ni escribas contexto
 en nombre de la conexión para saltarte la revisión. Presenta el borrador y pide
-su aprobación conforme a esa skill; no inicies `propose` automáticamente.
+su aprobación conforme a esa skill. Sus evidencias compartidas deben identificar
+repositorio, archivos y revisión sin rutas personales; el índice local no sustituye
+esas fuentes. No actualices Git durante Discovery ni inicies `propose` o `apply`
+automáticamente. Una implementación posterior necesita identificar los repositorios
+y destinos autorizados; el inventario no distribuye tareas ni concede ese alcance.
 
 Sin código todavía, deja la identidad y los datos iniciales preparados y utiliza
 sólo el propósito que haya aportado el usuario para el borrador. No inventes

@@ -26,12 +26,16 @@ raíz con el agente y escribe en el chat:
 ```text
 Lee AGENTS.md y usa la skill local .agents/skills/connect-project/SKILL.md.
 Este S0 corresponde a [nombre y propósito del sistema].
-Puedes configurar este S0 y el código ubicado en [ruta o lista de repositorios].
+Puedes configurar este S0 y estos repositorios: [rutas locales o URLs Git con rama opcional].
+Para las descargas, usa [carpeta de trabajo fuera del S0].
 Continúa con Project Discovery hasta presentar el borrador de contexto.
 ```
 
-El agente prepara la conexión local. Revisa el borrador antes de que Discovery
-guarde contexto y publica los diffs según el proceso de tu equipo.
+El agente conecta las copias locales y descarga los remotos indicados; puedes
+combinar ambos. Sólo pide carpeta de descargas cuando hace falta y la recuerda
+en esta máquina. Reconectar conserva las revisiones; actualizarlas requiere una
+petición explícita. Revisa el borrador antes de que Discovery guarde contexto y
+publica los diffs según el proceso de tu equipo.
 Los [requisitos y pasos completos](INSTALLATION.md#requirements) están en la guía.
 
 ## Qué contiene el S0
