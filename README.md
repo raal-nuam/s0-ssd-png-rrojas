@@ -14,17 +14,21 @@ Un sistema puede tener uno, diez o veinte repositorios de código y un único S0
 
 | Tu situación | Qué vas a hacer | Guía paso a paso |
 | --- | --- | --- |
-| Ya existe un producto, con uno o varios repositorios | Crear su S0 desde la plantilla, documentar el sistema y conectar sus repositorios | [1. Adoptar S0 en un sistema existente](INSTALLATION.md#existing-system) |
-| Vas a comenzar un proyecto sin código | Crear su S0, definir el contexto inicial y preparar los primeros cambios; conectar código cuando exista | [2. Empezar un proyecto nuevo](INSTALLATION.md#new-system) |
+| Ya existe un producto, con uno o varios repositorios | Crear y clonar su S0 manualmente, pedir `connect-project` y revisar el borrador de contexto | [1. Adoptar S0 en un sistema existente](INSTALLATION.md#existing-system) |
+| Vas a comenzar un proyecto sin código | Crear y clonar su S0, pedir `connect-project` sin repositorios de producto y definir el contexto inicial | [2. Empezar un proyecto nuevo](INSTALLATION.md#new-system) |
 | El equipo ya preparó el S0 y te incorporas como PO, QA o lector | Clonar o descargar **el S0 del sistema**, abrirlo y usar sus archivos y skills | [3. Usar un S0 ya configurado](INSTALLATION.md#join-team) |
 
 PO y QA pueden leer, refinar historias y preparar casos desde la carpeta S0 con
 un agente compatible, **sin instalar OpenSpec ni repetir la configuración del
-sistema**. La CLI se necesita para configurar el store o ejecutar workflows
-nativos como `propose` y `apply`. Los requisitos completos están en la
+sistema**. Para la primera conexión, el responsable crea el repositorio con
+GitHub Template, lo clona y lo abre con el agente; después pide
+**[connect-project](.agents/skills/connect-project/SKILL.md)**. La skill prepara
+la conexión local y continúa con un borrador de Discovery para revisar.
+La CLI es necesaria para la conexión y los workflows nativos; la skill puede
+instalar OpenSpec 1.14.3 si encuentra Node.js >=20.19.0 y npm. Los requisitos están en la
 [guía de instalación](INSTALLATION.md#requirements).
 
-Para comprender un sistema existente antes de proponer cambios, usa
+Para comprender o actualizar un sistema ya conectado, usa
 **[Project Discovery](.agents/skills/project-discovery/SKILL.md)**. Inspecciona fuentes
 autorizadas, presenta contexto verificable y publica sólo el borrador aprobado
 en `context/`. Es opcional; no modifica configuración, schemas, specs ni workflows
@@ -82,6 +86,7 @@ cliente con selector de skills también puedes seleccionar la entrada local.
 
 | Tarea | Codex | Claude Code |
 | --- | --- | --- |
+| Conectar el proyecto | `$connect-project` | `/connect-project` |
 | Descubrir contexto | `$project-discovery` | `/project-discovery` |
 | Explorar | `$openspec-explore` | `/opsx:explore` |
 | Proponer | `$openspec-propose` | `/opsx:propose` |
@@ -98,6 +103,9 @@ Refinar no crea tickets ni cambios. Preparar casos no ejecuta pruebas. El
 Discovery también empieza con un borrador en conversación; la escritura posterior
 está limitada a los archivos de contexto aprobados y se comprueba con Git y el
 verificador incluido (Python >=3.10). Su análisis no requiere CLI OpenSpec.
+`connect-project` prepara identidad, registro, punteros e integraciones y deja
+los diffs locales para revisar. No hace commit, push ni PR. La escritura del
+contexto continúa sujeta al borrador y las rutas aprobadas en Discovery.
 
 ## Versiones, mantenimiento y evidencia
 
