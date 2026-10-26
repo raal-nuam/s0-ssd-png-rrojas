@@ -23,6 +23,7 @@ Los ejemplos usan nombres y rutas ficticios. Los prompts van en el chat del agen
 | Leer, refinar historias o preparar casos desde el S0 | Editor o agente con acceso al S0; no requiere CLI OpenSpec |
 | Ejecutar workflows oficiales | CLI OpenSpec 1.14.3 y acceso a las fuentes pertinentes |
 | Guardar contexto mediante Discovery | Git y Python >=3.10 para verificar el alcance |
+| Revisar PR | Acceso al PR o snapshot y código de su revisión; Node.js >=20 para verificar los informes; OpenSpec 1.14.3 si se resuelve un store desde un consumidor |
 | Ejecutar producto o sus tests | Herramientas, entorno, datos y permisos del producto |
 
 `connect-project` puede instalar OpenSpec 1.14.3 mediante npm si ya existen

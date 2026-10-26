@@ -23,6 +23,7 @@ requieren la CLI; la comprobación de versión se establece en [AGENTS.md](AGENT
 | Descubrir contexto | `$project-discovery` | `/project-discovery` |
 | Refinar una historia | `$refine-user-story` | `/refine-user-story` |
 | Preparar casos QA | `$prepare-tests` | `/prepare-tests` |
+| Revisar un PR | `$review-pr` | `/review-pr` |
 | Explorar | `$openspec-explore` | `/opsx:explore` |
 | Proponer | `$openspec-propose` | `/opsx:propose` |
 | Implementar | `$openspec-apply-change` | `/opsx:apply` |
@@ -47,6 +48,7 @@ autorizados; disponer de un inventario o un checkout no distribuye permisos.
 | DEV: planificación | Necesidad refinada, contexto y código pertinente | `openspec-explore` cuando haga falta y `openspec-propose` | Artefactos según el schema: habitualmente propuesta, specs delta, diseño y tareas en el S0 |
 | DEV: revisión del plan | Artefactos existentes y nuevas decisiones | `openspec-update-change` | Ediciones de planificación confirmadas; conserva el código |
 | DEV: implementación | Cambio identificado, tareas y repositorios afectados | `openspec-apply-change` después de la propuesta, mediante nueva petición | Código y tests en los consumidores; avance y resultados según lo ejecutado |
+| DEV: revisión de PR | PR o snapshot identificado, código en su SHA y fuentes S0 pertinentes | `review-pr` | Hallazgos verificables e informes en `.local/review-pr/`; publicación sólo cuando se solicite |
 | QA: preparación | HDU, specs y escenarios en su revisión correcta | `prepare-tests` | Casos trazables, dudas y cobertura; por defecto en conversación |
 | QA: ejecución | Casos, versión/build, suite, entorno y datos | Solicitud de implementar o ejecutar pruebas | Automatizaciones en la suite y resultados, incluidos fallos y pendientes |
 | Equipo: cierre | Diffs, resultados y deltas frente a specs vigentes | `openspec-sync-specs` cuando corresponda y `openspec-archive-change` | Estado de specs según la operación elegida e historial archivado |
@@ -83,6 +85,10 @@ casos afectados; un cambio de intención puede requerir un cambio OpenSpec nuevo
 En multirrepositorio, cada tarea identifica su Git. Enlaza los PR de código con
 el cambio S0 y registra las versiones comprobadas; no hay distribución automática
 de tareas o permisos entre repositorios.
+
+Para revisar un PR identificado puedes usar `review-pr`: captura base/head y
+contrasta el código con las fuentes pertinentes. Su informe no aprueba ni fusiona
+el PR y no sustituye la ejecución QA ni el cierre de OpenSpec.
 
 ## 4. Cuándo interviene una persona
 
@@ -133,6 +139,19 @@ Implementa el cambio [change-id] usando openspec-apply-change.
 Puedes modificar [repositorios autorizados]. Ejecuta las comprobaciones
 pertinentes y comunica resultados y pendientes.
 ```
+
+**DEV — revisar un PR:**
+
+```text
+Usa la skill local review-pr para revisar [URL del PR].
+El S0 es [ruta o store resuelto]. Cambio OpenSpec relacionado: [id, si existe].
+Entrega los informes locales con hallazgos, pruebas y límites.
+```
+
+También puedes aportar un snapshot y código de la revisión si no hay acceso
+remoto. Si no existe HDU/cambio vinculado, indícalo. Desde un consumidor, resuelve
+el store y pide leer `.agents/skills/review-pr/SKILL.md` de esa raíz; no es necesario
+copiar la skill al código. La publicación de comentarios se solicita expresamente.
 
 **QA — preparar cobertura:**
 

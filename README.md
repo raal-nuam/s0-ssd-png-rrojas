@@ -53,7 +53,7 @@ Jira es opcional y no se exigen documentos adicionales por rol.
 ## Uso y referencias
 
 Codex y Claude utilizan las mismas fuentes propias; otros agentes pueden leerlas.
-El cliente y el modelo se eligen aparte. Consulta las [invocaciones de las diez
+El cliente y el modelo se eligen aparte. Consulta las [invocaciones de las
 skills](PLAYBOOK.md#skills) y cómo [seleccionar la copia local](INSTALLATION.md#local-skills).
 
 | Documento | Para qué leerlo |
