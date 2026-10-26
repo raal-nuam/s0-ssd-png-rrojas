@@ -24,7 +24,7 @@ Después de crear tu repositorio con **Use this template** y clonarlo, abre su
 raíz con el agente y escribe en el chat:
 
 ```text
-Lee AGENTS.md y usa la skill local .agents/skills/connect-project/SKILL.md.
+Lee AGENTS.md y usa la skill connect-project de este S0.
 Este S0 corresponde a [nombre y propósito del sistema].
 Puedes configurar este S0 y estos repositorios: [rutas locales o URLs Git con rama opcional].
 Para las descargas, usa [carpeta de trabajo fuera del S0].

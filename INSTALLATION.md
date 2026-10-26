@@ -67,7 +67,7 @@ Abre con tu agente la raíz que contiene `AGENTS.md`, `context/` y `openspec/`.
 En el chat, sustituye nombre, propósito y fuentes. Si ya tienes el código local:
 
 ```text
-Usa la skill local .agents/skills/connect-project/SKILL.md.
+Usa la skill connect-project de este S0.
 Conecta este S0 como my-system. El producto es [nombre y propósito].
 Puedes configurar estos repositorios Git: D:\my-system-web y D:\my-system-api.
 Continúa con el borrador de contexto de Project Discovery.
@@ -80,7 +80,7 @@ identifica los repositorios dentro de ese límite. Puedes conectar más después
 Si el código está en GitHub, GitLab o Bitbucket, proporciona sus URLs Git:
 
 ```text
-Usa connect-project para conectar este S0 con:
+Usa la skill connect-project de este S0 para conectar:
 - Web: https://github.com/your-team/web.git, rama development.
 - API: git@gitlab.com:your-team/api.git, rama main.
 Descarga las copias en D:\workspaces y presenta el borrador de Project Discovery.
@@ -89,7 +89,7 @@ Descarga las copias en D:\workspaces y presenta el borrador de Project Discovery
 También puedes mezclar fuentes en una petición:
 
 ```text
-Usa connect-project para conectar D:\my-system-api y
+Usa la skill connect-project de este S0 para conectar D:\my-system-api y
 https://github.com/your-team/web.git, rama development.
 Descarga lo necesario en D:\workspaces y continúa con el borrador de Discovery.
 ```
@@ -127,7 +127,8 @@ sin buscar automáticamente nuevas revisiones.
 Para trabajar con código remoto más reciente, solicítalo expresamente:
 
 ```text
-Usa connect-project para actualizar la fuente Web conectada, rama development.
+Usa la skill connect-project de este S0 para actualizar la fuente Web conectada,
+rama development.
 Conserva mi copia actual y prepara la revisión reciente en el workspace recordado.
 Continúa con Project Discovery hasta presentar el borrador.
 ```
@@ -150,7 +151,7 @@ su existencia no autoriza descargar todas.
 Crea y clona el S0 siguiendo los pasos 1 y 2 anteriores. Abre su raíz y escribe:
 
 ```text
-Usa la skill local .agents/skills/connect-project/SKILL.md.
+Usa la skill connect-project de este S0.
 Prepara este S0 para my-system. El objetivo inicial es [problema y usuarios].
 Todavía no hay código ni consumidores. Prepara un borrador de contexto inicial
 para revisar, distinguiendo intención de implementación existente.
@@ -188,9 +189,11 @@ Preparará lo que falte sin regenerar la identidad compartida.
 
 Comprueba que usa la entrada del repositorio bajo `.agents/skills/` o su puente
 `.claude/skills/`. Una skill personal del mismo nombre puede ser otra versión.
-Si no aparece la local, pide leer su `SKILL.md` explícitamente. El descubrimiento
-y la prioridad dependen del cliente; otros agentes pueden leer los archivos,
-pero su integración debe comprobarse.
+Si no aparece la local, pide leer su `SKILL.md` explícitamente. Por ejemplo,
+`connect-project` está en `.agents/skills/connect-project/SKILL.md`, con ruta
+relativa a la raíz de ese S0. El descubrimiento y la prioridad dependen del
+cliente; otros agentes pueden leer los archivos, pero su integración debe
+comprobarse.
 
 Desde un consumidor, `store:` no instala las skills propias ni carga por sí solo
 las instrucciones del S0. Resuelve `openspec context --json` y lee `AGENTS.md`,
