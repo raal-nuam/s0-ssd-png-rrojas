@@ -33,6 +33,7 @@ las mismas reglas funcionales con cualquier cliente que pueda leer los archivos.
 - Contextualización opcional: [.agents/skills/project-discovery/SKILL.md](.agents/skills/project-discovery/SKILL.md).
 - Refinamiento PO: [.agents/skills/refine-user-story/SKILL.md](.agents/skills/refine-user-story/SKILL.md).
 - Preparación QA: [.agents/skills/prepare-tests/SKILL.md](.agents/skills/prepare-tests/SKILL.md).
+- Revisión de PR: [.agents/skills/review-pr/SKILL.md](.agents/skills/review-pr/SKILL.md).
 
 Lee la skill correspondiente al realizar esa tarea, aunque el cliente no la
 descubra automáticamente. Resolver un store no instala sus skills ni carga sus

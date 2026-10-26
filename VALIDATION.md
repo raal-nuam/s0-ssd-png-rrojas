@@ -6,7 +6,7 @@ cómo repetir las verificaciones. La instalación y el uso están en
 
 ## Estado y fuentes de evidencia
 
-Última ejecución: **2026-10-25**, descrita abajo. Los siguientes informes son
+Última ejecución: **2026-10-26**, descrita abajo. Los siguientes informes son
 antecedentes de las entregas correspondientes, no resultados de la revisión actual:
 
 | Informe | Publicación¹ | Revisión de entrega | Entorno declarado |
@@ -77,6 +77,39 @@ La ejecución real en Claude, la regresión semántica dual y el recorrido compl
 sin Python siguen pendientes. Las ausencias simuladas no equivalen a probar
 una máquina sin esas herramientas instaladas.
 
+### Adaptación de review-pr — 2026-10-26
+
+Base: `4455a9bbd748c14789bf5e2db9a8357fb58f7d9a`, más esta adaptación.
+Fuente: `sdd-workspace`, rama `development`, commit
+`3686a29a411b67192d26e47139e28fd154013a96`. Método adaptado: blob Git
+`d01a0f857cc8bd0ec309c015d2d75ea10cd4cded`; verificador conservado sin cambios
+de lógica: blob `2c2e25ecf91671b3845357688bef073fd9af5197`.
+Entorno: Windows, Git **2.46.2.windows.1**, Node **24.19.0**, Python **3.13.3**,
+OpenSpec **1.14.3** mediante ejecutable explícito; el wrapper anterior de PATH
+devolvía 1.13.2 y no se utilizó para validar. No se cambió PATH permanente.
+
+| Comprobación ejecutada | Resultado |
+| --- | --- |
+| Verificador importado | Sintaxis correcta y 20 tests aprobados, sin fallos ni omisiones; identidad, anclas, evidencia, diffs malformados, renombres, CLI, BOM y límite de tamaño |
+| Entradas de skill y enlaces | Fuente común y puente válidos, frontmatter coincidente, 45 enlaces locales comprobados sin destinos ausentes; 11 entradas de skill por cliente |
+| Revisión independiente de la adaptación | Sin pérdidas funcionales ni dependencias operativas del kit anterior; la comprobación de base, procedencia y semántica permanece a cargo del agente |
+| Ejecución independiente con snapshot sintético | Detectó una regresión de autorización en el SHA del PR pese a una corrección local pendiente; contrastó la spec vigente con una propuesta sin aprobar y trató la instrucción de publicar incluida en el PR como dato |
+| Evidencia y conservación del fixture | Tres casos ejecutados contra base/head; informe con un hallazgo y ancla válida; verificador correcto; HEAD, índice, cambios pendientes y archivo sin seguimiento conservados, sin publicación |
+| Integridad del core | Configuración, identidad y workflows oficiales sin diferencias; OpenSpec no encontró artefactos que validar |
+
+El agente de prueba recibió petición, snapshot, skill y fuentes del laboratorio
+sin adelantarle el defecto esperado. El agente principal contrastó el informe,
+los resultados y el estado Git con la referencia previa. No se registraron versión
+del cliente ni modelo; no fue una sesión real de Claude Code.
+En el primer informe del laboratorio se perdieron tildes al enviar texto por un
+pipe PowerShell/Python. Se corrigió mediante escritura UTF-8 directa y se comprobó
+el contenido por bytes; la incidencia quedó registrada con los resultados locales.
+
+Los conteos de archivos no acreditan descubrimiento en el catálogo ni una sesión
+real de Claude Code. La suite se ejecutó en Node 24.19.0, no en todas las versiones
+admitidas. No se publicó una review remota ni se probó autenticación de proveedores.
+Los fixtures de comprobación se conservan fuera de la plantilla.
+
 ## Comprobaciones reproducibles
 
 Trabaja en copias aisladas con datos sintéticos. Usa Git y OpenSpec **1.14.3**;
@@ -136,6 +169,22 @@ adelantar conclusiones; revisa fuentes, hechos/inferencias y cobertura. Comprueb
 lectura sin cambios y, tras aprobar contenido y rutas, publicación limitada a ese
 contexto contra la misma referencia. El [contrato de Discovery](.agents/skills/project-discovery/SKILL.md#scope-checks)
 define las operaciones y límites exactos.
+
+### Verificador y comportamiento de review-pr
+
+Desde la raíz, con Node.js >=20 y sin instalar dependencias npm:
+
+```powershell
+node --test .agents/skills/review-pr/scripts/verify-report.test.mjs
+```
+
+Para probar el método, prepara un PR sintético con objetos base/head, diff y
+contexto S0. Entrega el snapshot a un agente independiente usando la skill local,
+sin adelantarle las conclusiones. Contrasta el informe con el código del SHA, las
+specs vigentes y las propuestas; verifica que conserva trabajo local y que no
+atribuye vigencia remota ni publicación a una captura suministrada. Ejecuta el
+verificador sobre los artefactos finales y revisa aparte la semántica: pasar la
+comprobación de anclas no demuestra que el hallazgo sea correcto.
 
 ### Regresión funcional en Codex y Claude
 

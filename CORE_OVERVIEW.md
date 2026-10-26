@@ -4,9 +4,9 @@ Fotografía del core para una persona o IA que necesite comprenderlo y discutir
 ideas sin conocer la conversación de desarrollo. Este archivo es opcional para
 usar S0. Resume el diseño; las instrucciones operativas tienen sus propias fuentes.
 
-- **Fecha de revisión:** 2026-10-25.
-- **Base de revisión:** `2e9fd3dbeeca8e047ceedc04e84be0a4d22f2eb6`; esta edición
-  incorpora la ampliación de `connect-project` a fuentes remotas y mixtas.
+- **Fecha de revisión:** 2026-10-26.
+- **Base de revisión:** `4455a9bbd748c14789bf5e2db9a8357fb58f7d9a`; esta edición
+  incorpora `review-pr`, adaptada del proyecto anterior a las fuentes de S0 Core.
   Las comprobaciones ejecutadas se documentan por separado en `VALIDATION.md`.
 - **Dependencia fijada:** OpenSpec 1.14.3, schema oficial `spec-driven`.
 
@@ -18,7 +18,8 @@ uno o múltiples repositorios de código. Proporciona métodos comunes para PO, 
 y QA, con Jira opcional y sin imponer archivos adicionales por rol.
 
 El núcleo está formado por Markdown/YAML, workflows interpretados por un agente,
-la CLI oficial OpenSpec y un verificador Python de Discovery. Las skills requieren
+la CLI oficial OpenSpec, un verificador Python de Discovery y un verificador Node
+de informes de PR. Las skills requieren
 un agente con herramientas y acceso a las fuentes; no son servicios autónomos.
 
 Cada instancia mantiene su propio historial Git, contexto, specs y cambios.
@@ -63,7 +64,7 @@ indicada consulta la predeterminada; el resultado identifica el SHA realmente pr
 ## Mapa de archivos
 
 Este mapa agrupa integraciones equivalentes para evitar listar cada método tres
-veces. Los diez nombres y sus funciones aparecen en el catálogo siguiente.
+veces. Los once nombres y sus funciones aparecen en el catálogo siguiente.
 
 ```text
 s0-core-template/
@@ -83,18 +84,21 @@ s0-core-template/
 ├── context/project.md               Página inicial que adopta cada sistema
 ├── .agents/skills/
 │   ├── .openspec-target              Marcador de destino codex
-│   ├── <skill>/SKILL.md              Cuatro métodos propios y seis oficiales
-│   └── project-discovery/
-│       ├── agents/openai.yaml        Nombre y descripción de interfaz
-│       └── scripts/
-│           ├── check_discovery_scope.py
-│           └── test_project_discovery_scope.py
+│   ├── <skill>/SKILL.md              Cinco métodos propios y seis oficiales
+│   ├── project-discovery/
+│   │   ├── agents/openai.yaml        Nombre y descripción de interfaz
+│   │   └── scripts/
+│   │       ├── check_discovery_scope.py
+│   │       └── test_project_discovery_scope.py
+│   └── review-pr/
+│       ├── references/report-format.md
+│       └── scripts/                 Verificador de informes y sus tests Node
 └── .claude/
-    ├── skills/<skill>/SKILL.md       Cuatro puentes propios y seis oficiales
+    ├── skills/<skill>/SKILL.md       Cinco puentes propios y seis oficiales
     └── commands/opsx/               explore, propose, apply, update, sync, archive
 ```
 
-Los comandos Claude son archivos `.md`. Las cuatro skills propias residen completas
+Los comandos Claude son archivos `.md`. Las cinco skills propias residen completas
 en `.agents/skills/`; sus entradas Claude son puentes. Los seis workflows oficiales
 se generan para cada cliente con OpenSpec y no se editan manualmente. S0 no fija
 proveedor o modelo; otros agentes pueden leer el contenido, pero su integración
@@ -110,9 +114,10 @@ El destino de las descargas se recuerda en Git local mediante `s0.sourcesRoot`.
 El índice `<workspace>/.s0-connections/<store-id>.json` registra instancia, fuentes,
 ramas, rutas, SHA y estado de las copias, incluidas las anteriores. Vive fuera del
 S0 y se contrasta con Git en cada uso; no sustituye las evidencias compartidas ni
-el snapshot de Discovery. No se añaden scripts, dependencias o carpetas al core.
+el snapshot de Discovery. Esa conexión no añade scripts, dependencias o carpetas
+al core.
 
-## Los diez métodos
+## Los once métodos
 
 Cada nombre corresponde a `.agents/skills/<nombre>/SKILL.md` y tiene una entrada
 Claude. Las invocaciones de chat están en el playbook.
@@ -123,6 +128,7 @@ Claude. Las invocaciones de chat están en el playbook.
 | `project-discovery` | Fuentes autorizadas y foco → contexto trazable en borrador; escritura posterior sólo de Markdown aprobado en `context/` |
 | `refine-user-story` | Necesidad, contexto y specs → alcance, criterios y dudas para PO, por defecto en conversación |
 | `prepare-tests` | HDU, specs o cambio identificado → matriz de casos trazables preparados, sin ejecución por defecto |
+| `review-pr` | PR o snapshot identificado y código de su revisión → hallazgos, captura e informes locales verificados; publicación sólo cuando se solicita |
 | `openspec-explore` | Pregunta o problema → análisis y alternativas; capturar artefactos requiere alcance confirmado |
 | `openspec-propose` | Necesidad comprendida → artefactos de planificación según schema; se detiene antes de implementar |
 | `openspec-apply-change` | Cambio y repositorios autorizados → implementación, comprobaciones y avance de tareas |
@@ -178,6 +184,14 @@ Un `sync` ya solicitado no impone otra aprobación universal. Guardar refinamien
 crear tickets o ejecutar tests requiere ese alcance. El proceso del equipo determina
 revisores de PR, aceptación y publicación. Archivar no acredita QA, merge o despliegue.
 Caso preparado, test implementado y test ejecutado son estados distintos.
+
+`review-pr` contrasta el PR con código, contratos y fuentes S0 identificadas. Guarda
+captura e informes bajo `.local/review-pr/`, excluido de Git, y comprueba anclas y
+evidencia literal con Node.js >=20, sin dependencias npm. El verificador no acredita
+procedencia, vigencia remota, cobertura ni corrección semántica. El agente comprueba
+esos límites por separado; una revisión no autoriza modificar código ni publicar,
+aprobar o fusionar. El método admite snapshots suministrados sin atribuirles vigencia
+remota y no requiere una HDU asociada ni un subagente de un proveedor concreto.
 
 ## Requisitos y límites de la automatización
 
