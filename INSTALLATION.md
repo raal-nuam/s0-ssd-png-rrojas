@@ -182,7 +182,17 @@ conservando tu trabajo local.
 
 Si eres DEV y necesitas resolver el store desde código en esta máquina, pide
 `connect-project` desde el S0 con su ID existente y las rutas o URLs pertinentes.
-Preparará lo que falte sin regenerar la identidad compartida.
+Para conectar usa un clon Git del S0. Preparará lo que falte conservando su
+identidad, contexto, specs y cambios existentes. Por ejemplo:
+
+```text
+Usa la skill connect-project de este S0 para conectar los repositorios locales
+D:\my-system-web y D:\my-system-api. Conserva el contexto y la planificación existentes.
+```
+
+Las rutas se recuerdan sólo en tu clon; las de otro desarrollador no viajan con
+Git. Conecta una vez por estación y repite al añadir o reubicar fuentes, no antes
+de cada historia. Un posible borrador Discovery se revisa antes de guardarlo.
 
 <a id="local-skills"></a>
 ## Si el agente encuentra otra skill
@@ -221,6 +231,20 @@ Para trabajar con historias, cambios y pruebas, continúa en [PLAYBOOK.md](PLAYB
 Estos comandos sirven para diagnóstico o configuración manual deliberada.
 La primera conexión con el agente sigue el recorrido anterior. Usa el ejecutable
 1.14.3 comprobado en los comandos que siguen y la raíz indicada en cada sección.
+
+### Localizar los repositorios locales
+
+Desde el S0, `git rev-parse --git-path s0-local-sources.json` indica el localizador
+que `connect-project` mantiene para las raíces locales verificadas. Vive en la
+metadata Git, admite repositorios en carpetas distintas y no se publica ni requiere
+un inventario compartido. Su contrato y las comprobaciones de lectura están en
+[AGENTS.md](AGENTS.md#fuentes-locales-de-esta-estación).
+
+Las ramas y commits pueden cambiar durante el trabajo: el agente comunica la
+revisión que consulta. Si mueves un repositorio, conecta su nueva ruta; una ruta
+ausente se informa y no se reemplaza silenciosamente. La ausencia del localizador
+no impide trabajar con contexto y specs. Es una extensión local de S0, no un
+archivo o mecanismo interpretado por OpenSpec.
 
 ### Localizar las copias remotas
 

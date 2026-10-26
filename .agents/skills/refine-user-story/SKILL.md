@@ -12,9 +12,10 @@ Recibe una necesidad en texto. Una clave o enlace Jira es una fuente opcional:
 úsala sólo si hay conexión y acceso autorizados. Si no puedes leerla, pide el
 texto necesario y continúa con el material disponible; no inventes su contenido.
 
-Identifica el sistema y la fuente de la solicitud. En un S0 lee
+Identifica el sistema y la fuente de la solicitud. En un S0 lee `AGENTS.md` y
 `context/project.md`; en un consumidor con `store:` resuelve primero la raíz
-mediante `openspec context --json` y lee el contexto de esa raíz. Si el store no
+mediante `openspec context --json` y lee ambas fuentes de esa raíz. Aplica sus
+instrucciones de fuentes locales cuando necesites consultar código. Si el store no
 se resuelve o el archivo es inaccesible, comunica la limitación; no crees otro
 OpenSpec ni uses un proyecto vecino. Lee sólo las specs y cambios relacionados.
 Cita rutas, escenarios e identificadores consultados; indica rama o revisión

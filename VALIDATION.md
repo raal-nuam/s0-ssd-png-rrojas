@@ -110,6 +110,39 @@ real de Claude Code. La suite se ejecutó en Node 24.19.0, no en todas las versi
 admitidas. No se publicó una review remota ni se probó autenticación de proveedores.
 Los fixtures de comprobación se conservan fuera de la plantilla.
 
+### Localización de fuentes por estación — 2026-10-26
+
+Base: `385fb8bea31f1dbffc0a446a52ac93fa9e7c59f0`, más esta ampliación.
+Fuente final de `connect-project`: blob Git
+`4c706dc213b5b78d61cbeaad9847232b9865f7cb`.
+Entorno observado: Windows, Git **2.25.0.windows.1**, OpenSpec **1.14.3** y
+Python **3.11.1**. Se usó el ejecutable comprobado y modo UTF-8 para el validador
+de skills. Los scripts y evidencias de laboratorio quedaron fuera del core.
+
+| Comprobación | Resultado |
+| --- | --- |
+| Skills y enlaces | Cuatro skills propias válidas; 71 enlaces locales comprobados entre maestro e instancia; fuentes comunes iguales |
+| Incorporación a S0 existente | Dos Git en carpetas distintas conectados con registro y preferencias aislados; identidad, contexto, spec y cinco artefactos del cambio preexistente conservados por hash |
+| Reejecución | Sin repetir registro ni init; archivos, estado Git, punteros y localizador conservados, incluido el mtime del JSON |
+| Revisión actual y fuentes inválidas | Cambios de rama/HEAD admitidos con árbol sucio; ruta ausente, origin distinto y propietario ajeno identificados sin reparar ni sustituir entradas |
+| Conexión mixta | Una copia remota sintética quedó en el índice externo `version: 1` con estado `connected`; el localizador conservó sólo las fuentes locales. Reejecución sin duplicados ni cambios de hashes/mtime |
+| Instancia existente | Trece raíces locales verificadas; sesión independiente encontró dos componentes sin recibir sus rutas y declaró sus revisiones actuales |
+| Integridad | Schema efectivo del paquete, sin overrides; configuración, identidad, skills oficiales y artefactos de planificación conservados en las instancias reales revisadas |
+
+La primera prueba detectó que `status` sin selección falla cuando existen cambios
+activos. Se corrigió la invocación de la skill propia a `status --all`, opción
+oficial comprobada también con inventario vacío; no se modificó la CLI.
+En el fixture, `init` oficial añadió `openspec/changes/archive/.gitkeep`; conservar
+los artefactos anteriores no equivale a que la inicialización no añada archivos.
+Discovery verificó su referencia y dejó sólo un borrador, sin publicar contexto.
+El laboratorio registró 40 comprobaciones de conservación aprobadas; son controles
+de conexión y lectura, no tests del producto ni una certificación general del agente.
+
+El remoto del caso mixto se redirigió por comando Git a un bare local, sin cambios
+de configuración global. Estas pruebas no ejecutaron producto ni autenticación remota. No acreditan una
+sesión real de Claude Code. La validación de estación usa evidencia local y no
+convierte el localizador en configuración OpenSpec o en inventario compartido.
+
 ## Comprobaciones reproducibles
 
 Trabaja en copias aisladas con datos sintéticos. Usa Git y OpenSpec **1.14.3**;
@@ -145,6 +178,8 @@ Para repetir la conexión, sigue estos escenarios con `connect-project`:
 | Remoto o mixto, rama omitida y varias ramas | SHA realmente preparado; selección predeterminada correcta; copias sin colisiones ni conexiones por inferencia |
 | Reejecución o actualización explícita | Reutilización sin avance implícito; nueva copia cuando corresponda y anterior intacta, también al actualizar desde una ruta local |
 | Índice, descargas pendientes y varios S0 | Propietario y rutas comprobados; recuperación sin borrar copias; discrepancias de una copia verificada bloquean reconexión |
+| Fuentes locales recordadas y estación nueva | S0 con contexto/specs/cambios conservados; rutas propias fuera del contenido versionado; sesión posterior encuentra código sin recibirlas otra vez |
+| Lectura del localizador | Rama/HEAD actuales sin fijarlos; raíces ausentes, remotos distintos y propietario ajeno se informan sin reparar ni sustituir fuentes |
 
 El cierre deja diffs locales sin stage, commit, push ni PR. Captura la referencia
 de Discovery después de la preparación técnica y verifica lectura sin cambios

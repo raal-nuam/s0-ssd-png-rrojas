@@ -25,8 +25,9 @@ stage, push, PR, migraciones ni cambios de rama en copias existentes. Deja las
 diferencias locales para revisión y conserva el trabajo previo.
 No escribas código de producto ni crees specs, cambios o schemas. No añadas
 scripts, dependencias nuevas, inventarios obligatorios, archivos de estado
-versionados ni carpetas auxiliares al S0. El índice de copias descrito más abajo
-vive fuera del S0 y no modifica el registro ni el schema de OpenSpec.
+versionados ni carpetas auxiliares al S0. El localizador de fuentes locales vive
+en la metadata Git del S0 y el índice de descargas vive en el workspace externo;
+ambos son propios de S0 y no modifican el registro ni el schema de OpenSpec.
 
 ## 1. Comprueba el alcance y las herramientas
 
@@ -46,7 +47,10 @@ vive fuera del S0 y no modifica el registro ni el schema de OpenSpec.
 - Lee instrucciones y configuración existentes antes de escribir. Un árbol sucio
   no impide trabajar si puedes preservar sus cambios. No hagas reset, limpieza
   ni sustitución completa de archivos personalizados. No busques copias en todo
-  el equipo: consulta sólo rutas aportadas y copias del índice de esta instancia.
+  el equipo: consulta sólo rutas aportadas, fuentes conocidas seleccionadas del
+  localizador descrito en `AGENTS.md` y copias del índice de esta instancia.
+  Comprueba las entradas antes de reutilizarlas; reconectar una fuente conocida
+  no exige volver a pedir su ruta si la selección es inequívoca.
   Dos rutas o ramas del mismo remoto no son duplicados por compartir URL.
 - Comprueba Git y las instalaciones de OpenSpec. Ejecuta `--version` sobre los
   candidatos reales; una instalación correcta puede estar detrás de otra en PATH.
@@ -81,7 +85,8 @@ es el maestro, detén la preparación antes de clonar o configurar consumidores.
 ## 3. Prepara las fuentes remotas y las actualizaciones solicitadas
 
 Si la petición sólo conecta rutas locales, sin actualizarlas, o todavía no hay
-código, omite este paso: no crees workspace ni índice. Para obtener copias, usa el destino indicado o
+código, omite este paso: no crees workspace ni índice de descargas. Las conexiones
+locales verificadas se recuerdan en el paso 6. Para obtener copias, usa el destino indicado o
 consulta `git config --local --get s0.sourcesRoot` desde el S0. Si falta, pide
 una carpeta de trabajo una vez. Resuelve su ruta real: no puede estar dentro
 del S0 ni de otra raíz Git. Puede contener las nuevas copias como hijas.
@@ -253,14 +258,37 @@ Revisa las instrucciones anidadas pertinentes y corrige referencias de conexión
 obsoletas dentro del alcance, sin reescribir reglas de producto por suposición.
 Si un archivo inaccesible o un conflicto impide esa alineación, informa el límite.
 
-Desde el S0 ejecuta `store doctor <id>` y `status --store <id>`. Desde cada
-consumidor ejecuta `context --json` y `status`: la raíz debe ser exactamente el
+Desde el S0 ejecuta `store doctor <id>` y `status --all --store <id>`. Desde cada
+consumidor ejecuta `context --json` y `status --all`: la raíz debe ser exactamente el
 S0 elegido. Comprueba los punteros conservados, las integraciones esperadas y
 la ausencia de specs/changes locales. Revisa diferencias y archivos nuevos con
 Git y `git diff --check`; no hagas stage para obtener el diff de archivos nuevos.
 Actualiza el estado de las copias del índice: `connected` sólo tras verificar
 su resolución e integraciones, `blocked` si la conexión está pendiente. Conserva
 el SHA base y distingue los cambios de integración de otras modificaciones locales.
+
+### Recuerda las fuentes locales conectadas
+
+Para las raíces seleccionadas como fuentes locales y verificadas en este recorrido,
+mantén el localizador definido en `AGENTS.md`. Incluye también conexiones locales
+ya correctas; excluye consumidores bloqueados, el propio S0 y otros S0. Las copias
+descargadas en el paso 3 mantienen su índice existente; no importes su historial.
+Sin fuentes locales verificadas no crees un localizador vacío.
+
+Obtén el destino con `git rev-parse --git-path s0-local-sources.json` desde el S0.
+Comprueba que corresponde a su metadata Git y no sigas un enlace para escribir
+en otro destino. Si existe, valida su estructura y propietario antes de editarlo;
+un archivo inválido o ajeno queda intacto y su persistencia se informa pendiente.
+Conserva entradas anteriores y fusiona por raíz real, no por URL ni nombre de
+carpeta. Repetir una conexión correcta no duplica ni reescribe el archivo.
+Actualiza una entrada existente sólo al conectar explícitamente esa raíz y
+comprobar su identidad actual; no retires otras rutas porque estén inaccesibles.
+
+Guarda JSON UTF-8 sin credenciales, usando un temporal y reemplazo en el mismo
+directorio. No registres ramas, SHA ni estado de trabajo: son fuentes de trabajo
+locales, no snapshots. Si falla la escritura, conserva lo anterior y comunica
+qué conexiones quedaron verificadas pero sin recordar; no declares ese paso
+completo. No cambies configuración Git global ni añadas el archivo al repositorio.
 
 Una segunda ejecución reutiliza identidad, registro, punteros e instrucciones
 correctos y completa únicamente lo pendiente. Ante un fallo conserva las partes
@@ -270,7 +298,7 @@ No hagas rollback general ni elimines fuentes para obtener una comprobación ver
 ## 7. Continúa con el borrador de contexto
 
 Entrega un resumen breve de S0/ID, raíces únicas, conexiones y bloqueos, versión
-de CLI usada y archivos modificados. Para cada fuente identifica URL si aplica,
+de CLI usada, localizador guardado o pendiente y archivos modificados. Para cada fuente identifica URL si aplica,
 rama, SHA base/HEAD actual, ruta y cambios locales; señala las copias anteriores
 conservadas. Luego lee y utiliza la skill local
 [project-discovery](../project-discovery/SKILL.md), pasando el S0 y los repositorios

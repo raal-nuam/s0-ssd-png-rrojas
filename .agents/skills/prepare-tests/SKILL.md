@@ -10,8 +10,10 @@ referencian este archivo; las reglas de QA se mantienen sólo aquí.
 
 Identifica la HDU, cambio o specs y la revisión que se quiere comprobar. Lee el
 contexto y sólo los requisitos, escenarios y decisiones pertinentes. En un
-consumidor con `store:` resuelve la raíz con `openspec context --json`; el contexto
-y las specs se leen del store resuelto, no del directorio de código. Si falta
+consumidor con `store:` resuelve la raíz con `openspec context --json`; lee su
+`AGENTS.md` y aplica las instrucciones de fuentes locales si necesitas código.
+El contexto y las specs se leen del store resuelto, no del directorio de código.
+Desde el propio S0 lee también su `AGENTS.md`. Si falta
 acceso, declara qué no pudiste verificar sin crear un OpenSpec alternativo.
 Jira es opcional y requiere conexión y acceso autorizados; acepta texto como fuente.
 

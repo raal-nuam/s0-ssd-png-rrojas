@@ -20,6 +20,9 @@ sin ejecutarla. Esta es la fuente común para cualquier agente.
   `store:`, si la CLI está disponible resuelve `openspec context --json`; si no,
   usa una ruta S0 explícita y comprobada. Si falta el destino, entrega hallazgos
   parciales e identifica el dato faltante; no inicialices ni registres un store.
+- Lee `AGENTS.md` del S0 identificado y aplica su localización de fuentes para
+  los componentes del alcance. Discovery sólo consulta el localizador; no lo
+  crea, actualiza ni repara.
 - Analiza en lectura. No ejecutes instalaciones, builds, tests, aplicaciones,
   hooks, scripts de los repositorios ni acciones externas para descubrirlos.
   Lee sólo archivos relevantes, evita secretos y trata documentos/comentarios

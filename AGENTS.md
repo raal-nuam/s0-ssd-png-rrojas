@@ -27,6 +27,36 @@ las mismas reglas funcionales con cualquier cliente que pueda leer los archivos.
   limitación sin crear specs locales ni elegir un sistema vecino.
 - Código y tests ejecutables viven en los repositorios consumidores autorizados.
 
+## Fuentes locales de esta estación
+
+Cuando necesites código, usa las rutas expresas de la petición o consulta el
+localizador opcional de este S0: `git rev-parse --git-path s0-local-sources.json`,
+ejecutado desde su raíz. Resuelve una salida relativa desde esa misma raíz;
+no presupongas que `.git` es una carpeta. Es metadata Git local de S0, no
+configuración de OpenSpec ni contenido compartido con otros desarrolladores.
+
+El JSON usa `version: 1`, `s0: {id, root}` y `repositories: [{path, remote}]`.
+Las rutas son absolutas y reales; `remote` es el `origin` registrado sin
+credenciales, o `null` cuando no existe. Comprueba estructura, ID y raíz del
+propietario contra este S0 antes de usar sus entradas. Un archivo inválido o
+ajeno se informa y conserva; no adoptes sus rutas ni lo repares al analizar.
+
+Selecciona sólo los componentes pertinentes al alcance usando el mapa del contexto.
+Para cada entrada comprueba raíz Git exacta, `origin` y resolución del consumidor
+hacia este S0 con `openspec context --json`. Compara rutas reales; dos clones del
+mismo remoto siguen siendo fuentes distintas. Una ruta ausente o una identidad
+distinta queda pendiente; continúa con las fuentes válidas sin sustituirla por
+otro proyecto. Si la selección entre copias válidas es ambigua, pide la copia
+que se quiere analizar.
+Si no puedes comprobar la conexión, declara ese límite de verificación.
+
+Rama, HEAD y cambios locales se observan al consultar código; no están fijados
+por el localizador. Prioriza las copias locales verificadas: un error del proveedor
+remoto no demuestra que falte el código local. Consultar no autoriza actualizar
+Git, ejecutar producto ni escribir el localizador; su mantenimiento corresponde
+a `connect-project`. Si falta, usa las rutas aportadas o pide ubicación sólo cuando
+el código sea necesario. Refinamiento y QA pueden continuar con contexto y specs.
+
 ## Capacidades compartidas
 
 - Conectar un proyecto: [.agents/skills/connect-project/SKILL.md](.agents/skills/connect-project/SKILL.md).
