@@ -325,6 +325,49 @@ La raíz resuelta debe ser el S0; no deben aparecer specs/changes en el consumid
 `members: []` es normal sin Worksets. Revisa también instrucciones raíz y anidadas:
 `init` no reconcilia sus referencias antiguas por ti.
 
+<a id="viewer"></a>
+## Visor de contexto, specs y cambios
+
+Incluimos [OpenSpec Viewer Base 0.9.0](tools/openspec-viewer/openspec-viewer-0.9.0.vsix),
+con identidad `fdelvalle01.openspec-viewer`, y su
+[manifiesto](tools/openspec-viewer/openspec-viewer-0.9.0.manifest.json).
+Su fuente se mantiene en [sdd-openspec-view](https://github.com/fdelvalle01/sdd-openspec-view).
+Es un paquete Base de lectura, sin asistente IA. Requiere VS Code de escritorio
+1.110.0 o posterior; leer el S0 directamente no requiere Git ni CLI OpenSpec.
+
+1. En VS Code abre **Extensiones → … → Instalar desde VSIX…** y selecciona
+   `tools/openspec-viewer/openspec-viewer-0.9.0.vsix` de tu copia del S0.
+2. Ejecuta **Developer: Reload Window** al instalar o actualizar. La actualización
+   conserva los comandos y las preferencias `sddWorkspaceViewer`.
+3. Abre la raíz del S0 y ejecuta **OpenSpec Viewer: Abrir visor**. Desde otra
+   carpeta, usa **Elegir carpeta S0** o **Abrir S0 por ruta**.
+
+El proyecto entra por `context/project.md`; su mapa de componentes permanece
+documentado en Markdown. No se exige inventario JSON. El visor conserva `docs/`
+y descriptores de S0 anteriores; `repositories.yaml`, `jira.md` y `revision.md`
+son opcionales. Las casillas marcadas no acreditan pruebas ni aceptación.
+
+Desde un consumidor con `store:`, el visor consulta `openspec context --json`
+con una CLI compatible, después de comprobar su versión, y exige un workspace
+confiable para ejecutar esa consulta. Esta plantilla utiliza OpenSpec 1.14.3.
+Varios consumidores del mismo S0 se agrupan; si hay varios sistemas, selecciona
+el que quieres leer. Si falta la CLI, es incompatible o no resuelve el store,
+el visor explica la limitación y permite elegir manualmente el S0. En modo
+restringido puedes continuar con la lectura directa.
+
+Para verificar el archivo antes de instalarlo, ejecuta desde la raíz del S0:
+
+```powershell
+$viewerManifest = Get-Content tools/openspec-viewer/openspec-viewer-0.9.0.manifest.json -Raw | ConvertFrom-Json
+$viewerHash = (Get-FileHash tools/openspec-viewer/openspec-viewer-0.9.0.vsix -Algorithm SHA256).Hash.ToLowerInvariant()
+if ($viewerHash -ne $viewerManifest.package.sha256) { throw 'El hash del VSIX no coincide con su manifiesto.' }
+```
+
+La instalación sigue siendo una acción manual. `connect-project` no instala ni
+actualiza extensiones. El visor sólo consulta archivos; los workflows OpenSpec
+y el código continúan en sus herramientas habituales. Consulta los resultados
+y límites registrados en [VALIDATION.md](VALIDATION.md#viewer).
+
 <a id="maintenance"></a>
 ## Mantenimiento
 

@@ -143,6 +143,49 @@ de configuración global. Estas pruebas no ejecutaron producto ni autenticación
 sesión real de Claude Code. La validación de estación usa evidencia local y no
 convierte el localizador en configuración OpenSpec o en inventario compartido.
 
+<a id="viewer"></a>
+## OpenSpec Viewer Base 0.9.0 — distribución del 2026-10-26
+
+El paquete `tools/openspec-viewer/openspec-viewer-0.9.0.vsix` y su manifiesto
+provienen del repositorio [sdd-openspec-view](https://github.com/fdelvalle01/sdd-openspec-view),
+rama `development`. El manifiesto identifica commit y árbol fuente, lockfile,
+versión de Node, archivos inspeccionados y SHA-256 del VSIX. La identidad
+`fdelvalle01.openspec-viewer` y los ajustes anteriores se conservan.
+
+Fuente confirmada: `f156c7c986408a7d8eefe9d8043559586495e806`. SHA-256 del VSIX:
+`172997393f78072523b40cffcd644f71611b5f1d77367b32bff57a7b01ef5bc1`. El mismo binario y manifiesto se copiaron sin reconstruir
+a ambas plantillas; sus hashes se contrastaron después de la copia.
+
+| Comprobación ejecutada | Resultado |
+| --- | --- |
+| Fuente y dependencias | Commit f156c7c986408a7d8eefe9d8043559586495e806 limpio; lockfile con npm ci; Node 22.18.0 y npm 10.9.3. |
+| Suite principal | 218 aprobadas, 0 fallidas y 1 omitida por permisos de symlink de archivo en Windows. |
+| Interfaz y catálogo visual | 50 y 12 comprobaciones aprobadas; mapa Markdown y YAML opcional consultables sin inventario generado. |
+| Regresión de registro de watchers | 26 pruebas de layout/controlador y 56 de extensión aprobadas; recuperación de archivos creados durante el registro de nuevas raíces. |
+| Separación de productos | 8 pruebas y renderer Base real aprobados; sin asistente ni puente Desktop. |
+| Inspección del VSIX | 43 entradas permitidas, documentación explícita y procedencia verificada; sólo se distribuye Base 0.9.0. |
+| Instalación y host del paquete final | Install from VSIX en perfil aislado; versión 0.9.0 confirmada y 26 comprobaciones del paquete instalado aprobadas. |
+| Core, consumidor y compatibilidad | Lectura de contexto, búsqueda, grafo, enlaces y watchers; consumidor resuelto con OpenSpec 1.14.3 antes de la ruta recordada; fixtures antiguos conservados. |
+| Preservación de archivos | Lectura conservó 49 archivos de cada plantilla y 54 de NXT; los 54 hashes de NXT también coinciden antes y después del host del VSIX instalado. |
+| Procedencia del motor | Seis módulos locales verificados; árbol histórico y adaptación local registrados por separado. |
+
+Una prueba de symlink de archivo quedó omitida por EPERM; el rechazo de una junction externa sí se comprobó.
+El grafo conserva diagnósticos de enlaces a documentos raíz fuera del índice y de algunas anclas HTML de skills que no reconoce.
+En la estación de validación el primer OpenSpec de PATH es 1.13.2. Se utilizó 1.14.3 sólo en el entorno de prueba; con una CLI incompatible sigue disponible la selección manual del S0.
+El primer candidato de validación no se distribuyó; el candidato final incorpora la reconciliación de watchers y pasó el host instalado.
+No se instalaron extensiones en el perfil habitual ni se publicaron paquetes AI/Desktop. Las regresiones compartidas no equivalen a una nueva aceptación Desktop ni a una aceptación real de Jira OAuth.
+
+La documentación de instalación explica selección directa y por consumidor,
+actualización manual y la limitación de Workspace Trust. El empaquetado usa un
+inventario explícito de documentación distribuible; diseños, auditorías,
+diagnósticos privados, fuentes y servicios IA permanecen fuera del VSIX Base.
+`*.vsix binary` evita normalización de finales de línea sobre el paquete Git.
+
+La instalación aislada, las pruebas automáticas, la lectura real y la aceptación
+manual son evidencias distintas. Jira OAuth y la aceptación funcional humana no
+se acreditan por compilar, pasar fixtures o distribuir este paquete. Los
+artefactos OpenSpec y las skills de esta plantilla conservan su contenido.
+
 ## Comprobaciones reproducibles
 
 Trabaja en copias aisladas con datos sintéticos. Usa Git y OpenSpec **1.14.3**;

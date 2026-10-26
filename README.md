@@ -18,6 +18,15 @@ Si este repositorio ya corresponde a un sistema preparado, comienza por
 PO y QA pueden leer, refinar y preparar casos desde el S0 sin instalar OpenSpec
 ni descargar todos los repositorios de código.
 
+## Visor incluido para VS Code
+
+El repositorio incluye [OpenSpec Viewer Base 0.9.0](tools/openspec-viewer/openspec-viewer-0.9.0.vsix)
+y su [manifiesto de procedencia](tools/openspec-viewer/openspec-viewer-0.9.0.manifest.json).
+Permite consultar contexto, mapa documental de componentes, specs y cambios.
+La instalación es manual mediante **Instalar desde VSIX…**; consulta
+[instalación, actualización y selección del S0](INSTALLATION.md#viewer).
+`connect-project` sigue dedicado a conectar proyectos y no instala extensiones.
+
 ## Conectar un S0 recién clonado
 
 Después de crear tu repositorio con **Use this template** y clonarlo, abre su
