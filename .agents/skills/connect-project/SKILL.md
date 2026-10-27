@@ -5,7 +5,8 @@ description: Conectar una instancia S0 con repositorios locales, remotos o mixto
 
 # Connect Project
 
-Recibe el S0 actual y rutas locales o URLs Git HTTPS/SSH con rama opcional.
+Recibe el S0 actual y rutas locales, URLs Git HTTPS/SSH con rama opcional o
+repositorios seleccionados del catálogo compartido `repositories.yaml`.
 Resuelve la preparación técnica con Git, las herramientas del agente y OpenSpec
 oficial. Esta es la fuente común para Codex, Claude y otros agentes.
 
@@ -63,6 +64,57 @@ ambos son propios de S0 y no modifican el registro ni el schema de OpenSpec.
   resolver su precedencia.
   Si falta Git o Node/npm, informa el requisito concreto; no instales otras
   herramientas del sistema por inferencia ni finjas una configuración completa.
+
+### Catálogo compartido y ubicaciones personales
+
+Si existe `repositories.yaml` en la raíz S0, su formato es `version: 1` y
+`repositories: [{id, remote, branch}]`; `branch` es opcional. Los IDs son únicos,
+`remote` es una URL Git HTTPS/SSH sin credenciales y el catálogo no guarda rutas
+personales ni revisiones observadas. No hace falta un catálogo para conectar
+rutas o URLs expresas. Su mantenimiento es una tarea del equipo; conectar una
+estación no lo reescribe.
+
+«Conecta todos los repositorios del catálogo» selecciona todas sus entradas;
+una petición de componentes concretos selecciona sólo esos IDs. Si sólo se pide
+leer el catálogo, no conectes ni descargues. Valida versión, entradas y referencias
+antes de usarlo; un catálogo inválido se informa sin inventar su contenido.
+Una selección de un catálogo vacío no identifica fuentes: pide URLs o rutas si
+se quiere conectar código. Esto no bloquea rutas o URLs expresas de la petición.
+
+Para las entradas seleccionadas, usa primero las rutas expresas por repositorio.
+Si el usuario indica una carpeta base, busca allí las entradas restantes y reutiliza
+sólo conexiones recordadas dentro de esa base; no elijas una copia de otra ubicación.
+Sin base indicada, reutiliza las conexiones recordadas válidas y pide ubicación
+sólo para las que falten. La base puede ser un agrupador o el propio coordinador Git.
+Comprueba la base y sus clones mediante raíz real y `origin`, no sólo nombres.
+Reconoce HTTPS y SSH del mismo host y repositorio, omitiendo el sufijo `.git` al
+comparar identidad; un fork u otro host no es el mismo remoto. Conserva el `origin`
+real al guardar el localizador. Si falta remoto o no coincide con la entrada,
+informa el conflicto sin sustituirlo.
+
+El descubrimiento general sigue deteniéndose al encontrar una raíz Git. Para
+entradas del catálogo seleccionadas expresamente, comprueba además sus carpetas
+homónimas dentro del coordinador verificado bajo la base indicada, incluso si
+éste es Git. Verifica cada componente como raíz independiente; no conectes otros
+repositorios anidados por inferencia. Una ruta expresa permite carpetas con otros
+nombres o fuera de la base; no amplíes la búsqueda a sus vecinas. Si hay varias
+copias válidas y ninguna seleccionada, pide elegirla.
+
+Con las raíces identificadas, continúa en el paso 2 antes de configurar nada;
+los pasos 5 y 6 conectan las copias compatibles y recuerdan sus rutas reales en el
+localizador existente, sin crear un segundo archivo de configuración local.
+Una petición sólo de rutas locales deja los clones faltantes pendientes; no los
+descarga por aparecer en el catálogo. Cuando se solicite descargarlos, usa el
+paso 3 y un destino autorizado fuera de raíces Git. Para nuevas descargas prevalece
+la rama expresa; después una selección anterior inequívoca y luego `branch` del
+catálogo. En copias existentes conserva rama, HEAD y cambios locales, e informa
+lo observado aunque difiera del catálogo. Si cambia la ubicación de una copia,
+verifica la nueva ruta antes de recordarla; conserva las demás entradas.
+
+En un entorno remoto o cloud, las rutas, copias, registro y permisos pertenecen
+a ese entorno. El catálogo compartido no hace accesibles los clones de otro equipo.
+Si no hay conexiones válidas ni ubicaciones indicadas, pide una carpeta existente
+o un destino para descargar las fuentes seleccionadas si el usuario quiere obtenerlas.
 
 ## 2. Comprueba la identidad antes de preparar fuentes
 

@@ -1,9 +1,14 @@
-# S0 Core — plantilla para sistemas
+# S0 Core — distribución Nuam
 
 S0 Core permite crear repositorios independientes de contexto y especificaciones
 basados en OpenSpec. Cada S0 representa un sistema con uno o varios repositorios
 de código y comparte skills para PO, DEV y QA. El equipo prepara el sistema una
 vez y publica sus cambios por Git; después, sus integrantes utilizan ese mismo S0.
+
+Esta distribución se mantiene en
+[`nuamx/nuam-ia-arq-sdd-openspec`, rama `development`](https://github.com/nuamx/nuam-ia-arq-sdd-openspec/tree/development).
+Comparte la base y los métodos de [s0-core-template](https://github.com/fdelvalle01/s0-core-template).
+Su catálogo se entrega vacío para completar al adoptar cada sistema.
 
 ## Elige tu recorrido
 
@@ -47,9 +52,25 @@ petición explícita. Revisa el borrador antes de que Discovery guarde contexto 
 publica los diffs según el proceso de tu equipo.
 Los [requisitos y pasos completos](INSTALLATION.md#requirements) están en la guía.
 
+Cuando el equipo ya preparó el sistema, puede mantener sus URLs Git en
+[repositories.yaml](repositories.yaml). Cada integrante indica sus clones sin
+editar ese catálogo compartido:
+
+```text
+Usa connect-project de este S0 para conectar todos los repositorios del catálogo.
+Mis clones están en [carpeta base]. Conserva sus ramas y cambios.
+Informa los que falten; no los descargues.
+```
+
+También puedes seleccionar IDs e indicar rutas por componente. La skill verifica
+y recuerda esas ubicaciones sólo en tu estación; consulta
+[catálogo y rutas personales](INSTALLATION.md#repository-catalog).
+
 ## Qué contiene el S0
 
 - `context/`: conocimiento del sistema y fuentes, con `project.md` como índice.
+- `repositories.yaml`: catálogo compartido inicialmente vacío; el equipo completa
+  IDs, URLs Git y ramas de referencia, sin rutas personales.
 - `openspec/specs/` y `openspec/changes/`: comportamiento vigente, propuestas e historial.
 - `AGENTS.md`, `.agents/` y `.claude/`: instrucciones e integraciones para agentes.
 - `.openspec-store/store.yaml` y `openspec/config.yaml`: identidad y configuración.

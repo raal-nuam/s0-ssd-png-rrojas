@@ -4,9 +4,10 @@ Fotografía del core para una persona o IA que necesite comprenderlo y discutir
 ideas sin conocer la conversación de desarrollo. Este archivo es opcional para
 usar S0. Resume el diseño; las instrucciones operativas tienen sus propias fuentes.
 
-- **Fecha de revisión:** 2026-10-26.
-- **Base de revisión:** `4455a9bbd748c14789bf5e2db9a8357fb58f7d9a`; esta edición
-  incorpora `review-pr`, adaptada del proyecto anterior a las fuentes de S0 Core.
+- **Fecha de revisión:** 2026-10-27.
+- **Base de revisión:** `b4a6654ee18dba13ff05a0237cb0cc1ff627622c`; esta edición
+  incorpora el catálogo compartido y su conexión con ubicaciones personales,
+  sobre la base que ya incluye el localizador y OpenSpec Viewer Base 0.9.0.
   Las comprobaciones ejecutadas se documentan por separado en `VALIDATION.md`.
 - **Dependencia fijada:** OpenSpec 1.14.3, schema oficial `spec-driven`.
 
@@ -82,6 +83,7 @@ s0-core-template/
 │   ├── specs/.gitkeep                Requisitos inicialmente vacíos
 │   └── changes/archive/.gitkeep      Cambios e historial inicialmente vacíos
 ├── context/project.md               Página inicial que adopta cada sistema
+├── repositories.yaml                Catálogo compartido, inicialmente vacío
 ├── .agents/skills/
 │   ├── .openspec-target              Marcador de destino codex
 │   ├── <skill>/SKILL.md              Cinco métodos propios y seis oficiales
@@ -106,9 +108,19 @@ y sus resultados requieren comprobación.
 
 El código y sus tests ejecutables permanecen en los consumidores. La plantilla no
 incluye datos de productos reales ni carpetas raíz adicionales `docs/`, `skills/`
-o `tests/`. Los archivos detallados de contexto y `repositories.yaml` son opcionales.
-Ese inventario puede listar componentes y URLs; OpenSpec no lo interpreta ni clona
-código, concede permisos o distribuye tareas a partir de él.
+o `tests/`. Los archivos detallados de contexto son opcionales. `repositories.yaml`
+se entrega vacío y su uso es opcional: el equipo puede completar
+`version: 1` y `repositories: [{id, remote, branch}]`, con `branch` opcional.
+OpenSpec no lo interpreta ni clona código, concede permisos o distribuye tareas
+a partir de él.
+
+Cada integrante selecciona entradas e indica una base local o rutas por componente.
+`connect-project` verifica identidad y remotos, incluidos componentes seleccionados
+dentro de un coordinador Git, y recuerda sus ubicaciones fuera del contenido compartido.
+Las rutas expresas prevalecen; una base indicada delimita las demás copias elegibles.
+El catálogo orienta nuevas descargas, conservando ramas y cambios de clones existentes.
+Una petición sólo local informa faltantes sin descargarlos. En cloud, las copias y
+el acceso corresponden a ese entorno; las rutas del PC no se transfieren.
 
 El destino de las descargas se recuerda en Git local mediante `s0.sourcesRoot`.
 El índice `<workspace>/.s0-connections/<store-id>.json` registra instancia, fuentes,
@@ -124,7 +136,7 @@ Claude. Las invocaciones de chat están en el playbook.
 
 | Método | Entrada → resultado |
 | --- | --- |
-| `connect-project` | S0 clonado y rutas locales, URLs Git o ambas → copias preparadas, identidad, registro, punteros e integraciones; diffs locales y borrador Discovery. También actualiza fuentes mediante petición explícita |
+| `connect-project` | S0 clonado y rutas locales, URLs Git o entradas del catálogo → copias preparadas, identidad, registro, punteros e integraciones; diffs locales y borrador Discovery. También actualiza fuentes mediante petición explícita |
 | `project-discovery` | Fuentes autorizadas y foco → contexto trazable en borrador; escritura posterior sólo de Markdown aprobado en `context/` |
 | `refine-user-story` | Necesidad, contexto y specs → alcance, criterios y dudas para PO, por defecto en conversación |
 | `prepare-tests` | HDU, specs o cambio identificado → matriz de casos trazables preparados, sin ejecución por defecto |

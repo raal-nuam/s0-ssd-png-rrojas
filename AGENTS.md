@@ -13,8 +13,9 @@ las mismas reglas funcionales con cualquier cliente que pueda leer los archivos.
 - Lee `context/project.md` cuando la tarea requiera conocimiento del sistema.
   Las reglas y el schema están en `openspec/config.yaml`.
 - Cada instancia S0 corresponde a un sistema con uno o varios repositorios de
-  código. Usa el mapa de componentes del contexto; si existe `repositories.yaml`,
-  consulta sólo las entradas pertinentes. Es una extensión opcional de S0, no
+  código. Usa el mapa de componentes del contexto y, cuando tenga entradas,
+  `repositories.yaml` para identificar remotos y ramas de referencia. Consulta
+  sólo las entradas pertinentes. Es una extensión opcional de S0, no
   configuración de OpenSpec ni autorización para clonar o modificar repositorios.
 - `openspec/specs/` describe lo vigente; `openspec/changes/` contiene propuestas
   e historial. Distingue una propuesta activa de un requisito consolidado.
@@ -28,6 +29,16 @@ las mismas reglas funcionales con cualquier cliente que pueda leer los archivos.
 - Código y tests ejecutables viven en los repositorios consumidores autorizados.
 
 ## Fuentes locales de esta estación
+
+El equipo mantiene IDs, URLs Git y ramas de referencia en `repositories.yaml`;
+la plantilla entrega ese catálogo vacío. Cada persona indica a `connect-project`
+la carpeta base de sus clones o rutas por componente. La skill verifica los remotos
+y recuerda únicamente conexiones comprobadas. Las rutas expresas tienen prioridad;
+si se indica una base, no elige copias recordadas fuera de ella. El catálogo no
+guarda rutas personales, no cambia ramas locales ni acredita código actualizado.
+Si faltan fuentes, identifica los IDs y remotos pertinentes; conocer una URL no
+equivale a tener acceso a su código. En cloud la conexión se comprueba dentro de
+ese entorno, sin reutilizar rutas de otra estación.
 
 Cuando necesites código, usa las rutas expresas de la petición o consulta el
 localizador opcional de este S0: `git rev-parse --git-path s0-local-sources.json`,

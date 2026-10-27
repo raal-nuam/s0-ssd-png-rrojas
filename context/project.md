@@ -24,9 +24,11 @@ negocio institucionales predefinidos.
 - Necesidades de origen: texto aportado por el usuario, issue o HDU; Jira opcional.
 - Código, contratos y tests: los repositorios consumidores que identifique cada
   sistema. Al adoptar, indica sus responsabilidades y URLs Git, sin rutas personales.
-- Un mapa más amplio puede mantenerse en `repositories.yaml`, extensión opcional
-  de S0. No hace falta crearlo si esta página basta; OpenSpec no interpreta ese
-  inventario ni lo usa para conceder acceso o sincronizar código.
+- El [catálogo compartido](../repositories.yaml) se entrega vacío. El equipo puede
+  completar IDs, URLs Git y ramas de referencia para que cada integrante indique
+  sus ubicaciones a `connect-project`; las rutas personales se recuerdan localmente.
+  Su uso es opcional y no reemplaza este mapa de responsabilidades. OpenSpec no
+  lo interpreta ni lo usa para conceder acceso o sincronizar código.
 - Si un subsistema tiene otro S0, identifica su fuente canónica y el contrato de
   integración relevante. Sus requisitos internos permanecen en ese S0; aquí se
   describe el comportamiento y las dependencias que corresponden a este sistema.

@@ -33,7 +33,10 @@ requieren la CLI; la comprobación de versión se establece en [AGENTS.md](AGENT
 
 `sync` es un workflow del agente; no existe un comando de terminal `openspec sync`.
 
-`connect-project` admite código local, URLs Git o ambos. Reconectar conserva las
+`connect-project` admite código local, URLs Git o entradas seleccionadas del
+[catálogo compartido](INSTALLATION.md#repository-catalog). El equipo mantiene
+los remotos; cada persona indica su base local o rutas por componente, que se
+verifican y recuerdan sólo en esa estación. Reconectar conserva las
 revisiones; para obtener código remoto reciente pide una actualización explícita
 según [la guía](INSTALLATION.md#connect-code). No se actualizan fuentes al abrir
 `explore` o `propose`. Para implementar, identifica los repositorios y copias

@@ -6,7 +6,8 @@ cómo repetir las verificaciones. La instalación y el uso están en
 
 ## Estado y fuentes de evidencia
 
-Última ejecución: **2026-10-26**, descrita abajo. Los siguientes informes son
+Última revisión de catálogo y distribución: **2026-10-27**, descrita abajo.
+Las suites anteriores conservan sus fechas y alcance. Los siguientes informes son
 antecedentes de las entregas correspondientes, no resultados de la revisión actual:
 
 | Informe | Publicación¹ | Revisión de entrega | Entorno declarado |
@@ -34,6 +35,25 @@ En futuras validaciones registra fecha de ejecución, commit probado, sistema,
 CLI, cliente/modelo cuando intervengan, resultado y enlace al informe o logs
 accesibles al equipo. Conserva fallos y omisiones; no conviertas un caso omitido
 en aprobado ni sobrescribas antecedentes con resultados de otro entorno.
+
+### Catálogo compartido y distribución — 2026-10-27
+
+Base: `b4a6654ee18dba13ff05a0237cb0cc1ff627622c`, más esta ampliación.
+Se incorpora `repositories.yaml` vacío (`version: 1`, `repositories: []`) y
+se documenta la selección de sus entradas con ubicaciones personales.
+
+- Validados YAML del catálogo y frontmatter de `connect-project` con el verificador
+  de skills; comprobados enlaces locales y `git diff --check`.
+- Revisión independiente de decisiones ante coordinador con componentes anidados,
+  ruta explícita con otro clon recordado, remotos HTTPS/SSH, fork distinto y entorno
+  cloud sin fuentes. Es una revisión del método, no una conexión real en Claude.
+- Se conservan identidad, configuración oficial `spec-driven`, workflows de
+  OpenSpec 1.14.3 y paquete Viewer 0.9.0 de la base anterior. El catálogo no contiene
+  repositorios de un producto ni rutas personales.
+
+No se ejecutaron nuevamente las suites históricas de Discovery o review-pr:
+sus implementaciones no cambiaron. Conexiones y autenticación deben comprobarse
+en cada estación; esta revisión no acredita acceso desde otros equipos.
 
 ### Fuentes locales, remotas y mixtas — 2026-10-25
 

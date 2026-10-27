@@ -1,5 +1,12 @@
 # Preparar o incorporarse a un S0
 
+Esta distribución corresponde a
+[`nuamx/nuam-ia-arq-sdd-openspec`, rama `development`](https://github.com/nuamx/nuam-ia-arq-sdd-openspec/tree/development).
+Para consultar o clonar esta base, selecciona expresamente `development`: la rama
+predeterminada de este remoto es `production`. El recorrido de creación desde
+GitHub Template usa el maestro enlazado en el paso 1, cuya rama predeterminada
+contiene la base actualizada.
+
 Elige el recorrido que corresponde a tu situación:
 
 | Situación | Recorrido |
@@ -140,10 +147,54 @@ Para actualizar desde una ruta local necesita un remoto y una rama inequívocos.
 Las copias no se eliminan automáticamente; un cambio manual de rama o HEAD en una
 copia registrada se informa, sin repararlo silenciosamente.
 
-Un mapa en `context/project.md` suele bastar. `repositories.yaml` es un inventario
-opcional, no interpretado por OpenSpec; puede contener responsabilidades, URLs y
-ramas, sin rutas personales ni credenciales. Indica qué entradas quieres conectar:
-su existencia no autoriza descargar todas.
+<a id="repository-catalog"></a>
+### Compartir URLs Git y configurar rutas personales
+
+El equipo mantiene [repositories.yaml](repositories.yaml), inicialmente vacío,
+con `version: 1` y `repositories: [{id, remote, branch}]`. `id` identifica al
+repositorio, `remote` es su URL Git HTTPS/SSH sin credenciales y `branch` es opcional.
+Las responsabilidades y relaciones se documentan en `context/project.md`.
+Ejemplo ficticio para sustituir por los repositorios reales de la instancia:
+
+```yaml
+version: 1
+repositories:
+  - id: web
+    remote: https://example.com/organizacion/web.git
+    branch: development
+  - id: api
+    remote: git@example.com:organizacion/api.git
+    branch: main
+```
+
+Cada persona puede conectar las entradas que seleccione mediante sus rutas:
+
+```text
+Usa connect-project de este S0 para conectar todos los repositorios del catálogo.
+Mis clones están en [carpeta base], incluidos los componentes dentro del coordinador.
+Conserva sus ramas y cambios. Informa los que falten; no los descargues.
+```
+
+Puedes sustituir «todos» por IDs concretos. Si un componente está en otra ubicación,
+indica «Conecta web del catálogo; mi clon está en [ruta de Web]». La ruta por
+componente prevalece; una base indicada limita la búsqueda de los restantes.
+Sin base, la skill reutiliza conexiones recordadas válidas y pide ubicación sólo
+para las que falten. Si hay varias copias sin selección inequívoca, pide elegir.
+
+Comprueba cada raíz y su remoto, reconociendo HTTPS/SSH del mismo repositorio.
+Los componentes seleccionados pueden estar dentro de un coordinador que también
+sea Git; no se conectan otros repositorios anidados por inferencia. Las ubicaciones
+verificadas se recuerdan en metadata Git local, sin editar el catálogo compartido.
+
+Si faltan clones y quieres obtenerlos, pide «Descarga y conecta [IDs o todos] del
+catálogo en [carpeta fuera del S0 y de otros Git]». La rama del catálogo orienta
+nuevas descargas; una rama expresa tiene prioridad. Conectar copias existentes
+conserva sus ramas y revisiones. Una petición sólo local no descarga faltantes.
+
+En cloud, hacen falta copias y acceso a los remotos dentro de ese entorno; el
+catálogo no transfiere rutas ni credenciales del PC. Usar el catálogo es opcional:
+siguen admitiéndose rutas o URLs expresas. OpenSpec no lo interpreta ni conecta
+repositorios por su mera presencia.
 
 <a id="new-system"></a>
 ## 2. Comenzar un proyecto nuevo, sin código
@@ -193,6 +244,8 @@ D:\my-system-web y D:\my-system-api. Conserva el contexto y la planificación ex
 Las rutas se recuerdan sólo en tu clon; las de otro desarrollador no viajan con
 Git. Conecta una vez por estación y repite al añadir o reubicar fuentes, no antes
 de cada historia. Un posible borrador Discovery se revisa antes de guardarlo.
+Si el equipo completó el [catálogo compartido](#repository-catalog), basta
+seleccionar sus IDs e indicar tu carpeta base o las rutas particulares.
 
 <a id="local-skills"></a>
 ## Si el agente encuentra otra skill
