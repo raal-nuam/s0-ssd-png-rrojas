@@ -5,10 +5,10 @@ basados en OpenSpec. Cada S0 representa un sistema con uno o varios repositorios
 de código y comparte skills para PO, DEV y QA. El equipo prepara el sistema una
 vez y publica sus cambios por Git; después, sus integrantes utilizan ese mismo S0.
 
-Esta distribución se mantiene en
+La fuente oficial de los métodos comunes es
 [`nuamx/nuam-ia-arq-sdd-openspec`, rama `development`](https://github.com/nuamx/nuam-ia-arq-sdd-openspec/tree/development).
-Comparte la base y los métodos de [s0-core-template](https://github.com/fdelvalle01/s0-core-template).
 Su catálogo se entrega vacío para completar al adoptar cada sistema.
+La procedencia de entregas anteriores se conserva en [VALIDATION.md](VALIDATION.md).
 
 ## Elige tu recorrido
 
@@ -22,6 +22,9 @@ Si este repositorio ya corresponde a un sistema preparado, comienza por
 `context/project.md` y el [playbook de PO, DEV y QA](PLAYBOOK.md).
 PO y QA pueden leer, refinar y preparar casos desde el S0 sin instalar OpenSpec
 ni descargar todos los repositorios de código.
+Para consultar código existente, [verifica o recuerda sus fuentes](INSTALLATION.md#source-access).
+Instalar integraciones en un consumidor es una acción explícita. OpenSpec 1.13.2
+y 1.14.3 conviven según [las capacidades comprobadas](INSTALLATION.md#cli-compatibility).
 
 ## Visor incluido para VS Code
 
@@ -34,8 +37,8 @@ La instalación es manual mediante **Instalar desde VSIX…**; consulta
 
 ## Conectar un S0 recién clonado
 
-Después de crear tu repositorio con **Use this template** y clonarlo, abre su
-raíz con el agente y escribe en el chat:
+Después de [crear tu copia independiente desde el Core oficial](INSTALLATION.md#existing-system),
+abre su raíz con el agente y escribe en el chat:
 
 ```text
 Lee AGENTS.md y usa la skill connect-project de este S0.
@@ -45,7 +48,8 @@ Para las descargas, usa [carpeta de trabajo fuera del S0].
 Continúa con Project Discovery hasta presentar el borrador de contexto.
 ```
 
-El agente conecta las copias locales y descarga los remotos indicados; puedes
+Esta petición autoriza la adopción e integración. El agente configura las copias
+locales y descarga los remotos indicados; puedes
 combinar ambos. Sólo pide carpeta de descargas cuando hace falta y la recuerda
 en esta máquina. Reconectar conserva las revisiones; actualizarlas requiere una
 petición explícita. Revisa el borrador antes de que Discovery guarde contexto y
@@ -57,7 +61,7 @@ Cuando el equipo ya preparó el sistema, puede mantener sus URLs Git en
 editar ese catálogo compartido:
 
 ```text
-Usa connect-project de este S0 para conectar todos los repositorios del catálogo.
+Usa connect-project de este S0 para verificar y recordar todos los repositorios del catálogo.
 Mis clones están en [carpeta base]. Conserva sus ramas y cambios.
 Informa los que falten; no los descargues.
 ```
@@ -74,10 +78,18 @@ y recuerda esas ubicaciones sólo en tu estación; consulta
 - `openspec/specs/` y `openspec/changes/`: comportamiento vigente, propuestas e historial.
 - `AGENTS.md`, `.agents/` y `.claude/`: instrucciones e integraciones para agentes.
 - `.openspec-store/store.yaml` y `openspec/config.yaml`: identidad y configuración.
+- `core-manifest.json` y `scripts/compare-core.py`: clasificación y comparación
+  de los archivos compartidos frente a una revisión concreta del maestro.
 
 El código y sus tests permanecen en los repositorios consumidores. Cada S0 tiene
 su propio historial; las mejoras de la plantilla se adoptan de forma selectiva.
 Jira es opcional y no se exigen documentos adicionales por rol.
+
+El template es la fuente de los métodos comunes; cada instancia conserva sus
+datos y reglas particulares. Al incorporar una revisión, registra su commit y
+las excepciones intencionales en `core-adoption.json`. El
+[procedimiento de mantenimiento](INSTALLATION.md#core-maintenance) compara sin
+copiar archivos ni actualizar repositorios automáticamente.
 
 <a id="trabajar-con-las-skills"></a>
 ## Uso y referencias

@@ -1,6 +1,6 @@
 ---
 name: connect-project
-description: Conectar una instancia S0 con repositorios locales, remotos o mixtos, o preparar un proyecto sin código. Usar al enlazar el código, adoptar S0 o pedir actualizar sus fuentes; configura OpenSpec e integraciones y continúa con un borrador de Project Discovery.
+description: Preparar acceso a fuentes locales, remotas o mixtas de un S0, o adoptar una instancia e integrar consumidores cuando se solicita. Verifica referencias, recuerda rutas locales y distingue consultar código de instalar OpenSpec en los repositorios.
 ---
 
 Antes de ejecutar esta skill, lee y sigue íntegramente la

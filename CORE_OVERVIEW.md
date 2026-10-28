@@ -4,12 +4,13 @@ Fotografía del core para una persona o IA que necesite comprenderlo y discutir
 ideas sin conocer la conversación de desarrollo. Este archivo es opcional para
 usar S0. Resume el diseño; las instrucciones operativas tienen sus propias fuentes.
 
-- **Fecha de revisión:** 2026-10-27.
-- **Base de revisión:** `b4a6654ee18dba13ff05a0237cb0cc1ff627622c`; esta edición
-  incorpora el catálogo compartido y su conexión con ubicaciones personales,
-  sobre la base que ya incluye el localizador y OpenSpec Viewer Base 0.9.0.
+- **Fecha de revisión:** 2026-10-28.
+- **Base de revisión oficial:** `5e5ec4a3975d2ccb46f4145b0803ad6649d7e305`;
+  esta edición incorpora la mejora común desarrollada en
+  `3f5e67de5451d0d45f25f8755e7b759b913734c1`: acceso a fuentes separado de
+  integración, compatibilidad por capacidades y seguimiento del Core adoptado.
   Las comprobaciones ejecutadas se documentan por separado en `VALIDATION.md`.
-- **Dependencia fijada:** OpenSpec 1.14.3, schema oficial `spec-driven`.
+- **CLI:** compatibilidad por tarea para 1.13.2 y 1.14.3; schema oficial `spec-driven`.
 
 ## Qué es y qué comparte
 
@@ -27,15 +28,35 @@ Cada instancia mantiene su propio historial Git, contexto, specs y cambios.
 Las mejoras del maestro se incorporan selectivamente. Los nombres técnicos están
 en inglés y la redacción es en español por defecto.
 
+## Fuente común y datos de instancia
+
+El maestro oficial
+[`nuamx/nuam-ia-arq-sdd-openspec`, rama `development`](https://github.com/nuamx/nuam-ia-arq-sdd-openspec/tree/development)
+mantiene métodos, workflows y comprobaciones reutilizables.
+Cada instancia mantiene identidad, repositorios, organización del workspace,
+contexto, planificación y políticas de su equipo. El Core no depende de un número
+de componentes, un orquestador, rutas de producto ni aprobadores concretos.
+
+`core-manifest.json` clasifica archivos compartidos, documentos que necesitan
+revisión y datos propios. El comparador `scripts/compare-core.py` muestra sus
+diferencias frente al maestro actual o un commit. La instancia registra la revisión
+incorporada y adaptaciones justificadas en `core-adoption.json`. Las excepciones
+siguen siendo visibles; ninguna herramienta copia o sincroniza automáticamente.
+El [procedimiento de mantenimiento](INSTALLATION.md#core-maintenance) es la fuente
+operativa de esta adopción. Una instancia utilizada para probar cambios conserva
+su identidad y evidencia propia y no sustituye al maestro.
+
 ## Arquitectura
 
 ```mermaid
 flowchart TD
-    T["s0-core-template"] -->|"Use this template"| S["S0 del sistema: Git independiente"]
+    T["Core oficial Nuam: development"] -->|"Copia independiente"| S["S0 del sistema: Git independiente"]
     S --> C["Contexto, specs, cambios y skills"]
-    F["Rutas locales y URLs Git autorizadas"] --> CP["connect-project: prepara copias y conecta"]
-    CP --> W
-    CP --> A
+    F["Fuentes locales o remotas autorizadas"] --> CP["connect-project: verificar o recordar acceso"]
+    CP --> P
+    S --> I["Petición de adopción e integración"]
+    I --> W
+    I --> A
     W["Consumidor web: store my-system"] --> R["Registro local: ID a ruta"]
     A["Consumidor API: store my-system"] --> R
     R --> S
@@ -57,8 +78,10 @@ del S0 en otro cliente. El agente debe leer las fuentes de la raíz resuelta.
 Cada entorno que use la CLI desde consumidores necesita sus checkouts y registro;
 PO/QA pueden consultar el S0 directamente sin preparar todos los servicios.
 
-Para fuentes remotas, `connect-project` obtiene copias locales mediante Git y
-las conecta con el mismo mecanismo. El responsable elige el workspace externo;
+Las fuentes remotas pueden consultarse mediante herramientas autorizadas del
+cliente sin preparar un clon. Cuando se solicitan descargas, `connect-project`
+obtiene copias locales mediante Git; la instalación de integraciones se pide
+expresamente. El responsable elige el workspace externo;
 las descargas permanecen allí, separadas del S0. Para una fuente nueva sin rama
 indicada consulta la predeterminada; el resultado identifica el SHA realmente preparado.
 
@@ -68,12 +91,14 @@ Este mapa agrupa integraciones equivalentes para evitar listar cada método tres
 veces. Los once nombres y sus funciones aparecen en el catálogo siguiente.
 
 ```text
-s0-core-template/
+nuam-ia-arq-sdd-openspec/
 ├── README.md                         Entrada y elección del recorrido
 ├── INSTALLATION.md                   Adopción, incorporación y diagnóstico
 ├── PLAYBOOK.md                       Uso diario, roles y revisión humana
 ├── VALIDATION.md                     Comprobaciones, evidencia y pendientes
 ├── CORE_OVERVIEW.md                  Este resumen fechado
+├── core-manifest.json                Archivos comunes, revisión y datos de instancia
+├── scripts/compare-core.py           Comparador de lectura con revisión Git opcional
 ├── AGENTS.md                         Instrucciones comunes
 ├── CLAUDE.md                         Importa @AGENTS.md
 ├── .gitignore / .gitattributes       Exclusiones locales y finales de línea
@@ -136,7 +161,7 @@ Claude. Las invocaciones de chat están en el playbook.
 
 | Método | Entrada → resultado |
 | --- | --- |
-| `connect-project` | S0 clonado y rutas locales, URLs Git o entradas del catálogo → copias preparadas, identidad, registro, punteros e integraciones; diffs locales y borrador Discovery. También actualiza fuentes mediante petición explícita |
+| `connect-project` | Fuentes seleccionadas → acceso comprobado y ubicaciones recordadas cuando se solicita; adopción e integración explícitas → identidad, registro, punteros e integraciones. Descargas, actualizaciones y Discovery se piden según la tarea |
 | `project-discovery` | Fuentes autorizadas y foco → contexto trazable en borrador; escritura posterior sólo de Markdown aprobado en `context/` |
 | `refine-user-story` | Necesidad, contexto y specs → alcance, criterios y dudas para PO, por defecto en conversación |
 | `prepare-tests` | HDU, specs o cambio identificado → matriz de casos trazables preparados, sin ejecución por defecto |
@@ -174,7 +199,8 @@ Las tareas identifican el repositorio cuando intervienen varios componentes.
 
 | Situación | Recorrido |
 | --- | --- |
-| Sistema existente | Crear S0 desde plantilla y clonarlo → `connect-project` con rutas o URLs Git → revisar Discovery → compartir diffs por Git |
+| Sistema existente | Crear S0 desde plantilla y clonarlo → pedir adopción e integración → revisar diffs; Discovery cuando se solicita |
+| Fuentes de un S0 existente | Verificar acceso local/remoto → recordar ubicaciones si se solicita; conservar consumidores |
 | Sistema nuevo | Crear/clonar S0 → definir propósito sin inventar código → preparar contexto inicial → conectar consumidores cuando existan |
 | Integrante de un equipo | Obtener el S0 y revisión ya preparados → leer contexto y usar las skills pertinentes; no crear otra instancia |
 
@@ -207,13 +233,15 @@ remota y no requiere una HDU asociada ni un subagente de un proveedor concreto.
 
 ## Requisitos y límites de la automatización
 
-La conexión y los workflows oficiales usan Git/OpenSpec 1.14.3 y un agente con
-acceso a las fuentes. La distribución npm requiere Node.js >=20.19.0; el binario
+La integración y los workflows oficiales usan una CLI con las capacidades
+necesarias y un agente con acceso a las fuentes. Las versiones 1.13.2 y 1.14.3 se
+evalúan por tarea. La distribución npm requiere Node.js >=20.19.0; el binario
 autónomo equivalente no. Discovery necesita Git y Python >=3.10 para comprobar
 la escritura de contexto. Leer, refinar o preparar casos desde S0 no requiere CLI.
 
 `connect-project` usa la CLI oficial, preserva identidad y trabajo previo, informa
-conflictos y permite reejecución. Puede instalar la CLI fijada con npm disponible.
+conflictos y permite reejecución. Instalar herramientas requiere esa intención
+en la petición; una versión compatible existente puede reutilizarse.
 Descarga sólo fuentes solicitadas usando el acceso Git HTTPS/SSH disponible.
 Sus cambios quedan locales: no incluye commits, push, PR ni migraciones.
 La comprobación del ejecutable al iniciar una sesión está en `AGENTS.md`.
@@ -233,8 +261,8 @@ El verificador compara archivos y estado Git; no prueba veracidad, aprobación
 humana ni escrituras transitorias revertidas. No es un sandbox y su coste depende
 del contenido de las raíces capturadas, aunque el análisis funcional sea selectivo.
 
-La conexión remota requiere checkouts locales: no ofrece lectura sólo por API,
-cachés o worktrees. No hay actualización automática al ejecutar `explore` o
+El acceso remoto depende de las capacidades autorizadas del cliente; conocer
+una URL no acredita acceso a sus archivos. No hay actualización automática al ejecutar `explore` o
 `propose`, sincronización del contexto con el código, propagación de mejoras del
 maestro ni transacciones entre Git. La implementación posterior mantiene su petición
 y alcance explícitos; un inventario no autoriza editar todos sus repositorios.
@@ -252,8 +280,9 @@ benchmark de escala; una prueba con remotos sintéticos no valida la autenticaci
 en todos los proveedores ni garantiza calidad funcional.
 
 Para evaluar futuras mejoras quedan abiertas, sin compromiso de implementación,
-la vigencia del contexto frente a varios commits, la distribución selectiva de
-mejoras y la equivalencia de comportamiento entre agentes.
+la vigencia del contexto frente a varios commits y la equivalencia de comportamiento
+entre agentes. La comparación de revisiones ya permite revisar una adopción selectiva;
+su aplicación sigue siendo deliberada y no ofrece transacciones entre repositorios.
 
 ## Fuentes y uso de este resumen
 

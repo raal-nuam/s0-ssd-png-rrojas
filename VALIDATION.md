@@ -6,7 +6,8 @@ cómo repetir las verificaciones. La instalación y el uso están en
 
 ## Estado y fuentes de evidencia
 
-Última revisión de catálogo y distribución: **2026-10-27**, descrita abajo.
+Última revisión del onboarding común y su traslado al Core oficial:
+**2026-10-28**, descritos abajo.
 Las suites anteriores conservan sus fechas y alcance. Los siguientes informes son
 antecedentes de las entregas correspondientes, no resultados de la revisión actual:
 
@@ -35,6 +36,111 @@ En futuras validaciones registra fecha de ejecución, commit probado, sistema,
 CLI, cliente/modelo cuando intervengan, resultado y enlace al informe o logs
 accesibles al equipo. Conserva fallos y omisiones; no conviertas un caso omitido
 en aprobado ni sobrescribas antecedentes con resultados de otro entorno.
+
+<a id="official-core"></a>
+### Incorporación en el Core oficial Nuam — 2026-10-28
+
+Base oficial: `5e5ec4a3975d2ccb46f4145b0803ad6649d7e305` de
+[`nuamx/nuam-ia-arq-sdd-openspec`, rama `development`](https://github.com/nuamx/nuam-ia-arq-sdd-openspec/tree/development).
+Se incorpora la implementación común del
+[commit `3f5e67d`](https://github.com/fdelvalle01/s0-core-template/commit/3f5e67de5451d0d45f25f8755e7b759b913734c1).
+Ese enlace conserva la procedencia histórica del trabajo. El origen vigente
+para nuevas adopciones es el repositorio oficial y un commit publicado allí.
+
+De los 44 archivos compartidos, 43 conservan exactamente los bytes de esa
+implementación. Sólo cambia la redacción de `connect-project` para referirse al
+repositorio maestro del Core sin exigir un nombre de repositorio particular.
+Las guías identifican el origen oficial, seleccionan expresamente `development`
+para crear una copia independiente y usan ese origen en el ejemplo de adopción.
+El maestro no distribuye un `core-adoption.json` rellenado.
+
+Comprobaciones ejecutadas en esta incorporación, en Windows con Git
+2.25.0.windows.1 y Python 3.11.1:
+
+- `quick_validate.py` aprobado para la skill canónica y su puente Claude.
+- Comparador: 13 tests ejecutados, 12 aprobados y uno omitido por falta de
+  privilegios para symlinks en Windows; el caso de junction fue aprobado.
+- Enlaces locales de las guías y la skill: destinos de archivo comprobados;
+  `git diff --check` sin errores.
+- Comparación por bytes contra la base oficial: conservados los seis archivos
+  de identidad, contexto, configuración, catálogo, specs e historial; los
+  18 workflows oficiales y su marcador; y los dos archivos del Viewer.
+  La identidad sigue siendo `s0-core`, el catálogo permanece vacío y el paquete
+  Viewer mantiene su manifiesto y publisher originales.
+
+La matriz CLI 1.13.2/1.14.3 y el ensayo independiente de agente descritos en la
+sección siguiente corresponden a la implementación fuente. No se repitieron
+durante el traslado, ni las suites históricas de Discovery o review-pr. Esta
+incorporación no acredita nuevos ensayos de producto ni sesiones de Claude.
+
+<a id="portable-onboarding"></a>
+### Core común, acceso a fuentes y compatibilidad — 2026-10-28
+
+Evidencia de la implementación fuente, incorporada aquí sin repetir los ensayos
+CLI o de agente. Base: `5a54e24b540dc4bfbd71cf505da8e00c09ba57ca`, más la
+ampliación publicada en `3f5e67de5451d0d45f25f8755e7b759b913734c1`.
+Entorno: Windows, Git 2.25.0.windows.1, Python 3.11.1 y Node 22.18.0.
+Se comprobaron las instalaciones npm de OpenSpec **1.13.2 y 1.14.3** con
+registros y preferencias XDG aislados y repositorios sintéticos sin datos de
+producto. Los ensayos de CLI usan la base citada; el ensayo de agente usa la
+skill revisada y sus instrucciones actuales. No se cambiaron HOME ni CODEX_HOME.
+
+| Comprobación | Resultado |
+| --- | --- |
+| Registrar una instancia nueva, resolverla y repetir el registro | Ambas versiones correctas; la repetición conserva el registro por bytes |
+| `init --tools "claude,codex" --profile core --no-animation` con `store:` | 1.13.2 rechaza la operación con salida 1 y conserva archivos; 1.14.3 crea las integraciones y conserva el puntero |
+| Repetir `init` con 1.14.3 | Archivos idénticos por bytes, sin specs ni changes locales |
+| Crear cambio genérico, consultar instrucciones y validar estrictamente | Recorrido 1.14.3: 14 comandos y 26 comprobaciones correctos; no prueba implementar código |
+| Consultar con 1.13.2 un consumidor integrado por 1.14.3 | `context`, `status`, `instructions apply` y validación estricta correctos; fixture y registro conservados |
+| `actionContext.allowedEditRoots` desde el consumidor | 1.13.2 devuelve sólo S0; 1.14.3 devuelve consumidor y S0; mismo resultado con y sin `--store` |
+| Fuente con otro store y trabajo pendiente | Puntero, archivos, índice y metadata conservados al consultar |
+| Comparador Core/instancia | 13 tests: 12 aprobados y uno omitido por privilegios Windows para symlinks; caso de junction aprobado |
+
+El rechazo de 1.13.2 es un límite comprobado, no un caso aprobado de integración.
+No se retiró `store:` para sortearlo. La consulta correcta de un consumidor no
+autoriza a ampliar las raíces de edición que declara el workflow. No se ejecutó
+apply ni código de producto y no se certifican otras versiones o sistemas operativos.
+
+Un agente independiente recibió la skill actual y una petición de preparar dos
+fuentes, sin conocer los resultados esperados. La comparación externa de snapshots
+confirmó una sola adición: el localizador Git del S0. Ambos consumidores, incluido
+uno con otro store y trabajo pendiente, conservaron todos sus archivos y metadata,
+ramas y HEAD; los registros y preferencias aislados y reales no cambiaron.
+No necesitó ejecutar CLI ni registrar el S0 para esa preparación.
+
+Una petición posterior al mismo agente autorizó integrar sólo el consumidor
+compatible. Seleccionó 1.14.3, registró la identidad existente, generó integraciones
+oficiales y alineó AGENTS/CLAUDE. `store doctor` no encontró problemas y `context`
+resolvió el S0 correcto. La comparación externa confirmó únicamente esas escrituras,
+el registro aislado y la configuración temporal de `delivery`; el otro consumidor
+y los archivos globales permanecieron intactos. La reejecución del agente omitió
+registro, init y escrituras, comprobando contenido y fechas de modificación
+idénticos. No inició Discovery. El preflight dejó pendiente init hasta disponer
+de lectura autorizada de los nombres de prompts globales; todos estaban ausentes.
+
+Los hashes del registro, preferencias y prompts globales de la estación se
+conservaron. La carpeta de prompts Codex globales no existía: el ensayo no prueba
+una migración con legado. `init` de 1.14.3 puede limpiar esos prompts fuera de
+XDG; la referencia de integración exige comprobarlos y dejar esa operación
+pendiente si la limpieza no está dentro del alcance autorizado.
+
+Los logs, snapshots y procedimientos del laboratorio se conservaron fuera de la
+plantilla; no se distribuyen como evidencia accesible a otros equipos. Para
+repetir la matriz, usa stores y consumidores sintéticos con XDG aislado, conserva
+estado Git y hashes antes/después y ejecuta las operaciones de la tabla con cada
+binario identificado. No uses productos ni el registro real para probar adopción.
+El comparador se comprueba desde la raíz con:
+
+```powershell
+py -3 -B -m unittest discover -s scripts -p test_compare_core.py -v
+```
+
+La revisión independiente de las fuentes comprobó separación entre acceso e
+integración y ausencia de reglas de producto en el maestro. Se corrigió el preflight de
+prompts globales y la documentación de requisitos Git del comparador. Las suites
+históricas de Discovery y review-pr no se repitieron: sus implementaciones no
+cambiaron. Las sesiones reales en Claude y la regresión semántica dual continúan
+pendientes; un ensayo de agente local no las acredita.
 
 ### Catálogo compartido y distribución — 2026-10-27
 

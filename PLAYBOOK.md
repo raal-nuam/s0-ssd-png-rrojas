@@ -19,7 +19,7 @@ requieren la CLI; la comprobación de versión se establece en [AGENTS.md](AGENT
 
 | Tarea | Codex | Claude Code |
 | --- | --- | --- |
-| Conectar el proyecto o actualizar sus fuentes | `$connect-project` | `/connect-project` |
+| Verificar fuentes o solicitar adopción/integración | `$connect-project` | `/connect-project` |
 | Descubrir contexto | `$project-discovery` | `/project-discovery` |
 | Refinar una historia | `$refine-user-story` | `/refine-user-story` |
 | Preparar casos QA | `$prepare-tests` | `/prepare-tests` |
@@ -33,10 +33,14 @@ requieren la CLI; la comprobación de versión se establece en [AGENTS.md](AGENT
 
 `sync` es un workflow del agente; no existe un comando de terminal `openspec sync`.
 
-`connect-project` admite código local, URLs Git o entradas seleccionadas del
+`connect-project` verifica código local, lectura remota o entradas seleccionadas del
 [catálogo compartido](INSTALLATION.md#repository-catalog). El equipo mantiene
 los remotos; cada persona indica su base local o rutas por componente, que se
-verifican y recuerdan sólo en esa estación. Reconectar conserva las
+verifican y se recuerdan cuando se solicita preparar las fuentes. Consultar
+código no necesita instalar integraciones. Adoptar el S0 e integrar consumidores
+usa el recorrido explícito de instalación; Discovery se inicia cuando se pide.
+La CLI se selecciona por [capacidades](INSTALLATION.md#cli-compatibility).
+Reconectar conserva las
 revisiones; para obtener código remoto reciente pide una actualización explícita
 según [la guía](INSTALLATION.md#connect-code). No se actualizan fuentes al abrir
 `explore` o `propose`. Para implementar, identifica los repositorios y copias
@@ -46,7 +50,8 @@ autorizados; disponer de un inventario o un checkout no distribuye permisos.
 
 | Rol o etapa | Qué consulta | Qué pide | Qué obtiene y dónde |
 | --- | --- | --- | --- |
-| DEV/administrador: preparación | Fuentes y ramas del sistema | `connect-project` | Copias conectadas, revisiones identificadas y borrador Discovery; revisión humana antes de guardar contexto |
+| PO/DEV/QA: acceso | Fuentes y referencias del sistema | Verificar o recordar fuentes con `connect-project` | Acceso comprobado y ubicaciones locales recordadas cuando se solicita |
+| DEV/administrador: adopción | S0 y consumidores seleccionados | Adoptar S0 e instalar integraciones con `connect-project` | Identidad, registro, punteros e integraciones; diffs para revisión; Discovery si se pidió |
 | PO | Necesidad original, contexto, specs y cambios relacionados | `refine-user-story` | Objetivo, alcance, criterios y dudas; por defecto en conversación |
 | DEV: planificación | Necesidad refinada, contexto y código pertinente | `openspec-explore` cuando haga falta y `openspec-propose` | Artefactos según el schema: habitualmente propuesta, specs delta, diseño y tareas en el S0 |
 | DEV: revisión del plan | Artefactos existentes y nuevas decisiones | `openspec-update-change` | Ediciones de planificación confirmadas; conserva el código |
@@ -174,6 +179,7 @@ Para automatizar o ejecutar después, indica suite, versión, entorno, datos y a
   enlace de ejecución. Se conservan fallos y omisiones.
 
 Un `status` completo o una validación estructural no acreditan aceptación funcional.
+Registra la versión de CLI junto a cada validación: sus diagnósticos pueden variar.
 Archivar tampoco prueba aprobación QA, merge o despliegue. Al cerrar, indica el
 estado de las specs, la operación realizada y la publicación Git pendiente.
 Las comprobaciones de la plantilla se mantienen en [VALIDATION.md](VALIDATION.md).
