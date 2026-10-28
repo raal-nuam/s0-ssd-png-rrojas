@@ -18,7 +18,8 @@ negocio institucionales predefinidos.
 
 ## Componentes y fuentes
 
-- Repositorio de la plantilla: <https://github.com/fdelvalle01/s0-core-template>.
+- Repositorio oficial de la plantilla:
+  [`nuamx/nuam-ia-arq-sdd-openspec`, rama `development`](https://github.com/nuamx/nuam-ia-arq-sdd-openspec/tree/development).
 - Requisitos vigentes: [openspec/specs/](../openspec/specs/), vacíos en la plantilla.
 - Propuestas e historial: [openspec/changes/](../openspec/changes/).
 - Necesidades de origen: texto aportado por el usuario, issue o HDU; Jira opcional.
