@@ -41,8 +41,12 @@ una fuente incompatible queda pendiente; continúa con las fuentes válidas.
 
 Para un clon S0, comprueba raíz Git real, remoto, rama, HEAD y cambios locales.
 Lee su identidad en `.openspec-store/store.yaml`; el ID no demuestra por sí solo
-que un clon sea el maestro o una instancia descartable. Para un S0 remoto,
-identifica repositorio y referencia y lee sus instrucciones en esa revisión.
+que un clon sea el maestro o una instancia descartable. Tampoco lo demuestran
+el contexto genérico ni un remoto heredado del Core: respeta la carpeta que el
+usuario identificó como copia destinada a su sistema. Conectar fuentes permite
+usar esa copia para Discovery sin completar primero su adopción o integración.
+Para un S0 remoto, identifica repositorio y referencia y lee sus instrucciones
+en esa revisión.
 No exijas un clon local para consultar archivos remotos.
 
 Respeta la elección local, remota o mixta por componente. Una URL no es una orden
