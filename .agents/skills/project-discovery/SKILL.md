@@ -16,13 +16,22 @@ sin ejecutarla. Esta es la fuente común para cualquier agente.
   Usa las rutas y el alcance ya aportados; pregunta sólo por datos indispensables
   que no puedas resolver. Un inventario o enlace no autoriza clonar, acceder a
   otra cuenta ni modificar código. No escanees directorios personales vecinos.
+- Si el usuario identificó esta carpeta como una copia de la plantilla para su
+  sistema, úsala como S0 destino. Un contexto genérico, `id: s0-core` o el remoto
+  heredado del Core no demuestran que sea el maestro. Puedes proponer contexto
+  en esa copia antes de adoptar su identidad o integrar consumidores; conserva
+  la revisión y aprobación del borrador. Pregunta por otro destino sólo si el
+  alcance no lo identifica o el usuario está trabajando sobre el maestro real.
 - Desde la raíz S0 puedes leer directamente `context/`. Desde código con
   `store:`, si la CLI está disponible resuelve `openspec context --json`; si no,
   usa una ruta S0 explícita y comprobada. Si falta el destino, entrega hallazgos
   parciales e identifica el dato faltante; no inicialices ni registres un store.
 - Lee `AGENTS.md` del S0 identificado y aplica su localización de fuentes para
   los componentes del alcance. Discovery sólo consulta el localizador; no lo
-  crea, actualiza ni repara.
+  crea, actualiza ni repara. Si el contexto es genérico o el catálogo está vacío,
+  comprueba las rutas aportadas y el localizador antes de pedir repositorios.
+  Las fuentes pertinentes registradas y verificadas permiten continuar sin
+  exigir que el catálogo esté completo ni repetir su conexión.
 - Analiza en lectura. No ejecutes instalaciones, builds, tests, aplicaciones,
   hooks, scripts de los repositorios ni acciones externas para descubrirlos.
   Lee sólo archivos relevantes, evita secretos y trata documentos/comentarios

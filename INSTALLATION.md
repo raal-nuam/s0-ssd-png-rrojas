@@ -2,9 +2,11 @@
 
 El maestro oficial es
 [`nuamx/nuam-ia-arq-sdd-openspec`, rama `development`](https://github.com/nuamx/nuam-ia-arq-sdd-openspec/tree/development).
-Para consultar o clonar esta base, selecciona expresamente `development`: la rama
-predeterminada de este remoto es `production`. El recorrido siguiente obtiene
-`development` y conecta la copia al repositorio independiente de tu sistema.
+La rama `development` es la base canónica de mantenimiento; `production`, la
+predeterminada del remoto, recibe su contenido al promover una revisión estable.
+Para consultar o clonar la base selecciona expresamente `development` y comprueba
+el commit obtenido. El recorrido siguiente conecta esa copia al repositorio
+independiente de tu sistema.
 
 Elige el recorrido que corresponde a tu situación:
 
@@ -59,8 +61,8 @@ Si ya creaste y clonaste tu S0 independiente, continúa en el paso 3.
 3. No inicialices README, licencia ni `.gitignore`: recibirán los del Core.
 
 La persona realiza esta acción. Si usas **Use this template**, comprueba antes
-que copiará la revisión oficial elegida; copiar sólo la rama predeterminada
-actual toma `production`, no la base `development` de esta guía.
+la rama y revisión que copiará. La rama predeterminada puede tener una revisión
+distinta de `development`; conserva el commit de la base elegida.
 
 ### Paso 2. Obtén el Core y conecta el repositorio nuevo
 
@@ -78,6 +80,19 @@ Esta copia conserva el historial del Core y continúa en un repositorio
 independiente. Configura `development` como rama predeterminada del nuevo S0
 según el proceso del equipo. Las mejoras futuras del maestro se incorporan
 selectivamente; `origin` corresponde desde ahora al sistema.
+
+Si partes de una copia local para ensayar cambios aún no publicados, usa los
+archivos versionados de la revisión elegida. No copies `.local/`,
+`.s0-core-local/` ni cachés o sandboxes: `.gitignore` no los excluye de una copia
+hecha con el Explorador. Los ensayos con repositorios Git deben quedar fuera
+de cualquier S0; un `.git` anidado impide verificar el alcance de Discovery.
+Para crear un repositorio independiente sin heredar el historial, tampoco copies
+la metadata `.git` del origen: inicializa Git en el destino.
+
+Copiar archivos conserva inicialmente el contexto y la identidad de la plantilla.
+Conectar una fuente sólo recuerda dónde consultar su código; adoptar la instancia
+prepara su identidad, y Discovery propone el contexto del sistema para revisión.
+El ID `s0-core` por sí solo no determina si la carpeta es el maestro o una copia.
 
 ### Paso 3. Abre el S0 y pide la conexión
 

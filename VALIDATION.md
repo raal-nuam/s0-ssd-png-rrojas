@@ -6,6 +6,10 @@ cómo repetir las verificaciones. La instalación y el uso están en
 
 ## Estado y fuentes de evidencia
 
+Correcciones de copias S0: **2026-10-29**, sobre la base estable
+`v1.0.0` (`4eaba5f`). Se retiró el ensayo de planificación de pruebas;
+se conservan únicamente las correcciones de destino y fuentes descritas abajo.
+
 Última revisión del onboarding común y su traslado al Core oficial:
 **2026-10-28**, descritos abajo.
 Las suites anteriores conservan sus fechas y alcance. Los siguientes informes son
@@ -36,6 +40,22 @@ En futuras validaciones registra fecha de ejecución, commit probado, sistema,
 CLI, cliente/modelo cuando intervengan, resultado y enlace al informe o logs
 accesibles al equipo. Conserva fallos y omisiones; no conviertas un caso omitido
 en aprobado ni sobrescribas antecedentes con resultados de otro entorno.
+
+### Copias locales del S0 — 2026-10-29
+
+`project-discovery` y `connect-project` respetan la carpeta identificada como
+copia por el usuario aunque conserve contexto, ID y remoto genéricos. Discovery
+consulta las fuentes registradas antes de pedir otras rutas o repetir la conexión.
+La adopción de identidad y la integración de consumidores mantienen su alcance.
+
+Las skills pasan validación estructural. Una sesión independiente comprobó la
+resolución inicial de una copia y su fuente registrada, sin generar contexto ni
+ejecutar producto. Se conserva la revisión del borrador antes de publicarlo.
+
+Los repositorios y registros de ensayo se guardan fuera de cualquier S0. Se
+reprodujo el rechazo de Git anidados y se comprobó `snapshot` y `verify` con
+salida 0 después de retirarlos, preservando los archivos y el localizador. La
+guía de instalación aclara qué excluir al copiar la plantilla con el Explorador.
 
 <a id="official-core"></a>
 ### Incorporación en el Core oficial Nuam — 2026-10-28
