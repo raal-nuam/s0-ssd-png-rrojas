@@ -301,6 +301,14 @@ Si solicitas un borrador Discovery, se revisa antes de guardarlo.
 Si el equipo completó el [catálogo compartido](#repository-catalog), basta
 seleccionar sus IDs e indicar tu carpeta base o las rutas particulares.
 
+### Catálogo de proyectos de automatización
+
+`generate-playwright-tests` usa [test-automation.yaml](test-automation.yaml), con
+`version: 1` y una lista de proyectos `{id, remote, branch, config}`; `branch` y
+`config` son opcionales y `remote` es `null` si el proyecto sólo existe en local.
+Las rutas de cada estación se recuerdan en `s0-test-automation.json`, en la
+metadata Git del S0, y no viajan con el repositorio.
+
 <a id="local-skills"></a>
 ## Si el agente encuentra otra skill
 

@@ -1,0 +1,10 @@
+# Catálogo compartido de proyectos de automatización de pruebas de NXT.
+# Lo usa generate-playwright-tests. Las rutas de cada estación se recuerdan en la
+# metadata Git local del S0 (s0-test-automation.json); no se guardan aquí.
+# remote es null cuando el proyecto sólo existe en local; branch y config son opcionales.
+version: 1
+# Ejemplo:
+#   - id: nxt-e2e
+#     remote: https://github.com/nuamx/nxt-e2e.git
+#     branch: development
+#     config: playwright.config.ts

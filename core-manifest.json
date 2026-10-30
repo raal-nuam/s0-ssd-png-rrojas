@@ -26,6 +26,7 @@
     "openspec/specs/",
     "openspec/changes/",
     "repositories.yaml",
+    "test-automation.yaml",
     "core-adoption.json"
   ]
 }

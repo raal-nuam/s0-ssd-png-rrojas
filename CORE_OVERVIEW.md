@@ -109,23 +109,26 @@ nuam-ia-arq-sdd-openspec/
 │   └── changes/archive/.gitkeep      Cambios e historial inicialmente vacíos
 ├── context/project.md               Página inicial que adopta cada sistema
 ├── repositories.yaml                Catálogo compartido, inicialmente vacío
+├── test-automation.yaml             Catálogo de proyectos de automatización, inicialmente vacío
 ├── .agents/skills/
 │   ├── .openspec-target              Marcador de destino codex
-│   ├── <skill>/SKILL.md              Cinco métodos propios y seis oficiales
+│   ├── <skill>/SKILL.md              Seis métodos propios y seis oficiales
 │   ├── project-discovery/
 │   │   ├── agents/openai.yaml        Nombre y descripción de interfaz
 │   │   └── scripts/
 │   │       ├── check_discovery_scope.py
 │   │       └── test_project_discovery_scope.py
+│   ├── generate-playwright-tests/
+│   │   └── references/playwright-conventions.md   Convenciones de los scripts
 │   └── review-pr/
 │       ├── references/report-format.md
 │       └── scripts/                 Verificador de informes y sus tests Node
 └── .claude/
-    ├── skills/<skill>/SKILL.md       Cinco puentes propios y seis oficiales
+    ├── skills/<skill>/SKILL.md       Seis puentes propios y seis oficiales
     └── commands/opsx/               explore, propose, apply, update, sync, archive
 ```
 
-Los comandos Claude son archivos `.md`. Las cinco skills propias residen completas
+Los comandos Claude son archivos `.md`. Las seis skills propias residen completas
 en `.agents/skills/`; sus entradas Claude son puentes. Los seis workflows oficiales
 se generan para cada cliente con OpenSpec y no se editan manualmente. S0 no fija
 proveedor o modelo; otros agentes pueden leer el contenido, pero su integración
@@ -165,6 +168,7 @@ Claude. Las invocaciones de chat están en el playbook.
 | `project-discovery` | Fuentes autorizadas y foco → contexto trazable en borrador; escritura posterior sólo de Markdown aprobado en `context/` |
 | `refine-user-story` | Necesidad, contexto y specs → alcance, criterios y dudas para PO, por defecto en conversación |
 | `prepare-tests` | HDU, specs o cambio identificado → matriz de casos trazables preparados, sin ejecución por defecto |
+| `generate-playwright-tests` | Specs de HU (grupo `OpenSpec`) o casos QA de varias HU (grupos con nombre) → scripts Playwright trazables en un proyecto de automatización registrado; no los ejecuta ni modifica el S0 o los productos |
 | `review-pr` | PR o snapshot identificado y código de su revisión → hallazgos, captura e informes locales verificados; publicación sólo cuando se solicita |
 | `openspec-explore` | Pregunta o problema → análisis y alternativas; capturar artefactos requiere alcance confirmado |
 | `openspec-propose` | Necesidad comprendida → artefactos de planificación según schema; se detiene antes de implementar |
