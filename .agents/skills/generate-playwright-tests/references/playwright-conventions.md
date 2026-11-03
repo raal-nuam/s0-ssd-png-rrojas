@@ -151,30 +151,32 @@ ruta y, si viene de un cambio no archivado, también `proposal`. WHEN y THEN se
 convierten en `test.step`.
 
 ```ts
-// tests/openspec/gestion-workspaces/creacion-de-un-workspace-con-nombre.spec.ts
+// tests/openspec/order-management/creacion-de-un-pedido.spec.ts
 import { test, expect } from '@playwright/test';
-import { WorkspaceTabs } from '../../../pages/workspace-tabs';
+import { OrdersPage } from '../../../pages/orders-page';
 
-const SPEC = 'openspec/specs/gestion-workspaces/spec.md';
+const SPEC = 'openspec/specs/order-management/spec.md';
 
-test.describe('Requirement: Creación de un Workspace con nombre', () => {
-  test('Scenario: Creación con nombre asignado', {
-    annotation: [{ type: 'spec', description: `${SPEC} › Creación de un Workspace con nombre › Creación con nombre asignado` }],
+test.describe('Requirement: Creación de un pedido', () => {
+  test('Scenario: Creación con referencia asignada', {
+    annotation: [{ type: 'spec', description: `${SPEC} › Creación de un pedido › Creación con referencia asignada` }],
   }, async ({ page }) => {
-    const tabs = new WorkspaceTabs(page);
+    const orders = new OrdersPage(page);
     await page.goto('/');
 
-    await test.step('WHEN el operador crea un Workspace con el nombre «REPO»', async () => {
-      await tabs.create('REPO');
+    await test.step('WHEN el usuario crea un pedido con la referencia «PED-1»', async () => {
+      await orders.create('PED-1');
     });
 
-    await test.step('THEN aparece la pestaña «REPO» sin widgets y queda activa', async () => {
-      await expect(tabs.tab('REPO')).toHaveAttribute('aria-selected', 'true');
-      await expect(tabs.widgets()).toHaveCount(0);
+    await test.step('THEN el pedido «PED-1» aparece en la lista sin productos', async () => {
+      await expect(orders.row('PED-1')).toBeVisible();
+      await expect(orders.items('PED-1')).toHaveCount(0);
     });
   });
 });
 ```
+
+La capability, los requisitos y las pantallas de los ejemplos son ficticios.
 
 ## Tests de grupos QA
 
@@ -184,23 +186,23 @@ repite por cada HU que atraviesa el flujo; si el caso viene de una matriz de
 que indica su HU.
 
 ```ts
-// tests/flows/flujo-1/crear-workspace-y-agregar-watchlist.spec.ts
+// tests/flows/flujo-1/crear-pedido-y-emitir-factura.spec.ts
 import { test, expect } from '@playwright/test';
 
-test('Flujo: crear un Workspace y agregar una watchlist', {
+test('Flujo: crear un pedido y emitir su factura', {
   annotation: [
-    { type: 'hu', description: 'NPDNEN-68 › openspec/specs/gestion-workspaces/spec.md' },
-    { type: 'hu', description: 'NPDNEN-XXX › openspec/specs/watchlist/spec.md' },
+    { type: 'hu', description: 'HU-101 › openspec/specs/order-management/spec.md' },
+    { type: 'hu', description: 'HU-102 › openspec/specs/invoicing/spec.md' },
     { type: 'case', description: 'QA-01' },
   ],
 }, async ({ page }) => {
-  await test.step('[NPDNEN-68] crear el Workspace «Flujo»', async () => { /* ... */ });
-  await test.step('[NPDNEN-XXX] agregar una watchlist al Workspace', async () => { /* ... */ });
+  await test.step('[HU-101] crear el pedido «PED-1»', async () => { /* ... */ });
+  await test.step('[HU-102] emitir la factura del pedido', async () => { /* ... */ });
 });
 ```
 
-Sustituye `NPDNEN-XXX` por la HU real. Si una HU no está identificada, no la
-inventes: deja el paso trazado al caso y regístralo como duda.
+Sustituye `HU-101` y `HU-102` por las HU reales. Si una HU no está identificada,
+no la inventes: deja el paso trazado al caso y regístralo como duda.
 
 ## Buenas prácticas de escritura
 
