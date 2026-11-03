@@ -10,6 +10,13 @@ La fuente oficial de los métodos comunes es
 Su catálogo se entrega vacío para completar al adoptar cada sistema.
 La procedencia de entregas anteriores se conserva en [VALIDATION.md](VALIDATION.md).
 
+El proceso de trabajo de NUAM tiene como fuente oficial el
+[Playbook Full de Confluence](https://nuamexchange.atlassian.net/wiki/spaces/LPLTIA/pages/2725412896)
+y su [versión resumida](https://nuamexchange.atlassian.net/wiki/spaces/LPLTIA/pages/2725380126).
+El [playbook local](PLAYBOOK.md) relaciona ese proceso con las capacidades del Core.
+Los roles, reuniones, revisiones de PR y puntos de control son acuerdos del equipo;
+su descripción no incorpora bloqueos automáticos ni restricciones nuevas al agente.
+
 ## Elige tu recorrido
 
 | Tu situación | Siguiente paso |
@@ -25,6 +32,8 @@ ni descargar todos los repositorios de código.
 Para consultar código existente, [verifica o recuerda sus fuentes](INSTALLATION.md#source-access).
 Instalar integraciones en un consumidor es una acción explícita. OpenSpec 1.13.2
 y 1.14.3 conviven según [las capacidades comprobadas](INSTALLATION.md#cli-compatibility).
+El proceso publicado en Confluence establece 1.14.3 como versión de trabajo para
+los workflows; la matriz conserva la compatibilidad técnica de otras operaciones.
 
 ## Visor incluido para VS Code
 
@@ -83,9 +92,12 @@ y recuerda esas ubicaciones sólo en tu estación; consulta
 - `core-manifest.json` y `scripts/compare-core.py`: clasificación y comparación
   de los archivos compartidos frente a una revisión concreta del maestro.
 
-El código y sus tests permanecen en los repositorios consumidores. Cada S0 tiene
-su propio historial; las mejoras de la plantilla se adoptan de forma selectiva.
-Jira es opcional y no se exigen documentos adicionales por rol.
+El código y sus tests permanecen en los repositorios consumidores; la skill
+Playwright escribe en un proyecto de automatización separado, fuera del S0.
+Cada S0 tiene su propio historial; las mejoras de la plantilla se adoptan de forma selectiva.
+La integración técnica con Jira es opcional. En el proceso NUAM, Jira aporta la
+clave de la HU y el enlace al PR; la HU se formaliza en `proposal.md`. No se
+exigen documentos adicionales por rol.
 
 El template es la fuente de los métodos comunes; cada instancia conserva sus
 datos y reglas particulares. Al incorporar una revisión, registra su commit y
@@ -103,7 +115,7 @@ skills](PLAYBOOK.md#skills) y cómo [seleccionar la copia local](INSTALLATION.md
 | Documento | Para qué leerlo |
 | --- | --- |
 | [INSTALLATION.md](INSTALLATION.md) | Preparar el entorno, incorporarse al equipo o diagnosticar la conexión |
-| [PLAYBOOK.md](PLAYBOOK.md) | Trabajar por rol, elegir skills y revisar resultados |
+| [PLAYBOOK.md](PLAYBOOK.md) | Aplicar el proceso de Confluence con las skills disponibles y reconocer sus resultados |
 | [VALIDATION.md](VALIDATION.md) | Mantener el core: comprobaciones, evidencia y pendientes |
 | [CORE_OVERVIEW.md](CORE_OVERVIEW.md) | Compartir con otra IA un resumen fechado de arquitectura, capacidades y límites |
 

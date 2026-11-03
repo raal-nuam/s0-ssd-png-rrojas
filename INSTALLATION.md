@@ -21,6 +21,13 @@ La plantilla maestra crea instancias independientes. Cada S0 comparte contexto,
 specs y cambios de un sistema; sus repositorios de código son los consumidores.
 Los ejemplos usan nombres y rutas ficticios. Los prompts van en el chat del agente.
 
+La metodología de uso se consulta en el
+[Playbook oficial de Confluence](https://nuamexchange.atlassian.net/wiki/spaces/LPLTIA/pages/2725412896)
+y su correspondencia con las herramientas en [PLAYBOOK.md](PLAYBOOK.md).
+Confluence establece OpenSpec **1.14.3** para el trabajo del equipo con los
+workflows. Esta guía conserva la compatibilidad técnica por operación; leer o
+preparar casos directamente desde archivos no equivale a ejecutar esos workflows.
+
 <a id="requirements"></a>
 ## Herramientas según tu tarea
 
@@ -395,9 +402,9 @@ el ejecutable efectivo al comenzar una nueva sesión, según [AGENTS.md](AGENTS.
 <a id="cli-compatibility"></a>
 ### Compatibilidad por capacidades
 
-El equipo puede usar 1.13.2 y 1.14.3 según las operaciones comprobadas en
-[VALIDATION.md](VALIDATION.md#portable-onboarding). 1.14.3 se recomienda para
-nuevas instalaciones; otra versión no se rechaza sólo por su número. Comprueba
+El Core admite 1.13.2 y 1.14.3 según las operaciones comprobadas en
+[VALIDATION.md](VALIDATION.md#portable-onboarding). El proceso NUAM utiliza
+1.14.3; técnicamente, otra versión no se rechaza sólo por su número. Comprueba
 las opciones y campos que requiere la tarea cuando no estén verificados, y
 mantén el mismo ejecutable durante la operación.
 

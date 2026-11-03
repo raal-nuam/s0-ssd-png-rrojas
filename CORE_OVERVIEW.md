@@ -12,12 +12,23 @@ usar S0. Resume el diseño; las instrucciones operativas tienen sus propias fuen
   Las comprobaciones ejecutadas se documentan por separado en `VALIDATION.md`.
 - **CLI:** compatibilidad por tarea para 1.13.2 y 1.14.3; schema oficial `spec-driven`.
 
+**Actualización documental del 3 de noviembre de 2026:** la metodología se toma
+del [Playbook Full de Confluence](https://nuamexchange.atlassian.net/wiki/spaces/LPLTIA/pages/2725412896)
+(1.5) y su [resumen](https://nuamexchange.atlassian.net/wiki/spaces/LPLTIA/pages/2725380126)
+(1.0), ambos con versión de página 11 al consultar. El [playbook local](PLAYBOOK.md)
+explica su uso con el Core; los controles metodológicos corresponden al equipo.
+La revisión técnica `d3bbcdb7d299be8ae177d857c0d54aef8cf519f7` ya incorpora
+`generate-playwright-tests`. Esta actualización documental no acredita nuevas
+ejecuciones de pruebas ni la adopción de esa skill en otras instancias.
+
 ## Qué es y qué comparte
 
 S0 Core es una plantilla reutilizable para crear repositorios independientes de
 contexto y especificaciones. Una instancia representa un sistema y puede cubrir
 uno o múltiples repositorios de código. Proporciona métodos comunes para PO, DEV
-y QA, con Jira opcional y sin imponer archivos adicionales por rol.
+y QA, con integración técnica opcional a Jira y sin imponer archivos adicionales
+por rol. El proceso NUAM usa Jira para la clave de HU y el enlace al PR; la HU
+se formaliza en `proposal.md`.
 
 El núcleo está formado por Markdown/YAML, workflows interpretados por un agente,
 la CLI oficial OpenSpec, un verificador Python de Discovery y un verificador Node
@@ -88,7 +99,7 @@ indicada consulta la predeterminada; el resultado identifica el SHA realmente pr
 ## Mapa de archivos
 
 Este mapa agrupa integraciones equivalentes para evitar listar cada método tres
-veces. Los once nombres y sus funciones aparecen en el catálogo siguiente.
+veces. Los doce nombres y sus funciones aparecen en el catálogo siguiente.
 
 ```text
 nuam-ia-arq-sdd-openspec/
@@ -134,7 +145,8 @@ se generan para cada cliente con OpenSpec y no se editan manualmente. S0 no fija
 proveedor o modelo; otros agentes pueden leer el contenido, pero su integración
 y sus resultados requieren comprobación.
 
-El código y sus tests ejecutables permanecen en los consumidores. La plantilla no
+El código y sus tests permanecen en los consumidores; la skill Playwright escribe
+en un proyecto de automatización separado, también fuera del S0. La plantilla no
 incluye datos de productos reales ni carpetas raíz adicionales `docs/`, `skills/`
 o `tests/`. Los archivos detallados de contexto son opcionales. `repositories.yaml`
 se entrega vacío y su uso es opcional: el equipo puede completar
@@ -208,10 +220,12 @@ Las tareas identifican el repositorio cuando intervienen varios componentes.
 | Sistema nuevo | Crear/clonar S0 → definir propósito sin inventar código → preparar contexto inicial → conectar consumidores cuando existan |
 | Integrante de un equipo | Obtener el S0 y revisión ya preparados → leer contexto y usar las skills pertinentes; no crear otra instancia |
 
-PO refina necesidades y criterios. DEV prepara el plan y después implementa en el
-código autorizado. QA puede preparar casos en paralelo y comprobar una versión
-identificada cuando disponga de suite, entorno y datos. El equipo revisa resultados
-y solicita cierre o correcciones según su proceso.
+Según Confluence, PO, QA y Dev/LT preparan el cambio en sesión conjunta. El PO
+mantiene `proposal.md`, QA las specs, y Dev/LT el diseño y las tareas. Dev implementa
+y genera las pruebas automatizadas de los escenarios de la HU; QA valida su
+cobertura, analiza casos adicionales, los automatiza cuando corresponde y ejecuta
+las pruebas sobre una versión identificada. Las aprobaciones G1–G4 y el cierre
+se acuerdan y registran por el equipo en su proceso de reuniones, ramas y PR.
 
 Las intervenciones específicas del método son:
 
@@ -226,6 +240,9 @@ Un `sync` ya solicitado no impone otra aprobación universal. Guardar refinamien
 crear tickets o ejecutar tests requiere ese alcance. El proceso del equipo determina
 revisores de PR, aceptación y publicación. Archivar no acredita QA, merge o despliegue.
 Caso preparado, test implementado y test ejecutado son estados distintos.
+En el proceso NUAM, el equipo cierra con tareas completas, deltas sincronizados
+y specs verificadas por QA. Las opciones generales de `archive` descritas arriba
+no sustituyen ese acuerdo ni constituyen un control automático de su cumplimiento.
 
 `review-pr` contrasta el PR con código, contratos y fuentes S0 identificadas. Guarda
 captura e informes bajo `.local/review-pr/`, excluido de Git, y comprueba anclas y
@@ -242,6 +259,8 @@ necesarias y un agente con acceso a las fuentes. Las versiones 1.13.2 y 1.14.3 s
 evalúan por tarea. La distribución npm requiere Node.js >=20.19.0; el binario
 autónomo equivalente no. Discovery necesita Git y Python >=3.10 para comprobar
 la escritura de contexto. Leer, refinar o preparar casos desde S0 no requiere CLI.
+La versión establecida por Confluence para trabajar con los workflows es 1.14.3;
+la compatibilidad técnica por tarea se mantiene documentada por separado.
 
 `connect-project` usa la CLI oficial, preserva identidad y trabajo previo, informa
 conflictos y permite reejecución. Instalar herramientas requiere esa intención
