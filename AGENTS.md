@@ -90,6 +90,12 @@ petición; conectar acceso no instala OpenSpec en el producto.
 - Refinamiento PO: [.agents/skills/refine-user-story/SKILL.md](.agents/skills/refine-user-story/SKILL.md).
 - Preparación QA: [.agents/skills/prepare-tests/SKILL.md](.agents/skills/prepare-tests/SKILL.md).
 - Revisión de PR: [.agents/skills/review-pr/SKILL.md](.agents/skills/review-pr/SKILL.md).
+- Pruebas Playwright: [.agents/skills/generate-playwright-tests/SKILL.md](.agents/skills/generate-playwright-tests/SKILL.md).
+  El catálogo compartido de proyectos de automatización es `test-automation.yaml`;
+  las rutas locales se recuerdan en `s0-test-automation.json`, en la metadata Git
+  del S0. Pregunta siempre el grupo: `OpenSpec` para HU desde specs, o un grupo
+  QA con nombre para casos que abarcan varias HU. Sólo escribe en el proyecto de
+  automatización resuelto, nunca en el S0 ni en los productos.
 
 Lee la skill correspondiente al realizar esa tarea, aunque el cliente no la
 descubra automáticamente. Resolver un store no instala sus skills ni carga sus

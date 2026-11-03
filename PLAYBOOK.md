@@ -23,6 +23,7 @@ requieren la CLI; la comprobación de versión se establece en [AGENTS.md](AGENT
 | Descubrir contexto | `$project-discovery` | `/project-discovery` |
 | Refinar una historia | `$refine-user-story` | `/refine-user-story` |
 | Preparar casos QA | `$prepare-tests` | `/prepare-tests` |
+| Generar pruebas Playwright | `$generate-playwright-tests` | `/generate-playwright-tests` |
 | Revisar un PR | `$review-pr` | `/review-pr` |
 | Explorar | `$openspec-explore` | `/opsx:explore` |
 | Proponer | `$openspec-propose` | `/opsx:propose` |
@@ -58,6 +59,7 @@ autorizados; disponer de un inventario o un checkout no distribuye permisos.
 | DEV: implementación | Cambio identificado, tareas y repositorios afectados | `openspec-apply-change` después de la propuesta, mediante nueva petición | Código y tests en los consumidores; avance y resultados según lo ejecutado |
 | DEV: revisión de PR | PR o snapshot identificado, código en su SHA y fuentes S0 pertinentes | `review-pr` | Hallazgos verificables e informes en `.local/review-pr/`; publicación sólo cuando se solicite |
 | QA: preparación | HDU, specs y escenarios en su revisión correcta | `prepare-tests` | Casos trazables, dudas y cobertura; por defecto en conversación |
+| QA: automatización | Casos QA o specs de HU, y proyecto de automatización registrado en `test-automation.yaml` | `generate-playwright-tests` (pregunta el grupo: `OpenSpec` o uno con nombre) | Scripts Playwright trazables en el proyecto de automatización; sin ejecutarlos |
 | QA: ejecución | Casos, versión/build, suite, entorno y datos | Solicitud de implementar o ejecutar pruebas | Automatizaciones en la suite y resultados, incluidos fallos y pendientes |
 | Equipo: cierre | Diffs, resultados y deltas frente a specs vigentes | `openspec-sync-specs` cuando corresponda y `openspec-archive-change` | Estado de specs según la operación elegida e historial archivado |
 
@@ -94,6 +96,11 @@ En multirrepositorio, cada tarea identifica su Git. Enlaza los PR de código con
 el cambio S0 y registra las versiones comprobadas; no hay distribución automática
 de tareas o permisos entre repositorios.
 
+Para convertir specs de HU o casos QA preparados en scripts Playwright usa
+`generate-playwright-tests`: genera los archivos en el proyecto de automatización
+registrado, sin ejecutarlos ni modificar el S0. Un test implementado no equivale a
+uno ejecutado.
+
 Para revisar un PR identificado puedes usar `review-pr`: captura base/head y
 contrasta el código con las fuentes pertinentes. Su informe no aprueba ni fusiona
 el PR y no sustituye la ejecución QA ni el cierre de OpenSpec.
@@ -107,7 +114,7 @@ el PR y no sustituye la ejecución QA ni el cierre de OpenSpec.
 | Pasar de propuesta a implementación | Nueva petición explícita después de presentar el plan | [openspec-propose](.agents/skills/openspec-propose/SKILL.md) |
 | Editar planificación existente | Confirmar cada edición presentada antes de escribir | [openspec-update-change](.agents/skills/openspec-update-change/SKILL.md) |
 | Ambigüedad material, bloqueo o cambio de alcance | Aclarar la decisión que impide continuar | Reglas del workflow y alcance autorizado |
-| Guardar refinamiento/casos o automatizar/ejecutar tests | Solicitar la acción con destino, alcance y acceso | [refine-user-story](.agents/skills/refine-user-story/SKILL.md) y [prepare-tests](.agents/skills/prepare-tests/SKILL.md) |
+| Guardar refinamiento/casos o automatizar/ejecutar tests | Solicitar la acción con destino, alcance y acceso | [refine-user-story](.agents/skills/refine-user-story/SKILL.md), [prepare-tests](.agents/skills/prepare-tests/SKILL.md) y [generate-playwright-tests](.agents/skills/generate-playwright-tests/SKILL.md) |
 | Código, resultados QA, PR y merge | Aplicar revisores y criterios acordados | Proceso del equipo |
 | Sincronizar y archivar | Resolver ambigüedades; confirmar pendientes y elegir el tratamiento de deltas cuando corresponda | [sync](.agents/skills/openspec-sync-specs/SKILL.md) y [archive](.agents/skills/openspec-archive-change/SKILL.md) |
 

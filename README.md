@@ -73,6 +73,8 @@ y recuerda esas ubicaciones sólo en tu estación; consulta
 ## Qué contiene el S0
 
 - `context/`: conocimiento del sistema y fuentes, con `project.md` como índice.
+- `test-automation.yaml`: catálogo compartido de proyectos de automatización de
+  pruebas, inicialmente vacío; lo usa `generate-playwright-tests`.
 - `repositories.yaml`: catálogo compartido inicialmente vacío; el equipo completa
   IDs, URLs Git y ramas de referencia, sin rutas personales.
 - `openspec/specs/` y `openspec/changes/`: comportamiento vigente, propuestas e historial.
